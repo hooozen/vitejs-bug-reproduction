@@ -53,7 +53,7 @@
 <script lang="ts">
 import { ref, defineComponent, computed } from "vue";
 import { ElSubmenu } from "element-plus";
-import menus from "../../menus/index.ts";
+import menus from "@/menus/index.ts";
 
 export default defineComponent({
   name: "AsideMenu",
