@@ -99,7 +99,7 @@ export default defineComponent({
   display: flex;
 }
 .user-face {
-  background: url(@/assets/logo.png) 0 0 /40px 40px;
+  background: url(@/assets/face.jpeg) 0 0 /40px 40px;
   height: 40px;
   width: 40px;
   border-radius: 20px;

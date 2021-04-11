@@ -26,14 +26,11 @@
             :key="menu.id"
             :is="menu.children.length ? 'el-submenu' : 'el-menu-item'"
           >
-            <template #title v-if="menu.children.length">
-              <i :class="`el-icon-${menu.icon}`"></i>
+            <i v-if="!menu.children.length" :class="`el-icon-${menu.icon}`"></i>
+            <template #title>
+              <i v-if="menu.children.length" :class="`el-icon-${menu.icon}`"></i>
               <span>{{ menu.label }}</span>
             </template>
-            <i v-if="!menu.children.length" :class="`el-icon-${menu.icon}`"></i>
-            <template v-if="!menu.children.length" #title>{{
-              menu.label
-            }}</template>
             <template v-if="menu.children.length">
               <el-menu-item
                 v-for="subMenu in menu.children"
@@ -53,7 +50,8 @@
 <script lang="ts">
 import { ref, defineComponent, computed } from "vue";
 import { ElSubmenu } from "element-plus";
-import menus from "@/menus/index.ts";
+// @ts-ignore
+import menus from "@/menus/index";
 
 export default defineComponent({
   name: "AsideMenu",

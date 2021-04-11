@@ -1,4 +1,12 @@
-const menus = [
+interface MenuItem {
+  id: Number,
+  label: String,
+  path: String,
+  icon?: String,
+  children?: MenuItem[]
+}
+
+const menus: MenuItem[] = [
   {
     id: 1,
     label: '首页',
