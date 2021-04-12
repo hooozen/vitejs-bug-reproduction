@@ -29,7 +29,7 @@
             <i v-if="!menu.children.length" :class="`el-icon-${menu.icon}`"></i>
             <template #title>
               <i v-if="menu.children.length" :class="`el-icon-${menu.icon}`"></i>
-              <span>{{ menu.label }}</span>
+              <router-link :to="menu.path">{{ menu.label }}</router-link>
             </template>
             <template v-if="menu.children.length">
               <el-menu-item
@@ -37,7 +37,8 @@
                 :key="subMenu.id"
                 :index="'' + subMenu.id"
               >
-                {{ subMenu.label }}
+
+              <router-link :to="subMenu.path">{{ subMenu.label }}</router-link>
               </el-menu-item>
             </template>
           </component>
@@ -63,7 +64,6 @@ export default defineComponent({
     const isCollapse = ref(false);
     const asideCls = computed(() => {
       return {
-        transition: "width ease-in 0.35s",
         width: isCollapse.value ? "64px" : "200px",
       };
     });
@@ -81,8 +81,9 @@ export default defineComponent({
 });
 </script>
 
-<style>
+<style lang="postcss">
 .aside {
+  transition: width ease-in 0.25s;
   position: relative;
   overflow: hidden;
   height: 100%;
@@ -114,6 +115,10 @@ export default defineComponent({
 }
 .el-menu-outer {
   border-right: none !important;
+  & a {
+    color: inherit;
+    text-decoration: none;
+  }
 }
 .aside-fold {
   width: 200px;

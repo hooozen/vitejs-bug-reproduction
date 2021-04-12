@@ -80,7 +80,6 @@ export default defineComponent({
   color: #606266;
 }
 .aside-outer {
-  overflow: hidden;
   border-right: solid 1px #e6e6e6;
   background-color: #3a3f51;
 }
@@ -89,6 +88,7 @@ export default defineComponent({
   flex: 1;
   background: #fff;
   flex-direction: column;
+  overflow: hidden;
 }
 .header {
   flex: 0 0 50px;
@@ -96,14 +96,13 @@ export default defineComponent({
   widows: 100%;
   line-height: 50px;
   background-color: #fff;
-  border-bottom: solid 1px #e6e6e6;
+  box-shadow: 0 2px 2px rgb(0 0 0 / 5%), 0 1px 0 rgb(0 0 0 / 5%);
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
 }
 .view-outer {
   flex: 1;
-  padding: 10px 15px;
 }
 .user {
   display: flex;
