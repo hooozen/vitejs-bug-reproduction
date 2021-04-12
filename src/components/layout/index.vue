@@ -47,7 +47,9 @@ export default defineComponent({
   setup: () => {},
 });
 </script>
-<style>
+<style lang="postcss">
+@import url(./common.css);
+
 .header-logo {
   position: absolute;
   left: 0;
@@ -83,17 +85,25 @@ export default defineComponent({
   background-color: #3a3f51;
 }
 .main {
+  display: flex;
   flex: 1;
   background: #fff;
+  flex-direction: column;
 }
 .header {
+  flex: 0 0 50px;
   height: 50px;
+  widows: 100%;
   line-height: 50px;
   background-color: #fff;
   border-bottom: solid 1px #e6e6e6;
   display: flex;
   flex-direction: row-reverse;
   align-items: center;
+}
+.view-outer {
+  flex: 1;
+  padding: 10px 15px;
 }
 .user {
   display: flex;

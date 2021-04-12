@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, computed } from "vue";
+import { ref, defineComponent, computed, inject } from "vue";
 import { ElSubmenu } from "element-plus";
 // @ts-ignore
 import menus from "@/menus/index";
@@ -59,6 +59,7 @@ export default defineComponent({
     ElSubmenu,
   },
   setup() {
+    const api =  inject('api');
     const isCollapse = ref(false);
     const asideCls = computed(() => {
       return {
