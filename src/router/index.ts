@@ -2,14 +2,19 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 import Login from 'components/Login.vue'
 import Layout from 'components/layout/index.vue'
+import Home from 'components/views/Home.vue'
 import Devices from 'components/views/Devices.vue'
 import DeviceDetail from 'components/views/DeviceDetail.vue'
 
 const routes = [
   {
     path: '/',
+    redirect: '/home',
     component: Layout,
     children: [{
+      path: 'home',
+      component: Home,
+    },{
       path: 'devices',
       component: Devices,
     }, {

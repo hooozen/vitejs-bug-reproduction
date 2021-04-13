@@ -10,7 +10,7 @@ const menus: MenuItem[] = [
   {
     id: 1,
     label: '首页',
-    path: '/',
+    path: 'home',
     icon: 's-data',
     children: [],
   }, {
@@ -37,7 +37,7 @@ const menus: MenuItem[] = [
     children: [{
       id: 6,
       label: '门店管理',
-      path: '/stores',
+      path: 'stores',
       children: [],
     }],
   }, {
@@ -59,7 +59,7 @@ const menus: MenuItem[] = [
     children: [{
       id: 10,
       label: '员工管理',
-      path: '/staff',
+      path: 'staff',
       children: [],
     }],
   }, {
@@ -70,24 +70,24 @@ const menus: MenuItem[] = [
     children: [{
       id: 12,
       label: '商品列表',
-      path: '/commodity',
+      path: 'commodity',
       children: [],
     }, {
       id: 13,
       label: '分类管理',
-      path: '/categroies',
+      path: 'categroies',
       children: [],
     }],
   }, {
     id: 14,
     label: '订单管理',
     icon: 's-order',
-    path: '/order',
+    path: 'order',
     children: [],
   }, {
     id: 15,
     label: '监控中心',
-    path: '/monitor',
+    path: 'monitor',
     icon: 'monitor',
     children: [],
   }, {
@@ -98,7 +98,7 @@ const menus: MenuItem[] = [
     children: [{
       id: 17,
       label: '设备分析',
-      path: '/device-analysis',
+      path: 'device-analysis',
       children: [],
     }, {
       id: 18,
@@ -109,7 +109,7 @@ const menus: MenuItem[] = [
   }, {
     id: 19,
     label: '运营管理',
-    path: '/opreation',
+    path: 'opreation',
     icon: 's-open',
     children: [{
       id: 20,
@@ -135,7 +135,7 @@ const menus: MenuItem[] = [
     children: [{
       id: 24,
       label: '信息发布',
-      path: '/deliver',
+      path: 'deliver',
       children: [],
     }],
   }, {
@@ -146,7 +146,7 @@ const menus: MenuItem[] = [
     children: [{
       id: 26,
       label: '用户管理',
-      path: '/users',
+      path: 'users',
       children: [],
     }, {
       id: 27,
@@ -156,17 +156,17 @@ const menus: MenuItem[] = [
     }, {
       id: 28,
       label: '职位管理',
-      path: '/position',
+      path: 'position',
       children: [],
     }, {
       id: 29,
       label: '用户信息',
-      path: '/user-info',
+      path: 'user-info',
       children: [],
     }, {
       id: 30,
       label: '操作日志',
-      path: '/logs',
+      path: 'logs',
       children: [],
     }],
   }, {
@@ -177,12 +177,12 @@ const menus: MenuItem[] = [
     children: [{
       id: 32,
       label: '销售台账',
-      path: '/sale-statement',
+      path: 'sale-statement',
       children: [],
     }, {
       id: 33,
       label: '运营商台账',
-      path: '/operator-statement',
+      path: 'operator-statement',
       children: [],
     }],
   }

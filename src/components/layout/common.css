@@ -28,4 +28,9 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
+  & .map-outer {
+    width: 440px;
+    height: 252px;
+  }
+
 }

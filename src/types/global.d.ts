@@ -1,11 +1,9 @@
-import { AxiosRequestConfig } from 'axios'
-
-declare interface TableColumnData {
+interface TableColumnData {
   prop: String,
   label: String,
-  width?: Number
 }
 
-declare interface $AxiosRequestConfig extends AxiosRequestConfig {
-  successMsg: string
+interface Window {
+  TMap: any,
+  initMap: any 
 }

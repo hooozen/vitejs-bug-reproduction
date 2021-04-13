@@ -5,7 +5,12 @@
     <div class="view-body">
       <el-table v-loading="loadingList" :data="list" border height="100%">
         <el-table-column v-for="col in columns" :key="col.prop" :label="col.label" :prop="col.prop">
-           
+        </el-table-column>
+        <el-table-column>
+          <template #default="scope">
+            <router-link :to="`/device-detail?id=${scope.id}`">查看详情</router-link>
+            <a>删除</a>
+          </template>
         </el-table-column>
       </el-table>
     </div>
@@ -51,7 +56,6 @@
       const getDevices = async () => {
         try {
           list.value = (await devices({}, '访问成功')).data.list
-          console.log(list)
         } catch { }
         loadingList.value = false;
       }
