@@ -17,7 +17,7 @@
               prefix-icon="el-icon-lock"
               type="password"
               placeholder="请输入登陆密码"
-              v-model="loginForm.passwd"
+              v-model="loginForm.password"
             />
           </el-form-item>
           <el-form-item>
@@ -28,27 +28,39 @@
               v-model="loginForm.code"
             >
               <template #suffix>
-                <img class="identifying-img" />
+                <img :src="codeImgSrc" class="identifying-img" />
               </template>
             </el-input>
           </el-form-item>
-          <el-button>登录</el-button>
+          <el-button @click="submitForm">登录</el-button>
         </el-form>
       </div>
     </div>
-    <div class="copyright">Copyright ©  All Rights Reserved.</div>
+    <div class="copyright">Copyright © All Rights Reserved.</div>
   </div>
 </template>
 <script lang="ts">
   import { ref, defineComponent } from "vue";
+  import { login, verificatinCode } from 'api/login.ts'
+
+  const imgSrc =
+    import.meta.env.VITE_API_BASE_URL +
+    '/admin/verification/code' +
+    '?height=50&width=100'
 
   export default defineComponent({
     setup() {
       const loginForm = ref({
         loginName: "",
-        passwd: "",
+        password: "",
+        imgeCode: ""
       });
-      return { loginForm };
+      const submitForm = async () => {
+        await login({ ...loginForm })
+      }
+      const loadCodeImg = async() => {
+      }
+      return { loginForm, submitForm };
     },
   });
 </script>

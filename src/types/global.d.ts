@@ -1,9 +1,13 @@
 interface TableColumnData {
-  prop: String,
-  label: String,
+  prop: string,
+  label: string,
 }
 
 interface Window {
   TMap: any,
   initMap: any 
+}
+
+interface AxiosRequestConfig {
+  successMsg: string
 }
