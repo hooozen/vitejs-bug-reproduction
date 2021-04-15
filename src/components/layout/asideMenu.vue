@@ -14,11 +14,12 @@
           background-color="#3a3f51"
           text-color="#fff"
           active-text-color="#4f94d4"
+          :uniqueOpened="true"
           default-active="1"
+          :router="true"
           class="el-menu-outer"
           @open="handleOpen"
           @close="handleClose"
-          @select="handleSelect"
           :collapse="isCollapse"
         >
           <component

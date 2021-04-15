@@ -1,10 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 
-import Login from 'components/Login.vue'
-import Layout from 'components/layout/index.vue'
-import Home from 'components/views/Home.vue'
-import Devices from 'components/views/Devices.vue'
-import DeviceDetail from 'components/views/DeviceDetail.vue'
+import Login from '@components/Login.vue'
+import Layout from '@components/layout/index.vue'
+import Home from '@components/views/Home.vue'
+import Devices from '@components/views/Devices.vue'
+import DeviceDetail from '@components/views/DeviceDetail.vue'
+import Staff from '@components/views/Staff.vue'
 
 const routes = [
   {
@@ -20,6 +21,9 @@ const routes = [
     }, {
       path: 'device-detail',
       component: DeviceDetail,
+    }, {
+      path: 'staff',
+      component: Staff,
     }]
   }, {
     path: '/login',

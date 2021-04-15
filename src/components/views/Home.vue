@@ -11,7 +11,8 @@
 
   const _Mapconfig = {
     zoom: 4.8,
-    mapStyleId: 'style3'
+    mapStyleId: 'style3',
+    pitch: 10
   }
 
   export default defineComponent({
@@ -20,7 +21,6 @@
     },
     setup() {
       const Mapconfig = ref(_Mapconfig)
-      console.log(Mapconfig.value)
       return { Mapconfig }
     },
   })

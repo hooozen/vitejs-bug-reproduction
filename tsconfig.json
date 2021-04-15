@@ -7,8 +7,15 @@
     "strict": true,
     "jsx": "preserve",
     "sourceMap": true,
+    "outDir": "./js",
     "resolveJsonModule": true,
     "esModuleInterop": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@api/*": [ "api/*"],
+      "@components/*": ["components/*"],
+      "@store/*": ["store/*"]
+    },
     "lib": [
       "esnext",
       "dom"

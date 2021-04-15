@@ -1,4 +1,4 @@
-interface MenuItem {
+export interface MenuItem {
   id: Number,
   label: String,
   path: String,

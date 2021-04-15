@@ -1,8 +1,8 @@
-import $axios from './index'
+import { AxiosPromise } from 'axios'
+import {$AxiosRequestConfig, post }from './index'
 
-function devices(data: any, params: Object | String) {
-  if (typeof params == 'string') params = { successMsg: params }
-  return $axios.post('/devices', data, { successMsg: '', ...params })
+function devices(data: any, params: $AxiosRequestConfig): AxiosPromise {
+  return post('/devices', data, params)
 }
 
 export { devices }

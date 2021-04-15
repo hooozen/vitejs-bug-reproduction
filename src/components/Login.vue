@@ -4,15 +4,15 @@
       <div class="login__head"></div>
       <div class="login__main">
         <div class="login__title">智能啤酒售卖系统</div>
-        <el-form :model="loginForm">
-          <el-form-item>
+        <el-form :model="loginForm" ref="form" :rules="formRules">
+          <el-form-item prop="loginName">
             <el-input
               prefix-icon="el-icon-user"
               placeholder="请输入用户名称"
               v-model="loginForm.loginName"
             />
           </el-form-item>
-          <el-form-item>
+          <el-form-item prop="password">
             <el-input
               prefix-icon="el-icon-lock"
               type="password"
@@ -20,19 +20,19 @@
               v-model="loginForm.password"
             />
           </el-form-item>
-          <el-form-item>
+          <el-form-item prop="imageCode">
             <el-input
               class="identifying-code"
               prefix-icon="el-icon-key"
               placeholder="验证码"
-              v-model="loginForm.code"
+              v-model="loginForm.imageCode"
             >
               <template #suffix>
-                <img :src="codeImgSrc" class="identifying-img" />
+                <img @click="loadCodeImg" ref="codeImg" class="identifying-img" />
               </template>
             </el-input>
           </el-form-item>
-          <el-button @click="submitForm">登录</el-button>
+          <el-button type="primary" @click="submitForm">登录</el-button>
         </el-form>
       </div>
     </div>
@@ -40,27 +40,58 @@
   </div>
 </template>
 <script lang="ts">
-  import { ref, defineComponent } from "vue";
-  import { login, verificatinCode } from 'api/login.ts'
-
-  const imgSrc =
-    import.meta.env.VITE_API_BASE_URL +
-    '/admin/verification/code' +
-    '?height=50&width=100'
+  import { ref, defineComponent, onMounted } from "vue"
+  import { login, verificationCode } from '@api/login'
+import { useStore } from "vuex";
 
   export default defineComponent({
     setup() {
       const loginForm = ref({
         loginName: "",
         password: "",
-        imgeCode: ""
+        imageCode: ""
       });
+      const formRules = ref({
+        loginName: [
+          { required: true, message: '请输入登陆名', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        password: [
+          { required: true, message: '请输入密码', trigger: 'blur' },
+        ],
+        imageCode: [
+          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { length: 6, message: '长度为 4 个字符', trigger: 'blur' }
+        ]
+      })
+      const store = useStore()
+      const codeImg = ref(null)
+      const form = ref(null)
       const submitForm = async () => {
-        await login({ ...loginForm })
+        (form.value as any).validate(async (valid: any) => {
+          if (valid) {
+            try {
+              const res = (await login({ ...(loginForm.value) })).data
+              store.commit('setToken', res.token)
+            } catch {
+              loadCodeImg()
+            }
+
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
       }
-      const loadCodeImg = async() => {
+      const loadCodeImg = async () => {
+        const data = await verificationCode({ width: '100', height: '50'})
+        // @ts-ignore
+        codeImg.value.src = window.URL.createObjectURL(data)
       }
-      return { loginForm, submitForm };
+      onMounted(() => {
+        loadCodeImg()
+      })
+      return { loginForm, submitForm, codeImg, form, loadCodeImg, formRules, store };
     },
   });
 </script>
