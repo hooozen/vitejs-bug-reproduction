@@ -1,17 +1,18 @@
 import { $AxiosRequestConfig, post } from '../axios'
 
-interface staffConfig {
+export interface staffParams {
   orderBy?: string,
   orderType?: string,
-  pageNum: number,
+  pageNum?: number,
   pageSize?: number
 }
 
-function staff(data: staffConfig, params: $AxiosRequestConfig) {
+function staff(data: staffParams, config: $AxiosRequestConfig) {
+  data.pageNum = data.pageNum || 1
   data.pageSize = data.pageSize || 10
   data.orderBy = data.orderBy || ''
   data.orderType = data.orderType || ''
-  return post('/admin/employee/list', data, params)
+  return post('/admin/employee/list', data, config)
 }
 
 

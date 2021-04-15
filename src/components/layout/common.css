@@ -5,10 +5,18 @@
 
   & .view-body {
     flex: 1;
+    padding: 10px;
+  }
+  & .view-panel {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 10px 0;
   }
 
-  & .view-body {
-    padding: 10px;
+  & .view-foot {
+    display: flex;
+    padding: 0 10px 20px;
+    flex-direction: row-reverse;
   }
 }
 
@@ -28,9 +36,11 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
+
   & .map-outer {
     width: 440px;
     height: 252px;
   }
+
 
 }

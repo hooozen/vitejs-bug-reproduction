@@ -60,7 +60,6 @@ import { useRouter } from "vue-router";
       ElSubmenu,
     },
     setup() {
-      const api = inject('api');
       const isCollapse = ref(false);
       const router = useRouter();
       const asideCls = computed(() => {
