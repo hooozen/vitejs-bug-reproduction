@@ -1,5 +1,5 @@
 import { AxiosPromise } from 'axios'
-import { post, get, $AxiosRequestConfig } from './index'
+import { post, get, $AxiosRequestConfig } from '../axios'
 
 interface loginParams {
   loginName: string,

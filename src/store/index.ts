@@ -6,16 +6,21 @@ import localAPI from '@api/local'
 
 interface State {
   menus: MenuItem[],
-  token: string,
+  token: string | null,
 }
 
 const store = createStore({
   state() {
     const state: State = {
-      token: '',
+      token: null,
       menus,
     }
     return state
+  },
+  getters: {
+    token(state: State) {
+      return state.token || localAPI.getToken()
+    }
   },
   mutations: {
     setToken(state: State, token) {

@@ -1,4 +1,4 @@
-import { $AxiosRequestConfig, post } from './index'
+import { $AxiosRequestConfig, post } from '../axios'
 
 interface staffConfig {
   orderBy?: string,

@@ -1,5 +1,3 @@
-import { AxiosRequestConfig } from 'axios'
-
 interface TableColumnData {
   prop: string,
   label: string,
@@ -10,9 +8,4 @@ interface Window {
   initMap: any
 }
 
-declare module 'axios' {
-  export interface AxiosRequestConfig {
-    successMsg?: string
-  }
-}
 

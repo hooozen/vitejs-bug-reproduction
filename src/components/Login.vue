@@ -41,7 +41,7 @@
 </template>
 <script lang="ts">
   import { ref, defineComponent, onMounted } from "vue"
-  import { login, verificationCode } from '@api/login'
+  import { login, verificationCode } from '@api/index'
 import { useStore } from "vuex";
 
   export default defineComponent({

@@ -18,7 +18,7 @@
 </template>
 <script lang="ts">
   import { computed, defineComponent, onMounted, reactive, ref } from 'vue'
-  import { devices } from '@api/devices'
+  import { devices } from '@api/server/devices'
 
   const columns: TableColumnData[] = [{
     prop: 'serialNum',

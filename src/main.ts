@@ -1,7 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 import router from './router'
-import api from './api'
+import api from './api/axios'
 import store from './store'
 
 import ElementPlus from 'element-plus'
