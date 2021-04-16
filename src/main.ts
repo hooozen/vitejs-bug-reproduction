@@ -13,5 +13,5 @@ import 'element-plus/lib/theme-chalk/index.css'
 createApp(App)
   .use(store)
   .use(router)
-  .use(ElementPlus, { locale })
+  .use(ElementPlus, { locale, size: 'small' })
   .mount('#app')

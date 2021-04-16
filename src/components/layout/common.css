@@ -7,10 +7,29 @@
     flex: 1;
     padding: 10px;
   }
+
+  & .cell-opt {
+    color: #409eff;
+    cursor: pointer;
+    text-decoration: underline;
+    &:not(:first-child) {
+      margin-left: 8px;
+    }
+    &:hover {
+      color: #66b1ff;
+    }
+  }
+
   & .view-panel {
     display: flex;
     justify-content: space-between;
     padding: 10px 10px 0;
+  }
+  & .panel__filter {
+    & > div:not(:first-child) {
+      margin-left: 10px;
+    }
+    display: flex;
   }
 
   & .view-foot {

@@ -9,14 +9,12 @@ const api = axios.create({
 })
 
 api.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig=> {
-  console.log(config)
   config = {
     ...config,
     headers: {
       token: store.getters.token
     }
   }
-  console.log(config)
   return config
 }, err => {
   console.error(err)
@@ -53,6 +51,11 @@ const get = (url: string, params: any, config?: Object | string): AxiosPromise =
 }
 
 export type $AxiosRequestConfig = AxiosRequestConfig | String
+
+export interface ListParams {
+  pageSize: number,
+  pageNum: number
+}
 
 export { post, get }
 
