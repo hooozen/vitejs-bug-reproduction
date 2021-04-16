@@ -4,7 +4,7 @@
       <div class="login__head"></div>
       <div class="login__main">
         <div class="login__title">智能啤酒售卖系统</div>
-        <el-form :model="loginForm" ref="form" :rules="formRules">
+        <el-form :model="loginForm" ref="form" :rules="formRules" size="normal">
           <el-form-item prop="loginName">
             <el-input
               prefix-icon="el-icon-user"
@@ -43,9 +43,11 @@
   import { ref, defineComponent, onMounted } from "vue"
   import { login, verificationCode } from '@api/index'
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 
   export default defineComponent({
     setup() {
+      const router = useRouter()
       const loginForm = ref({
         loginName: "",
         password: "",
@@ -73,10 +75,10 @@ import { useStore } from "vuex";
             try {
               const res = (await login({ ...(loginForm.value) })).data
               store.commit('setToken', res.token)
+              router.push('/home')
             } catch {
               loadCodeImg()
             }
-
           } else {
             console.log('error submit!!');
             return false;

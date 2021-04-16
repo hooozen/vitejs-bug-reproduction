@@ -1,4 +1,5 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
+import  store from '@store/index'
 
 import Login from '@components/Login.vue'
 import Layout from '@components/layout/index.vue'
@@ -31,8 +32,15 @@ const routes = [
   }
 ]
 
-export default createRouter({
+const router = createRouter({
   history: createWebHashHistory(),
   routes,
 });
 
+router.beforeEach((to, from) => {
+  if (to.path !== '/login' && !store.getters.token) {
+    router.push('/login')
+  }
+})
+
+export default router
