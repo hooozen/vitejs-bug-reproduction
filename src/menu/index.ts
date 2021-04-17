@@ -6,7 +6,7 @@ interface MenuItem {
   children?: MenuItem[]
 }
 
-const menus: MenuItem[] = [
+const menu: MenuItem[] = [
   {
     id: 1,
     label: '首页',
@@ -168,5 +168,5 @@ const menus: MenuItem[] = [
   }
 ]
 
-export default menus
+export default menu
 

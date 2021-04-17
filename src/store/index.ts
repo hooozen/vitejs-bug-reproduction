@@ -1,11 +1,11 @@
 import { createStore } from 'vuex'
 
-import menus from '@store/menus'
-import { MenuItem } from '@store/menus'
+import menu from '@/store/menu'
+import { MenuItem } from '@/store/menu'
 import localAPI from '@api/local'
 
 interface State {
-  menus: MenuItem[],
+  menu: MenuItem[],
   token: string | null,
 }
 
@@ -13,7 +13,7 @@ const store = createStore({
   state() {
     const state: State = {
       token: null,
-      menus,
+      menu,
     }
     return state
   },

@@ -14,8 +14,8 @@
 </template>
 <script lang="ts">
   import { defineComponent, ref } from 'vue'
-  import NavBar from './components/NavBar.vue'
-  import TMap from './components/TMap.vue'
+  import NavBar from '../components/navBar/index.vue'
+  import TMap from '../components/TMap/index.vue'
 
   const deviceLocation = [23.166028, 113.308253]
 

@@ -1,6 +1,7 @@
 interface TableColumnData {
   prop: string,
   label: string,
+  sortable?: boolean,
 }
 
 interface OptionData {

@@ -1,13 +1,8 @@
 import { $AxiosRequestConfig, post } from '../axios'
+import { ListParams } from './interface'
 
-export interface staffParams {
-  orderBy?: string,
-  orderType?: string,
-  pageNum?: number,
-  pageSize?: number
-}
 
-function staff(data: staffParams, config: $AxiosRequestConfig) {
+function staff(data: ListParams, config: $AxiosRequestConfig) {
   data.pageNum = data.pageNum || 1
   data.pageSize = data.pageSize || 10
   data.orderBy = data.orderBy || ''

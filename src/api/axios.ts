@@ -1,10 +1,10 @@
 import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse } from 'axios'
 import { ElMessage } from 'element-plus';
-import store from '@store/index'
+import store from '@/store/index'
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL as string,
-  // baseURL: import.meta.env.VITE_MOCK_BASE_URL as string,
+  // baseURL: import.meta.env.VITE_API_BASE_URL as string,
+  baseURL: import.meta.env.VITE_MOCK_BASE_URL as string,
   timeout: 15000,
 })
 

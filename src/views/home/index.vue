@@ -7,7 +7,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, reactive, ref } from 'vue'
-  import TMap from './components/TMap.vue'
+  import TMap from '../components/TMap/index.vue'
 
   const _Mapconfig = {
     zoom: 4.8,

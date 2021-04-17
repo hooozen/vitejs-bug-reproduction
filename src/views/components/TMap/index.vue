@@ -3,8 +3,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
-  //@ts-ignore
-  import { initMap, setMapMarkers } from './TMap.ts'
+  import { initMap, setMapMarkers } from './TMap'
 
   export default defineComponent({
     name: 'TMap',

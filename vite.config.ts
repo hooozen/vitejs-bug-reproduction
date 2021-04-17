@@ -8,9 +8,10 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),
-      '@components': path.resolve(__dirname, 'src/components'),
       '@api': path.resolve(__dirname, 'src/api'),
-      '@store': path.resolve(__dirname, 'src/store')
+      '@layout': path.resolve(__dirname, 'src/layout'),
+      '@store': path.resolve(__dirname, 'src/store'),
+      '@views': path.resolve(__dirname, 'src/views'),
     },
     extensions: ['.ts', '.js']
   },

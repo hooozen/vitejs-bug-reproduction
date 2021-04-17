@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { ref, defineComponent } from "vue";
-import AsideMenu from "./asideMenu.vue";
+import AsideMenu from "./components/asideMenu.vue";
 
 export default defineComponent({
   name: "Layout",

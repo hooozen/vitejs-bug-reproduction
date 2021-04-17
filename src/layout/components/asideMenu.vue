@@ -14,7 +14,7 @@
           background-color="#3a3f51"
           text-color="#fff"
           active-text-color="#4f94d4"
-          :uniqueOpened="true"
+          :unique-opened="true"
           default-active="1"
           :router="true"
           class="el-menu-outer"
@@ -23,13 +23,14 @@
           :collapse="isCollapse"
         >
           <component
-            v-for="menu in menus"
+            v-for="menu in menu"
             :index="menu.path"
             :key="menu.id"
             :is="menu.children.length ? 'el-submenu' : 'el-menu-item'"
           >
+            <i v-if="!menu.children.length" :class="`el-icon-${menu.icon}`"></i>
             <template #title>
-              <i :class="`el-icon-${menu.icon}`"></i>
+              <i v-if="menu.children.length" :class="`el-icon-${menu.icon}`"></i>
               <span>{{ menu.label }}</span>
             </template>
             <el-menu-item
@@ -50,8 +51,7 @@
 <script lang="ts">
   import { ref, defineComponent, computed, inject } from "vue";
   import { ElSubmenu } from "element-plus";
-  // @ts-ignore
-  import menus from "@/menus/index";
+  import menu from "@/menu/index";
 import { useRouter } from "vue-router";
 
   export default defineComponent({
@@ -70,7 +70,7 @@ import { useRouter } from "vue-router";
       const handleSelect = (index: string, indexPath: string):void => {
         router.push(index)
       }
-      return { isCollapse, asideCls, menus, handleSelect };
+      return { isCollapse, asideCls, menu, handleSelect };
     },
 
     methods: {

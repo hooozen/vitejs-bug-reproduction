@@ -12,9 +12,11 @@
     "esModuleInterop": true,
     "baseUrl": "./src",
     "paths": {
+      "@/*": [ "*"],
       "@api/*": [ "api/*"],
-      "@components/*": ["components/*"],
-      "@store/*": ["store/*"]
+      "@layout/*": [ "layout/*"],
+      "@store/*": ["store/*"],
+      "@views/*": ["views/*"]
     },
     "lib": [
       "esnext",

@@ -1,12 +1,13 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
-import  store from '@store/index'
+import store from '@/store/index'
 
-import Login from '@components/Login.vue'
-import Layout from '@components/layout/index.vue'
-import Home from '@components/views/Home.vue'
-import Devices from '@components/views/Devices.vue'
-import DeviceDetail from '@components/views/DeviceDetail.vue'
-import Staff from '@components/views/Staff.vue'
+import Login from '@views/login/index.vue'
+import Layout from '@layout/index.vue'
+import Home from '@views/home/index.vue'
+import Devices from '@views/devices/index.vue'
+import DeviceDetail from '@views/devices/detail.vue'
+import Stores from '@views/stores/index.vue'
+import Staff from '@views/staff/index.vue'
 
 const routes = [
   {
@@ -16,12 +17,15 @@ const routes = [
     children: [{
       path: 'home',
       component: Home,
-    },{
+    }, {
       path: 'devices',
       component: Devices,
     }, {
       path: 'device-detail',
       component: DeviceDetail,
+    }, {
+      path: 'stores',
+      component: Stores,
     }, {
       path: 'staff',
       component: Staff,
