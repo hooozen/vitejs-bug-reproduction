@@ -1,7 +1,7 @@
 <template>
   <div class="nav-bar">
     <div class="nav-back-btn">
-      <i class="el-icon-arrow-left"></i>
+      <el-button @click="$router.back()">返回</el-button>
     </div>
     <div class="nav-title">{{ title }}</div>
     <div class="nav-main">

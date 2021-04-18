@@ -32,10 +32,8 @@
         </el-table-column>
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
-            <router-link :to="`/device-detail?id=${scope.id}`"
-              >详情</router-link
-            >
-            <a href="#" @click="deleteItem(scope.id)">删除</a>
+            <router-link class="cell-opt" :to="`device-detail?id=${scope.id}`">详情</router-link>
+            <span class="cell-opt" @click="deleteItem(scope.id)">删除</span>
           </template>
         </el-table-column>
       </el-table>

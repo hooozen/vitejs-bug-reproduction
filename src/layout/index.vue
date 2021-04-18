@@ -93,7 +93,7 @@ export default defineComponent({
 .header {
   flex: 0 0 50px;
   height: 50px;
-  widows: 100%;
+  width: 100%;
   line-height: 50px;
   background-color: #fff;
   box-shadow: 0 2px 2px rgb(0 0 0 / 5%), 0 1px 0 rgb(0 0 0 / 5%);
@@ -103,6 +103,7 @@ export default defineComponent({
 }
 .view-outer {
   flex: 1;
+  height: calc(100% - 50px);
 }
 .user {
   display: flex;

@@ -27,8 +27,7 @@
       const {center, config, markers} = props
 
       onMounted(() => {
-        initMap(mapOuter.value, center, config, (map: any) => {
-        }).setMarkers(markers)
+        initMap(mapOuter.value, center as number[], config).setMarkers(markers)
       })
 
       return { mapOuter }

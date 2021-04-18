@@ -5,3 +5,4 @@ export interface ListParams {
   pageSize?: number,
   keyWord?: string
 }
+
