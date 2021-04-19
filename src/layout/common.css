@@ -20,7 +20,7 @@
   }
 
   & .cell-opt--warning {
-    color: red
+    color: red;
   }
 
   & .view-panel {

@@ -25,8 +25,10 @@
     <el-tabs v-model="activeTab" type="card">
       <el-tab-pane label="组织管理" name="organization">
         <el-tree
-          :props="{ label: 'name', children: 'children' }"
-          :data="organizations.children"
+          :props="{ key: 'id', label: 'name', children: 'children' }"
+          :data="[organizationTree]"
+          :default-expanded-keys="[0]"
+          v-loading="isLoading"
           node-key="id"
         >
           <template #default="{ node, data }">
@@ -34,10 +36,10 @@
               <span>{{ node.label }}</span>
               <span>
                 <a @click="showDialog(data, 'add')">添加</a>
-                <a style="color: inherit" @click="showDialog(data, 'edit')">
+                <a v-if="data.id" style="color: inherit" @click="showDialog(data, 'edit')">
                   编辑
                 </a>
-                <a style="color: red" @click="removeOrganization(data)">删除</a>
+                <a v-if="data.id" style="color: red" @click="removeOrganization(data)">删除</a>
               </span>
             </span>
           </template>
@@ -49,37 +51,66 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref, reactive } from "vue"
-  import { getAll, add, getByParentId, update, remove } from "@api/server/organizations"
-  import { ADDRGETNETWORKPARAMS } from "node:dns"
+  import { getAll, add, update, remove } from "@api/server/organizations"
 
   interface OrganizationNode {
     code: string,
-    id?: number,
+    id: number,
     name: string,
-    parentId?: number,
-    children?: []
+    parentId: number,
+    parentName?: string,
+    children?: OrganizationNode[]
   }
 
-  const breadthTravel = (tree: any[], level: number, condition: (node: any) => boolean, callback?: (parent: any, index?: number, target?: any) => any): any => {
-    if (level === 1) {
-      for (let i = 0; i < tree.length; i++) {
-        if (!condition(tree[i])) continue
-        callback && callback(tree, i, tree[i])
-        return { target: tree[i], targetIndex: i, parent: tree }
+  /*
+  const breadthTravel = (node: any, condition: (node: any) => boolean, callback?: (parent: any, index?: number, target?: any) => any): any => {
+    if (!node.children) return false
+    const children = node.children
+    for (let i: number = 0; i < children.length; i++) {
+      if (!condition(children[i])) breadthTravel(children[i], condition, callback)
+      callback && callback(node, 1, children[i])
+      return { parent: node, index: i, target: children[i] }
+    }
+    return false
+  }
+  */
+
+  const treeGenerate = (flatArray: any[]): OrganizationNode => {
+    const res: OrganizationNode = {
+      code: 'root',
+      name: '全部组织',
+      id: 0,
+      children: [],
+      parentId: -1
+    }
+    for (let node of flatArray) {
+      if (node.parentId == 0) {
+        node.parentName = '无'
+        res.children && res.children.push(node)
+      } else {
+        const parentNode = flatArray.find(el => el.id == node.parentId)
+        if (!parentNode) continue
+        parentNode.children = parentNode.children || []
+        node.parentName = parentNode.name
+        parentNode.children.push(node)
       }
-      callback && callback(tree)
-      return false
     }
-    for (let subTree of tree) {
-      return breadthTravel(subTree.children, level - 1, condition, callback)
-    }
+    return res
   }
 
   export default defineComponent({
     setup() {
 
       const activeTab = ref("organization")
-      const organizations = ref<OrganizationNode>({ code: 'all', name: '所有组织', children: [] })
+      const isLoading = ref(true)
+
+      const organizationTree = ref<OrganizationNode>({
+        code: 'root',
+        name: '全部组织',
+        id: 0,
+        children: [],
+        parentId: -1
+      })
 
       const dialogVisible = ref(false)
       const dialogData = reactive({
@@ -87,18 +118,10 @@
         superiorName: ''
       })
 
-      /*
-      const getOrganizations = async() => {
-        organizations.value = (await getAll()).data
-      }
-      */
-
-      const getOrganizations = async (parent: any, parentId: number = 0) => {
-        const children = (await getByParentId({ parentId })).data
-        if (children.length > 0) {
-          parent.children = children
-          children.forEach((child: any) => getOrganizations(child, child.id))
-        }
+      const getOrganizations = async () => {
+        const flatArray = (await getAll()).data
+        organizationTree.value = treeGenerate(flatArray)
+        isLoading.value = false
       }
 
       const addForm = reactive<OrganizationNode>({
@@ -108,29 +131,24 @@
         parentId: 0,
       })
 
-      const updateTreeData = (type: 'load' | 'add' | 'remove' | 'update', subTree: OrganizationNode, level: number) => {
+      /*
+      const updateTreeData = (type: 'load' | 'add' | 'remove' | 'update', node: OrganizationNode) => {
         switch (type) {
-          case 'load':
-            breadthTravel(organizations.value, level, node => true, parent => { parent.children = subTree })
-            break;
           case 'add':
-            breadthTravel(organizations.value, level, node => true, parent => { parent.children.push(subTree) })
+            breadthTravel(organizationTree, _node => _node.id == node.parentId, parent => {
+              parent.children = parent.children || []
+              parent.children.push(node)
+            })
             break
           case 'remove':
-            breadthTravel(organizations.value, level, node => node.id === subTree.id, (parent, i) => { parent.splice(i, 1) })
+            breadthTravel(organizationTree, _node => _node.id == node.id, (parent, i) => { parent.children.splice(i, 1) })
             break
           case 'update':
-            breadthTravel(organizations.value, level, node => node.id === subTree.id, (parent, i) => { parent.splice(i, 1, subTree) })
+            breadthTravel(organizationTree, _node => node.id == node.id, (parent, i) => { parent.splice(i, 1, node) })
             break
         }
       }
-
-      const loadChildren = async (node: any, resolve: any) => {
-        const children = (await getByParentId({ parentId: node.key || 0 })).data
-        updateTreeData('load', children, node.level + 1)
-        console.log(organizations.value)
-        resolve(children)
-      }
+      */
 
       const showDialog = (data: OrganizationNode, type: string) => {
         dialogData.type = type
@@ -139,10 +157,9 @@
           addForm.parentId = data.id!
           addForm.code = ''
           addForm.name = ''
-          addForm.id = undefined
+          addForm.id = undefined!
         } else {
-          console.log(data)
-          dialogData.superiorName = data.parentName
+          dialogData.superiorName = data.parentName!
           addForm.id = data.id!
           addForm.parentId = data.parentId!
           addForm.name = data.name
@@ -155,23 +172,21 @@
         dialogData.type === 'add' ?
           await add(addForm, '添加成功') :
           await update(addForm, '更新成功')
+        getOrganizations()
         dialogVisible.value = false
       }
+
       const removeOrganization = async (data: OrganizationNode) => {
         await remove({ id: data.id! })
+        getOrganizations()
       }
 
       onMounted(async () => {
-        const rootNode = { children: [] }
-        await getOrganizations(rootNode)
-        console.log(rootNode)
-        organizations.value = rootNode.children
-        console.log(organizations.value)
+        await getOrganizations()
       })
 
       return {
-        loadChildren,
-        activeTab, organizations,
+        activeTab, organizationTree, isLoading,
         dialogVisible, dialogData, showDialog,
         addForm, addOrganization, removeOrganization
       }
@@ -193,5 +208,9 @@
       text-decoration: none;
       margin: 0 4px;
     }
+  }
+</style>
+<style lang="postcss">
+  .organizations {
   }
 </style>
