@@ -11,13 +11,16 @@
   & .cell-opt {
     color: #409eff;
     cursor: pointer;
-    text-decoration: underline;
     &:not(:first-child) {
       margin-left: 8px;
     }
     &:hover {
       color: #66b1ff;
     }
+  }
+
+  & .cell-opt--warning {
+    color: red
   }
 
   & .view-panel {
@@ -33,7 +36,7 @@
     display: flex;
   }
 
-  & .panel__opt { 
+  & .panel__opt {
     display: flex;
   }
 
@@ -60,7 +63,7 @@
     overflow-y: auto;
     overflow-x: hidden;
   }
-  
+
   & .main-item {
     width: 100%;
   }
@@ -86,11 +89,11 @@
 
   & .main-item-title {
     position: relative;
-    margin-left: 15px; 
+    margin-left: 15px;
     padding: 0 10px;
 
     &::before {
-      content: '';
+      content: "";
       left: 0;
       top: 0;
       bottom: 0;
@@ -100,7 +103,6 @@
       height: 15px;
       position: absolute;
     }
-
   }
 
   & .main-item-body {

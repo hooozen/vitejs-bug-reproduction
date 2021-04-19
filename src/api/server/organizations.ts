@@ -9,6 +9,18 @@ function getByParentId(params: GetByParentIdParam, config?: $AxiosRequestConfig)
   return axios("get", "/admin/org/getByParentId", params, config)
 }
 
+interface GetByKeyWordParams {
+  keyWord: string
+}
+
+function getByKeyWord(params: GetByKeyWordParams, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('get', '/admin/org/geByKeyWord', params, config)
+}
+
+function getAll() {
+  return getByKeyWord({keyWord: ''})
+}
+
 interface AddParams {
   code: string,
   name: string,
@@ -35,4 +47,4 @@ function remove(params: RemoveParam, config?: $AxiosRequestConfig): AxiosPromise
   return axios("delete", "/admin/org/delete", params, config)
 }
 
-export { add, getByParentId, update, remove }
+export { getByKeyWord, getAll, add, getByParentId, update, remove }

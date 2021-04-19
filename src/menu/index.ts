@@ -131,12 +131,12 @@ const menu: MenuItem[] = [
     }, {
       id: 27,
       label: '组织管理',
-      path: '/organization',
+      path: '/organizations',
       children: [],
     }, {
       id: 28,
       label: '职位管理',
-      path: 'position',
+      path: 'positions',
       children: [],
     }, {
       id: 29,

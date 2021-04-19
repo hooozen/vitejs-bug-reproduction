@@ -14,4 +14,8 @@ interface Window {
   initMap: any
 }
 
+interface Dictionary {
+  [key: string]: string
+}
+
 

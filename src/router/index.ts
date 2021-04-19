@@ -9,6 +9,7 @@ import DeviceDetail from '@views/devices/detail.vue'
 import Stores from '@views/stores/index.vue'
 import Staff from '@views/staff/index.vue'
 import Organizations from '@views/organizations/index.vue'
+import Positions from '@views/positions/index.vue'
 
 const routes = [
   {
@@ -33,6 +34,9 @@ const routes = [
     }, {
       path: 'organizations',
       component: Organizations
+    }, {
+      path: 'positions',
+      component: Positions
     }]
   }, {
     path: '/login',
