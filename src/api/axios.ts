@@ -36,6 +36,7 @@ api.interceptors.response.use((response: AxiosResponse<any>): AxiosPromise => {
 }, (err) => {
   console.error(err)
   ElMessage.error(`请求出错：${err}`)
+  throw Error(err)
 })
 
 const deleteConfirm = (config?: DeleteConfirmConfig) => {
@@ -63,9 +64,10 @@ function $axios(method: Method, url: string, params: any, _config?: $AxiosReques
   else config = { ...config, params }
   if (method === 'delete') {
     return deleteConfirm(config.confirmConfig).then(() => {
+      console.log('xx')
       return api({ method, url, ...config })
-    }).catch(() => {
-      return false
+    }).catch((err) => {
+      return Promise.reject(err)
     })
   }
   return api({ method, url, ...config })

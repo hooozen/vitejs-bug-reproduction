@@ -58,10 +58,9 @@
   import { OrganizationNode, treeGenerate } from './tree'
 
   export default defineComponent({
-    name: 'tab-organizations',
+    name: 'tab-organization',
     setup() {
 
-      const activeTab = ref("organization")
       const isLoading = ref(true)
 
       const organizationTree = ref<OrganizationNode>({
@@ -139,7 +138,7 @@
       })
 
       return {
-        activeTab, organizationTree, isLoading,
+        organizationTree, isLoading,
         dialogVisible, dialogData, showDialog,
         execute, addForm, addOrganization, removeOrganization
       }

@@ -2,7 +2,7 @@
   <div class="organizations tabs-view">
     <el-tabs v-model="activeTab" type="card">
       <el-tab-pane label="组织管理" name="organization">
-        <tab-organizations></tab-organizations>
+        <tab-organization></tab-organization>
       </el-tab-pane>
       <el-tab-pane label="行业管理" name="industry"> </el-tab-pane>
     </el-tabs>
@@ -11,11 +11,11 @@
 
 <script lang="ts">
   import { defineComponent, ref } from "vue"
-  import TabOrganizations from './TabOrganizations.vue'
+  import TabOrganization from './tab-organization.vue'
 
   export default defineComponent({
     components: {
-      TabOrganizations,
+      TabOrganization,
     },
     setup() {
       const activeTab = ref("organization")
