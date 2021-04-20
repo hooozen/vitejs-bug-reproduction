@@ -1,5 +1,5 @@
-import axios, { AxiosPromise, AxiosRequestConfig, AxiosResponse, Method } from "axios"
-import { ElMessage } from "element-plus"
+import axios, { AxiosPromise, DeleteConfirmConfig, AxiosRequestConfig, AxiosResponse, Method } from "axios"
+import { ElMessage, ElMessageBox } from "element-plus"
 import store from "@/store/index"
 
 const api = axios.create({
@@ -38,10 +38,36 @@ api.interceptors.response.use((response: AxiosResponse<any>): AxiosPromise => {
   ElMessage.error(`请求出错：${err}`)
 })
 
-const $axios = (method: Method, url: string, params: any, _config?: Object | string): AxiosPromise => {
+const deleteConfirm = (config?: DeleteConfirmConfig) => {
+  config = {
+    text: '确认执行删除操作?',
+    title: '提示',
+    confirmButtonText: '确定',
+    cancelButtonClass: '取消',
+    center: false,
+    ...config
+  }
+  return ElMessageBox.confirm(config.text!, config.title!, {
+    confirmButtonText: config.confirmButtonText,
+    cancelButtonClass: config.confirmButtonText,
+    type: 'warning',
+    center: config.center
+  })
+}
+
+function $axios(method: 'delete' | 'DELETE', url: string, params: any, _config?: $AxiosRequestConfig): Promise<any> | boolean
+function $axios(method: 'get' | 'GET' | 'post' | 'POST', url: string, params: any, _config?: $AxiosRequestConfig): AxiosPromise
+function $axios(method: Method, url: string, params: any, _config?: $AxiosRequestConfig): Promise<any> | boolean | AxiosPromise {
   let config = typeof _config === "string" ? { successMsg: _config } : _config
   if (method === "post") config = { ...config, data: params }
   else config = { ...config, params }
+  if (method === 'delete') {
+    return deleteConfirm(config.confirmConfig).then(() => {
+      return api({ method, url, ...config })
+    }).catch(() => {
+      return false
+    })
+  }
   return api({ method, url, ...config })
 }
 

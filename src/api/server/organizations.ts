@@ -43,7 +43,7 @@ interface RemoveParam {
   id: number
 }
 
-function remove(params: RemoveParam, config?: $AxiosRequestConfig): AxiosPromise {
+function remove(params: RemoveParam, config?: $AxiosRequestConfig): Promise<any> | boolean{
   return axios("delete", "/admin/org/delete", params, config)
 }
 
