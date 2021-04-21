@@ -11,6 +11,9 @@ export default {
   tel: [
     { required: true, message: '请输入电话', trigger: 'blur' },
   ],
+  _address: [
+    { required: true, message: '请输入地址', trigger: 'blur' },
+  ],
   address: [
     { required: true, message: '请输入地址', trigger: 'blur' },
   ],

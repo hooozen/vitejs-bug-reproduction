@@ -28,9 +28,9 @@ export interface AddParams {
   code: string
   contacts: string
   description: string
-  id: number
-  latitude: string
-  longitude: string
+  id?: number
+  latitude: string | number
+  longitude: string | number
   name: string
   orgId: string
   tel: string

@@ -1,6 +1,6 @@
 <template>
   <div class="detail-view device-detail">
-    <nav-bar class="detail-nav" title="运营商详情">
+    <nav-bar class="detail-nav" :title="title">
       <el-button type="primary" @click="submitForm">保存</el-button>
     </nav-bar>
     <div class="detail-main">
@@ -32,16 +32,18 @@
             <el-form-item prop="account" label="账号:">
               <el-input v-model="formData.account"></el-input>
             </el-form-item>
-            <el-form-item prop="address" label="地址:">
-              <tl-addr-select></tl-addr-select>
+            <el-form-item prop="_address" label="地址:">
+              <tl-address v-model="formData._address"></tl-address>
             </el-form-item>
-            <el-form-item prop="businessArea" label="经营范围:">
-              <!--<tl-addr-select></tl-addr-select>-->
+            <el-form-item prop="_businessScope" label="经营范围:">
+              <tl-address v-model="formData._businessScope"></tl-address>
             </el-form-item>
           </div>
           <div class="item-body-column" style="flex-basis: 300px">
-            <el-form-item label="单位编号:"> </el-form-item>
-            <el-form-item label="添加时间:"> </el-form-item>
+            <el-form-item v-if="type === 'edit'" label="单位编号:">
+            </el-form-item>
+            <el-form-item v-if="type === 'edit'" label="添加时间:">
+            </el-form-item>
             <el-form-item label="备注:">
               <el-input type="textarea"></el-input>
             </el-form-item>
@@ -93,11 +95,12 @@
   import { computed, defineComponent, onMounted, ref } from "vue";
   import NavBar from "../components/navBar/index.vue";
   import TMap from "../components/TMap/index.vue";
-  import TlAddrSelect from "../components/address/index.vue";
+  import TlAddress from "../components/address/index.vue";
   import { add, AddParams, getById } from '@/api/server/operator'
   import { useRoute } from "vue-router";
 
   import formRules from './formRules'
+  import formDataTemplate from './formDataTemplate'
 
   const deviceLocation = [23.166028, 113.308253]
 
@@ -105,7 +108,7 @@
     components: {
       NavBar,
       TMap,
-      TlAddrSelect
+      TlAddress
     },
     setup(props) {
       const formData = ref<AddParams>({} as any)
@@ -114,6 +117,9 @@
       const route = useRoute()
       const id = computed(() => route.query.id)
 
+      const type = computed(() => id.value ? 'edit' : 'add')
+      const title = computed(() => type.value === 'edit' ? '运营商详情' : '新增运营商')
+
       const activeTab = ref("data");
       const location = ref(deviceLocation);
 
@@ -121,13 +127,18 @@
         (formEl.value as any).validate(async (valid: any) => {
           console.log(valid)
         })
+        console.log(formData)
       }
 
       onMounted(async () => {
         if (id.value) formData.value = (await getById(id.value as string)).data
+        else formData.value = formDataTemplate
       })
 
-      return { location, activeTab, formData, formRules, submitForm };
+      return {
+        type, title,
+        location, activeTab, formData, formRules, submitForm, formEl
+      };
     },
   });
 </script>
