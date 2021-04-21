@@ -76,7 +76,7 @@
             <el-tab-pane label="运行记录" name="working">
               <el-table border></el-table>
             </el-tab-pane>
-            <el-tab-pane label="操作记录" name="operation">
+            <el-tab-pane label="操作记录" name="operator">
               <el-table border></el-table>
             </el-tab-pane>
           </el-tabs>

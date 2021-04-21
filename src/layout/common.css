@@ -72,12 +72,7 @@
     flex: 1;
   }
 
-  & .item-body-column {
-    & .el-input {
-      width: 180px;
-    }
-    flex: 0 1 200px;
-  }
+
 
   & .detail-map {
     flex: 0 0 442px;
@@ -108,7 +103,15 @@
   & .main-item-body {
     padding: 15px;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
+  }
+
+  & .item-body-column {
+    & .el-input {
+      /* width: 180px; */
+    }
+    flex: 0 1 200px;
+    margin: 0 12px;
   }
 
   & .device-photo {

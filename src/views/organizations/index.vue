@@ -4,7 +4,9 @@
       <el-tab-pane label="组织管理" name="organization">
         <tab-organization></tab-organization>
       </el-tab-pane>
-      <el-tab-pane label="行业管理" name="industry"> </el-tab-pane>
+      <el-tab-pane label="行业管理" name="industry">
+        <tab-industry></tab-industry>
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -12,10 +14,12 @@
 <script lang="ts">
   import { defineComponent, ref } from "vue"
   import TabOrganization from './tab-organization.vue'
+  import TabIndustry from './tab-industry.vue'
 
   export default defineComponent({
     components: {
       TabOrganization,
+      TabIndustry,
     },
     setup() {
       const activeTab = ref("organization")

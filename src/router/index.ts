@@ -10,6 +10,8 @@ import Stores from '@views/stores/index.vue'
 import Staff from '@views/staff/index.vue'
 import Organizations from '@views/organizations/index.vue'
 import Positions from '@views/positions/index.vue'
+import Operators from '@views/operators/index.vue'
+import OperationDetail from '@views/operators/detail.vue'
 
 const routes = [
   {
@@ -37,6 +39,14 @@ const routes = [
     }, {
       path: 'positions',
       component: Positions
+    }, {
+      path: 'operators',
+      component: Operators
+    }, {
+      name: 'opratorDetail',
+      path: 'operator-detail',
+      props: true,
+      component: OperationDetail
     }]
   }, {
     path: '/login',

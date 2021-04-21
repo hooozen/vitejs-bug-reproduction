@@ -24,7 +24,6 @@
     },
     emits: ['update:modelValue'],
     setup(props, context) {
-      console.log(props.modelValue)
       const update = (value: string | number | boolean) => {
         context.emit('update:modelValue', value)
       }

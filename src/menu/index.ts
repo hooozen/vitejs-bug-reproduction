@@ -39,7 +39,7 @@ const menu: MenuItem[] = [
     id: 7,
     label: '运营商管理',
     icon: 's-cooperation',
-    path: 'operations',
+    path: 'operators',
     children: [],
   }, {
     id: 9,

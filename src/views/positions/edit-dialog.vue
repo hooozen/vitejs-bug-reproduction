@@ -7,13 +7,13 @@
     :model-value="visible"
   >
     <el-form
-      :model="formData"
+      :model="data.formData"
       ref="formEl"
       :rules="formRules"
       label-width="80px"
     >
       <el-form-item label="职位名称" prop="name">
-        <el-input v-model="formData.name"></el-input>
+        <el-input v-model="data.formData.name"></el-input>
       </el-form-item>
       <el-form-item label="职位权限" prop="functionIds">
         <el-cascader
@@ -25,13 +25,13 @@
             value: 'id',
             label: 'name',
           }"
-          v-model="formData.functionIds"
+          v-model="data.formData.functionIds"
           collapse-tags
           clearable
         ></el-cascader>
       </el-form-item>
       <el-form-item label="描述" prop="description">
-        <el-input v-model="formData.description" type="textarea"> </el-input>
+        <el-input v-model="data.formData.description" type="textarea"> </el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="submitForm">确定</el-button>
@@ -70,29 +70,11 @@
     emits: ['update:visible'],
 
     setup(props, context) {
-      console.log(props)
-
-      const visible = computed(() => props.visible)
-
       let allPrivileges = ref([])
 
       const formEl = ref(null)
 
-      /*
-      const formData = ref<AddParams>({
-        description: '',
-        functionIds: [],
-        name: '',
-      })
-      */
       const title = computed(() => props.data.title)
-
-      const formData = ref(props.data.formData)
-
-      onBeforeUpdate(() => {
-        console.log('before updated', props.data.formData)
-        formData.value = props.data.formData
-      })
 
       const getAllPrivileges = async () => {
         allPrivileges.value = (await privileges()).data
@@ -101,7 +83,7 @@
       const submitForm = () => {
         (formEl.value as any).validate((valid: boolean) => {
           if (valid) {
-            add(formData.value, '添加成功')
+            add(props.data.formData, '添加成功')
             context.emit('update:visible', false)
             resetForm()
           } else {
@@ -122,7 +104,7 @@
       onMounted(() => {
         getAllPrivileges()
       })
-      return { title, visible, allPrivileges, formData, submitForm, formRules, formEl, cancel }
+      return { title, allPrivileges, submitForm, formRules, formEl, cancel }
     },
   })
 </script>

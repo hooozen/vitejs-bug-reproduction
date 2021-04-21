@@ -6,7 +6,7 @@ interface GetByParentIdParam {
 }
 
 function getByParentId(params: GetByParentIdParam, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios("get", "/admin/org/getByParentId", params, config)
+  return axios("get", "/admin/industry/getByParentId", params, config)
 }
 
 interface GetByKeyWordParams {
@@ -14,11 +14,15 @@ interface GetByKeyWordParams {
 }
 
 function getByKeyWord(params: GetByKeyWordParams, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('get', '/admin/org/geByKeyWord', params, config)
+  return axios('get', '/admin/industry/geByKeyWord', params, config)
 }
 
 function getAll() {
-  return getByKeyWord({keyWord: ''})
+  return getByKeyWord({ keyWord: '' })
+}
+
+function getTree(params: { parentId: number }, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('get', '/admin/industry/getTreeByParentId', params, config)
 }
 
 interface AddParams {
@@ -28,7 +32,7 @@ interface AddParams {
 }
 
 function add(data: AddParams, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios("post", "/admin/org/add", data, config)
+  return axios("post", "/admin/industry/add", data, config)
 }
 
 interface UpdateParams extends AddParams {
@@ -36,15 +40,15 @@ interface UpdateParams extends AddParams {
 }
 
 function update(data: UpdateParams, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios("post", "/admin/org/update", data, config)
+  return axios("post", "/admin/industry/update", data, config)
 }
 
 interface RemoveParam {
   id: number
 }
 
-function remove(params: RemoveParam, config?: $AxiosRequestConfig): Promise<any> | boolean{
-  return axios("delete", "/admin/org/delete", params, config)
+function remove(params: RemoveParam, config?: $AxiosRequestConfig): Promise<any> | boolean {
+  return axios("delete", "/admin/industry/delete", params, config)
 }
 
-export { getByKeyWord, getAll, add, getByParentId, update, remove }
+export { getByKeyWord, getAll, add, getByParentId, update, remove, getTree }

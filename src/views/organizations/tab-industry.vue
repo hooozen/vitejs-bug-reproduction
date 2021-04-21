@@ -21,8 +21,7 @@
     </el-dialog>
     <el-tree
       :props="{ key: 'id', label: 'name', children: 'children' }"
-      :data="[industryTree]"
-      :default-expanded-keys="[0]"
+      :data="industries"
       v-loading="isLoading"
       node-key="id"
     >
@@ -38,11 +37,7 @@
             >
               编辑
             </a>
-            <a
-              v-if="data.id"
-              style="color: red"
-              @click="removeIndustry(data)"
-            >
+            <a v-if="data.id" style="color: red" @click="removeIndustry(data)">
               删除
             </a>
           </span>
@@ -54,7 +49,7 @@
 <script lang="ts">
   import { defineComponent, ref, reactive, onMounted } from 'vue'
 
-  import { getAll, add, update, remove } from "@api/server/industry"
+  import { getAll, add, update, remove, getTree } from "@api/server/industry"
   import { OrganizationNode, treeGenerate } from './tree'
 
   export default defineComponent({
@@ -63,6 +58,8 @@
 
       const isLoading = ref(true)
 
+      const industries = ref<OrganizationNode[]>([])
+      /*
       const industryTree = ref<OrganizationNode>({
         code: 'root',
         name: '全部组织',
@@ -70,6 +67,7 @@
         children: [],
         parentId: -1
       })
+      */
 
       const dialogVisible = ref(false)
       const dialogData = reactive({
@@ -80,9 +78,15 @@
         }
       })
 
+      /*
       const getIndustries = async () => {
         const flatArray = (await getAll()).data
         industryTree.value = treeGenerate(flatArray)
+        isLoading.value = false
+      }
+      */
+      const getIndustries = async () => {
+        industries.value = (await getTree({ parentId: 0 })).data
         isLoading.value = false
       }
 
@@ -138,7 +142,7 @@
       })
 
       return {
-        industryTree, isLoading,
+        industries, isLoading,
         dialogVisible, dialogData, showDialog,
         execute, addForm, addIndustry, removeIndustry
       }

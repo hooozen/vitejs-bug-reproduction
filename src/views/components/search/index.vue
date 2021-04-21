@@ -1,30 +1,52 @@
 <template>
   <el-input
     class="tl-search"
-    :modelValue="modelValue"
-    @input="$emit('update:modelValue', $event)"
+    :modelValue="keyword"
+    @input="$emit('update:keyword', $event)"
   >
+    <template v-if="keywordTypes" #prepend>
+      <el-select
+        :modelValue="keywordType"
+        @change="$emit('update:keywordType', $event)"
+      >
+        <el-option
+          v-for="opt in keywordTypes"
+          :key="opt.value"
+          :label="opt.label"
+          :value="opt.value"
+        >
+        </el-option>
+      </el-select>
+    </template>
     <template #append>
-      <el-buttton @click="$emit('search', modelValue)">
+      <el-button @click="$emit('search', keyword, keywordType)">
         <i class="el-icon-search"></i>
-      </el-buttton>
+      </el-button>
     </template>
   </el-input>
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue'
+  import { defineComponent, ref } from 'vue'
 
   export default defineComponent({
     name: 'TlSearch',
-    emits: ['search', 'update:modelValue'],
+    emits: ['search', 'update:keyword', 'update:keywordType'],
     props: {
-      modelValue: {
+      keyword: {
         type: String,
         required: true,
+      },
+      keywordType: {
+        type: [Number, String],
+        required: false
+      },
+      keywordTypes: {
+        type: Array,
+        required: false
       }
     },
-    setup() {
+    setup(props) {
     },
   })
 </script>
@@ -32,7 +54,10 @@
 <style lang="postcss">
   .tl-search {
     &.el-input {
-      width: 180px;
+      width: 300px;
+    }
+    & .el-select .el-input {
+      width: 100px;
     }
   }
 </style>
