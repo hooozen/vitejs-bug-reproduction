@@ -21,8 +21,6 @@
       }
     },
     setup(props) {
-      const title = ref(props.title);
-      return (title)
     },
   })
 </script>

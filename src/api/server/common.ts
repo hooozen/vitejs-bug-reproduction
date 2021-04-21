@@ -4,7 +4,7 @@ const KEY = import.meta.env.VITE_TMAP_KEY
 
 
 function getDistrict(parentId?: string, config?: $AxiosRequestConfig) {
-  return axios('get', 'https://apis.map.qq.com/ws/district/v1/getchildren', { id: parentId }, config)
+  return axios('get', '/admin/common/district/getChildren', { parentId, key: import.meta.env.VITE_TMAP_KEY }, config)
 }
 
 export { getDistrict }

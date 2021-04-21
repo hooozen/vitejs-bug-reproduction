@@ -1,35 +1,41 @@
 <template>
   <div class="detail-view device-detail">
-    <nav-bar class="detail-nav" title="设备详情">
-      <el-button type="">修改</el-button>
+    <nav-bar class="detail-nav" title="运营商详情">
+      <el-button type="primary" @click="submitForm">保存</el-button>
     </nav-bar>
     <div class="detail-main">
       <div class="main-item">
         <div class="main-item-title">基本信息</div>
-        <el-form :model="formData" class="main-item-body" label-width="80px">
+        <el-form
+          ref="formEl"
+          :rules="formRules"
+          :model="formData"
+          class="main-item-body"
+          label-width="100px"
+        >
           <div class="item-body-column" style="flex-basis: 400px">
-            <el-form-item label="名称:">
+            <el-form-item prop="name" label="名称:">
               <el-input v-model="formData.name"></el-input>
             </el-form-item>
-            <el-form-item label="组织代码:">
+            <el-form-item prop="code" label="组织代码:">
               <el-input v-model="formData.code"></el-input>
             </el-form-item>
-            <el-form-item label="联系人:">
+            <el-form-item prop="contacts" label="联系人:">
               <el-input v-model="formData.contacts"></el-input>
             </el-form-item>
-            <el-form-item label="电话:">
+            <el-form-item prop="tel" label="电话:">
               <el-input v-model="formData.tel"></el-input>
             </el-form-item>
-            <el-form-item label="开户行:">
+            <el-form-item prop="accountBank" label="开户行:">
               <el-input v-model="formData.accountBank"></el-input>
             </el-form-item>
-            <el-form-item label="账号:">
+            <el-form-item prop="account" label="账号:">
               <el-input v-model="formData.account"></el-input>
             </el-form-item>
-            <el-form-item label="地址:">
-              <!--<tl-addr-select></tl-addr-select>-->
+            <el-form-item prop="address" label="地址:">
+              <tl-addr-select></tl-addr-select>
             </el-form-item>
-            <el-form-item label="经营范围:">
+            <el-form-item prop="businessArea" label="经营范围:">
               <!--<tl-addr-select></tl-addr-select>-->
             </el-form-item>
           </div>
@@ -43,16 +49,19 @@
           </div>
           <div class="item-body-column detail-map">
             <el-form-item label="经纬度">
-              <el-input></el-input>
+              <t-map
+                :center="location"
+                v-model:pointer="location"
+                class="el-map-outer"
+              >
+              </t-map>
             </el-form-item>
-            <t-map :center="location" :markers="[location]" class="map-outer">
-            </t-map>
           </div>
         </el-form>
       </div>
       <div class="main-item">
         <div class="main-item-body">
-          <el-tabs v-model="activeTab" type="card" @tab-click="handleClick">
+          <el-tabs v-model="activeTab" type="card">
             <el-tab-pane label="设备数据" name="data">
               <el-table></el-table>
             </el-tab-pane>
@@ -88,7 +97,9 @@
   import { add, AddParams, getById } from '@/api/server/operator'
   import { useRoute } from "vue-router";
 
-  const deviceLocation = [23.166028, 113.308253];
+  import formRules from './formRules'
+
+  const deviceLocation = [23.166028, 113.308253]
 
   export default defineComponent({
     components: {
@@ -98,6 +109,7 @@
     },
     setup(props) {
       const formData = ref<AddParams>({} as any)
+      const formEl = ref(null)
 
       const route = useRoute()
       const id = computed(() => route.query.id)
@@ -105,11 +117,17 @@
       const activeTab = ref("data");
       const location = ref(deviceLocation);
 
+      const submitForm = () => {
+        (formEl.value as any).validate(async (valid: any) => {
+          console.log(valid)
+        })
+      }
+
       onMounted(async () => {
         if (id.value) formData.value = (await getById(id.value as string)).data
       })
 
-      return { location, activeTab, formData };
+      return { location, activeTab, formData, formRules, submitForm };
     },
   });
 </script>
