@@ -9,10 +9,8 @@
           :keywordTypes="options.keywordTypes"
           @search="doSearch"
         ></tl-search>
-        <tl-select
-          :options="options.regions"
-          v-model="filterRegion"
-        ></tl-select>
+        <tl-address v-model:district="filterRegion" :clearable="true">
+        </tl-address>
       </div>
       <div class="panel__opt">
         <el-button type="primary" @click="router.push('add-operator')">新增</el-button>
@@ -69,6 +67,7 @@
 
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'
+  import TlAddress from "../components/address/index.vue";
 
   import options from './options'
   import columns from './columns'
@@ -82,7 +81,7 @@
 
   export default defineComponent({
     name: 'Operators',
-    components: { TlSelect, TlSearch },
+    components: { TlSelect, TlSearch, TlAddress },
 
     setup() {
       const router = useRouter()

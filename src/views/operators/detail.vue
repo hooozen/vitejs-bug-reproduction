@@ -40,12 +40,16 @@
               <tl-address
                 v-model:district="formData._district"
                 v-model:address="formData.address"
+                :deepth="4"
+                @change="updateFormDistrictName"
                 :full="true"
               ></tl-address>
             </el-form-item>
             <el-form-item prop="_businessScope" label="经营范围:">
               <tl-address
                 v-model:district="formData._businessScope"
+                @change="updateFormBusinessScopeName"
+                :deepth="4"
               ></tl-address>
             </el-form-item>
           </div>
@@ -160,6 +164,14 @@
         })
       }
 
+      const updateFormDistrictName = (value: string[], name: string[]) => {
+        console.log(name.join('/'))
+      }
+      const updateFormBusinessScopeName = (value: string[], name: string[]) => {
+        console.log(name.join('/'))
+      }
+
+
       onMounted(async () => {
         if (id.value) {
           const originalForm = (await getById(id.value as string)).data
@@ -169,6 +181,8 @@
 
       return {
         title, editable,
+        updateFormDistrictName,
+        updateFormBusinessScopeName,
         location, activeTab, formData, formRules, submitForm, formEl
       };
     },
