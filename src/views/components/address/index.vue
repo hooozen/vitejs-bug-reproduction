@@ -1,6 +1,7 @@
 <template>
   <div class="tl-address">
     <el-cascader
+      ref="selectEl"
       :modelValue="district"
       @change="changeSelection"
       :props="config"
@@ -39,6 +40,8 @@
     emits: ['update:district', 'update:address', 'change', 'input'],
 
     setup(props, context) {
+      const selectEl = ref(null)
+
       const config = ref({
         value: 'id',
         label: 'fullname',
@@ -61,9 +64,9 @@
 
 
       const changeSelection = (value: Array<string>) => {
-        console.log(value)
+        const checkedData =  (selectEl.value as any).getCheckedNodes()[0]
         context.emit('update:district', value)
-        context.emit('change', value)
+        context.emit('change', value, checkedData.pathLabels)
       }
 
       const inputAddress= (value: string) => {
@@ -71,7 +74,7 @@
         context.emit('input', value)
       }
 
-      return { config, changeSelection, inputAddress}
+      return { config, changeSelection, inputAddress, selectEl}
     },
   })
 </script>
