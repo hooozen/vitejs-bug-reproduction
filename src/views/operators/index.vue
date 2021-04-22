@@ -15,8 +15,7 @@
         ></tl-select>
       </div>
       <div class="panel__opt">
-        <el-button type="primary">新增</el-button>
-        <el-button type="danger">删除</el-button>
+        <el-button type="primary" @click="router.push('add-operator')">新增</el-button>
         <el-button>导入</el-button>
         <el-button>导出</el-button>
       </div>
@@ -43,7 +42,7 @@
             >
               详情
             </router-link>
-            <span class="cell-opt" @click="deleteItem(scope.id)">删除</span>
+            <span class="cell-opt--warning" @click="deleteItem(scope.row.id)">删除</span>
           </template>
         </el-table-column>
       </el-table>
@@ -64,7 +63,9 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
-  import { getByKeyword, QueryParams } from '@/api/server/operator'
+  import { getByKeyword, QueryParams, remove } from '@/api/server/operator'
+
+  import { useRouter } from 'vue-router'
 
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'
@@ -84,6 +85,8 @@
     components: { TlSelect, TlSearch },
 
     setup() {
+      const router = useRouter()
+
       // table list and pagination
       const list = ref<{ [key: string]: any }[]>([])
       const loadingList = ref(true)
@@ -109,11 +112,13 @@
 
       onMounted(() => getList())
 
-      const deleteItem = (data: any) => {
-
+      const deleteItem = async (id: string) => {
+        await remove(id)
+        getList()
       }
 
       return {
+        router,
         options, columns,
         list, loadingList,
         deleteItem,

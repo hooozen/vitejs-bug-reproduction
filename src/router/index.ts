@@ -45,7 +45,12 @@ const routes = [
     }, {
       name: 'opratorDetail',
       path: 'operator-detail',
-      props: true,
+      props: { type: 'edit' },
+      component: OperationDetail
+    }, {
+      name: 'opratorAdd',
+      path: 'add-operator',
+      props: { type: 'add' },
       component: OperationDetail
     }]
   }, {

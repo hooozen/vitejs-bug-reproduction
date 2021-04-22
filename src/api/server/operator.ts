@@ -28,21 +28,32 @@ export interface AddParams {
   code: string
   contacts: string
   description: string
-  id?: number
-  latitude: string | number
-  longitude: string | number
+  latitude: string
+  longitude: string
   name: string
   orgId: string
   tel: string
 }
 
+export interface UpdateParams extends AddParams {
+  id: string
+}
+
 function add(params: AddParams, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('post', '/admin/poerator/add', params, config)
+  return axios('post', '/admin/operator/add', params, config)
+}
+
+function update(params: UpdateParams, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('post', '/admin/operator/update', params, config)
 }
 
 function getById(id: string, config?: $AxiosRequestConfig): AxiosPromise {
   return axios('get', '/admin/operator/getById', { id }, config)
 }
 
-export { getByKeyword, add, getById }
+function remove(id: string, config?: $AxiosRequestConfig) {
+  return axios('delete', '/admin/operator/delete', { id }, config)
+}
+
+export { getByKeyword, add, getById, remove, update }
 

@@ -1,12 +1,16 @@
 <template>
   <div class="detail-view device-detail">
     <nav-bar class="detail-nav" :title="title">
-      <el-button type="primary" @click="submitForm">保存</el-button>
+      <el-button v-if="editable" type="primary" @click="submitForm">
+        保存
+      </el-button>
+      <el-button v-else @click="editable = true">编辑</el-button>
     </nav-bar>
     <div class="detail-main">
       <div class="main-item">
         <div class="main-item-title">基本信息</div>
         <el-form
+          :disabled="!editable"
           ref="formEl"
           :rules="formRules"
           :model="formData"
@@ -17,8 +21,8 @@
             <el-form-item prop="name" label="名称:">
               <el-input v-model="formData.name"></el-input>
             </el-form-item>
-            <el-form-item prop="code" label="组织代码:">
-              <el-input v-model="formData.code"></el-input>
+            <el-form-item prop="orgId" label="组织代码:">
+              <el-input v-model="formData.orgId"></el-input>
             </el-form-item>
             <el-form-item prop="contacts" label="联系人:">
               <el-input v-model="formData.contacts"></el-input>
@@ -32,28 +36,39 @@
             <el-form-item prop="account" label="账号:">
               <el-input v-model="formData.account"></el-input>
             </el-form-item>
-            <el-form-item prop="_address" label="地址:">
-              <tl-address v-model="formData._address"></tl-address>
+            <el-form-item prop="_district" label="地址:">
+              <tl-address
+                v-model:district="formData._district"
+                v-model:address="formData.address"
+                :full="true"
+              ></tl-address>
             </el-form-item>
             <el-form-item prop="_businessScope" label="经营范围:">
-              <tl-address v-model="formData._businessScope"></tl-address>
+              <tl-address
+                v-model:district="formData._businessScope"
+              ></tl-address>
             </el-form-item>
           </div>
           <div class="item-body-column" style="flex-basis: 300px">
             <el-form-item v-if="type === 'edit'" label="单位编号:">
+              {{ formData.code }}
             </el-form-item>
             <el-form-item v-if="type === 'edit'" label="添加时间:">
+              {{ formData.createTime }}
             </el-form-item>
             <el-form-item label="备注:">
-              <el-input type="textarea"></el-input>
+              <el-input
+                v-model="formData.description"
+                type="textarea"
+              ></el-input>
             </el-form-item>
             <el-form-item label="营业执照:">2021-04-12</el-form-item>
           </div>
           <div class="item-body-column detail-map">
-            <el-form-item label="经纬度">
+            <el-form-item label="经纬度" prop="_position">
               <t-map
-                :center="location"
-                v-model:pointer="location"
+                :center="formData._position"
+                v-model:pointer="formData._position"
                 class="el-map-outer"
               >
               </t-map>
@@ -96,13 +111,11 @@
   import NavBar from "../components/navBar/index.vue";
   import TMap from "../components/TMap/index.vue";
   import TlAddress from "../components/address/index.vue";
-  import { add, AddParams, getById } from '@/api/server/operator'
+  import { add, AddParams, UpdateParams, update, getById } from '@/api/server/operator'
   import { useRoute } from "vue-router";
 
   import formRules from './formRules'
-  import formDataTemplate from './formDataTemplate'
-
-  const deviceLocation = [23.166028, 113.308253]
+  import { template as formDataTemplate, generateFormData } from './formDataTemplate'
 
   export default defineComponent({
     components: {
@@ -110,33 +123,52 @@
       TMap,
       TlAddress
     },
+    props: {
+      type: {
+        type: String,
+        required: true,
+      }
+    },
     setup(props) {
       const formData = ref<AddParams>({} as any)
       const formEl = ref(null)
 
+      formData.value = formDataTemplate
+
       const route = useRoute()
       const id = computed(() => route.query.id)
 
-      const type = computed(() => id.value ? 'edit' : 'add')
-      const title = computed(() => type.value === 'edit' ? '运营商详情' : '新增运营商')
+      const editable = ref<boolean>(true)
+      // const editable = ref<boolean>(false)
+      // if (props.type === 'add') editable.value = true
+
+      const title = computed(() => props.type === 'edit' ? '运营商详情' : '新增运营商')
 
       const activeTab = ref("data");
-      const location = ref(deviceLocation);
 
       const submitForm = () => {
         (formEl.value as any).validate(async (valid: any) => {
-          console.log(valid)
+          if (!valid) return
+          let _formData: { [key: string]: any } = {}
+          for (const [k, v] of Object.entries(formData.value)) {
+            if (k.substring(0, 1) === '_') continue
+            _formData[k] = v
+          }
+          if (props.type === 'add')
+            await add(_formData as AddParams, '新增成功')
+          else await update(_formData as UpdateParams, '保存成功')
         })
-        console.log(formData)
       }
 
       onMounted(async () => {
-        if (id.value) formData.value = (await getById(id.value as string)).data
-        else formData.value = formDataTemplate
+        if (id.value) {
+          const originalForm = (await getById(id.value as string)).data
+          formData.value = generateFormData(originalForm)
+        }
       })
 
       return {
-        type, title,
+        title, editable,
         location, activeTab, formData, formRules, submitForm, formEl
       };
     },

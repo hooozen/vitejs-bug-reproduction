@@ -7,8 +7,9 @@
     >
     </el-cascader>
     <el-input
-      :modelValue="addressDetail"
-      @input="changeAddressDetail"
+      v-if="full"
+      :modelValue="address"
+      @input="inputAddress"
       placeholder="详细地址"
     ></el-input>
   </div>
@@ -21,11 +22,21 @@
   export default defineComponent({
     name: 'TlAddress',
     props: {
-      modelValue: {
-        type: Array
+      full: {
+        type: Boolean,
+        required: false, 
+        default: false
       },
+      district: {
+        type: Array,
+        required: true
+      },
+      address: {
+        type: String,
+        required: false
+      }
     },
-    emits: ['update:modelValue', 'change'],
+    emits: ['update:district', 'update:address', 'change', 'input'],
 
     setup(props, context) {
       const config = ref({
@@ -48,27 +59,19 @@
         }
       })
 
-      const addressDetail = computed<string>(() => {
-        return ((props.modelValue && props.modelValue[0]) || '') as string
-      })
-
-      const district = computed<string[]>(() => {
-        return (props.modelValue && props.modelValue.slice(1)) as string[]
-      })
 
       const changeSelection = (value: Array<string>) => {
-        const fullAddress = ([] as string[]).concat(addressDetail.value, value)
-        context.emit('update:modelValue', fullAddress)
-        context.emit('change', fullAddress)
+        console.log(value)
+        context.emit('update:district', value)
+        context.emit('change', value)
       }
 
-      const changeAddressDetail = (value: string) => {
-        const fullAddress = ([] as string[]).concat(value, district.value)
-        context.emit('update:modelValue', fullAddress)
-        context.emit('change', fullAddress)
+      const inputAddress= (value: string) => {
+        context.emit('update:address', value)
+        context.emit('input', value)
       }
 
-      return { config, changeSelection, changeAddressDetail, district, addressDetail }
+      return { config, changeSelection, inputAddress}
     },
   })
 </script>

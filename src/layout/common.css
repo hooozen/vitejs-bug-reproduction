@@ -9,6 +9,7 @@
   }
 
   & .cell-opt {
+    text-decoration: none;
     color: #409eff;
     cursor: pointer;
     &:not(:first-child) {

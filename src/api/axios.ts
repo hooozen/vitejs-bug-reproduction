@@ -64,7 +64,6 @@ function $axios(method: Method, url: string, params: any, _config?: $AxiosReques
   else config = { ...config, params }
   if (method === 'delete') {
     return deleteConfirm(config.confirmConfig).then(() => {
-      console.log('xx')
       return api({ method, url, ...config })
     }).catch((err) => {
       return Promise.reject(err)
