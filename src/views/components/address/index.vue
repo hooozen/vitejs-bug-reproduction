@@ -5,6 +5,7 @@
       :modelValue="district"
       @change="changeSelection"
       :props="config"
+      :clearable="clearable"
     >
     </el-cascader>
     <el-input
@@ -25,7 +26,7 @@
     props: {
       full: {
         type: Boolean,
-        required: false, 
+        required: false,
         default: false
       },
       district: {
@@ -35,6 +36,15 @@
       address: {
         type: String,
         required: false
+      },
+      deepth: {
+        type: Number,
+        required: false,
+        default: 3,
+      },
+      clearable: {
+        type: Boolean,
+        default: false,
       }
     },
     emits: ['update:district', 'update:address', 'change', 'input'],
@@ -48,12 +58,13 @@
         lazy: true,
         lazyLoad(node: any, resolve: any) {
           const { level } = node
-          const deep = node.data.id ? getDistrictDeep(node.data.id) : 4
-          if (level >= deep) {
+          let maxDeepth = (node.data.id && getDistrictDeep(node.data.id)) || 4
+          maxDeepth -= (4 - props.deepth)
+          if (level >= maxDeepth) {
             resolve()
           } else {
             getDistrict(node.data.id || '').then(_res => {
-              const res = level == deep - 1 ? _res.data.map((item: any) => {
+              const res = level == maxDeepth - 1 ? _res.data.map((item: any) => {
                 return { leaf: true, ...item }
               }) : _res.data
               resolve(res)
@@ -64,17 +75,18 @@
 
 
       const changeSelection = (value: Array<string>) => {
-        const checkedData =  (selectEl.value as any).getCheckedNodes()[0]
+        const checkedData = (selectEl.value as any).getCheckedNodes()[0]
+        const districtName = (checkedData && checkedData.pathLabels) || []
         context.emit('update:district', value)
-        context.emit('change', value, checkedData.pathLabels)
+        context.emit('change', value, districtName)
       }
 
-      const inputAddress= (value: string) => {
+      const inputAddress = (value: string) => {
         context.emit('update:address', value)
         context.emit('input', value)
       }
 
-      return { config, changeSelection, inputAddress, selectEl}
+      return { config, changeSelection, inputAddress, selectEl }
     },
   })
 </script>
