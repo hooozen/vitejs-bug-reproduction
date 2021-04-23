@@ -1,6 +1,7 @@
 import axios, { AxiosPromise, DeleteConfirmConfig, AxiosRequestConfig, AxiosResponse, Method } from "axios"
 import { ElMessage, ElMessageBox } from "element-plus"
-import store from "@/store/index"
+import router from "@router/index"
+// import store from "@/store/index"
 
 const api = axios.create({
   // baseURL: import.meta.env.VITE_API_BASE_URL as string,
@@ -9,6 +10,7 @@ const api = axios.create({
   timeout: 15000,
 })
 
+/*
 api.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig => {
   config = {
     ...config,
@@ -21,12 +23,16 @@ api.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig =>
   console.error(err)
   throw Error(err)
 })
+*/
 
 api.interceptors.response.use((response: AxiosResponse<any>): AxiosPromise => {
   if (response.data.success !== undefined && !response.data.success) {
-    console.log(response.data.success)
-    // hanld error message
-    ElMessage.error(`接口错误：${response.data.message}`)
+    if (response.data.code === 'token.expired') {
+      ElMessage.error('身份验证过期，重新登录')
+      router.push('login')
+    } else {
+      ElMessage.error(`接口错误：${response.data.message}`)
+    }
     throw Error(response.data.message)
   }
   if (response.config.successMsg) {

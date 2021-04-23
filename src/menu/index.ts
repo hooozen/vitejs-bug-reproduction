@@ -17,7 +17,7 @@ const menu: MenuItem[] = [
     id: 2,
     label: '设备管理',
     icon: 'goblet-full',
-    path: '',
+    path: 'devices-m',
     children: [{
       id: 3,
       label: '设备管理',
@@ -51,7 +51,7 @@ const menu: MenuItem[] = [
     id: 11,
     label: '商品管理',
     icon: 'goods',
-    path: '',
+    path: 'goods-m',
     children: [{
       id: 12,
       label: '商品列表',
@@ -79,7 +79,7 @@ const menu: MenuItem[] = [
     id: 16,
     label: '统计分析',
     icon: 'pie-chart',
-    path: '',
+    path: 'statistics=m',
     children: [{
       id: 17,
       label: '设备分析',
@@ -94,7 +94,7 @@ const menu: MenuItem[] = [
   }, {
     id: 19,
     label: '运营管理',
-    path: '',
+    path: 'operator-m',
     icon: 's-open',
     children: [{
       id: 20,
@@ -122,7 +122,7 @@ const menu: MenuItem[] = [
     id: 25,
     label: '系统管理',
     icon: 's-platform',
-    path: '',
+    path: 'system-m',
     children: [{
       id: 26,
       label: '用户管理',
@@ -131,7 +131,7 @@ const menu: MenuItem[] = [
     }, {
       id: 27,
       label: '组织管理',
-      path: '/organizations',
+      path: 'organizations',
       children: [],
     }, {
       id: 28,
@@ -152,7 +152,7 @@ const menu: MenuItem[] = [
   }, {
     id: 31,
     label: '台账管理',
-    path: '',
+    path: 'statement-m',
     icon: 'notebook-1',
     children: [{
       id: 32,

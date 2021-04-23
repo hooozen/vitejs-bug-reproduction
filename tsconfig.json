@@ -16,6 +16,7 @@
       "@api/*": [ "api/*"],
       "@layout/*": [ "layout/*"],
       "@store/*": ["store/*"],
+      "@router/*": ["router/*"],
       "@views/*": ["views/*"]
     },
     "lib": [

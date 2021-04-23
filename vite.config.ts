@@ -16,6 +16,7 @@ export default defineConfig({
       '@api': path.resolve(__dirname, 'src/api'),
       '@layout': path.resolve(__dirname, 'src/layout'),
       '@store': path.resolve(__dirname, 'src/store'),
+      '@router': path.resolve(__dirname, 'src/router'),
       '@views': path.resolve(__dirname, 'src/views'),
     },
     extensions: ['.ts', '.js']

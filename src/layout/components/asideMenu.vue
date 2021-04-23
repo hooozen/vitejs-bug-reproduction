@@ -15,28 +15,35 @@
           text-color="#fff"
           active-text-color="#4f94d4"
           :uniqueOpened="true"
-          default-active="1"
+          :default-active="currentPath"
           :router="true"
           class="el-menu-outer"
-          @open="handleOpen"
-          @close="handleClose"
           :collapse="isCollapse"
         >
           <component
             v-for="menu in menu"
             :index="menu.path"
-            :key="menu.id"
-            :is="menu.children.length ? 'el-submenu' : 'el-menu-item'"
+            :key="menu.path"
+            :is="
+              menu.children && menu.children.length
+                ? 'el-submenu'
+                : 'el-menu-item'
+            "
           >
-            <i v-if="!menu.children.length" :class="`el-icon-${menu.icon}`"></i>
+            <i
+              v-if="!menu.children || !menu.children.length"
+              :class="`el-icon-${menu.icon}`"
+            ></i>
             <template #title>
-              <i v-if="menu.children.length" :class="`el-icon-${menu.icon}`"></i>
-              <span>{{ menu.label }}</span>
+              <template v-if="menu.children && menu.children.length">
+                <i :class="`el-icon-${menu.icon}`"></i>
+                <span> {{ menu.label }}</span>
+              </template>
+              <template v-else>{{ menu.label }}</template>
             </template>
             <el-menu-item
               v-for="subMenu in menu.children"
-              :key="subMenu.id"
-              :to="subMenu.path"
+              :key="subMenu.path"
               :index="subMenu.path"
             >
               {{ subMenu.label }}
@@ -52,7 +59,7 @@
   import { ref, defineComponent, computed, inject } from "vue";
   import { ElSubmenu } from "element-plus";
   import menu from "@/menu/index";
-import { useRouter } from "vue-router";
+  import { useRoute } from "vue-router";
 
   export default defineComponent({
     name: "AsideMenu",
@@ -61,16 +68,16 @@ import { useRouter } from "vue-router";
     },
     setup() {
       const isCollapse = ref(false);
-      const router = useRouter();
+      const route = useRoute();
+      const currentPath = ref(route.path.substring(1))
+
       const asideCls = computed(() => {
         return {
           width: isCollapse.value ? "64px" : "200px",
         };
       });
-      const handleSelect = (index: string, indexPath: string):void => {
-        router.push(index)
-      }
-      return { isCollapse, asideCls, menu, handleSelect };
+
+      return { isCollapse, asideCls, menu, currentPath };
     },
 
     methods: {
