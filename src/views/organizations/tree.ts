@@ -1,8 +1,8 @@
 interface OrganizationNode {
   code: string,
-  id: number,
+  id?: string,
   name: string,
-  parentId: number,
+  parentId: string,
   parentName?: string,
   children?: OrganizationNode[]
 }
@@ -44,9 +44,9 @@ const treeGenerate = (flatArray: any[]): OrganizationNode => {
   const res: OrganizationNode = {
     code: 'root',
     name: '全部组织',
-    id: 0,
+    id: '0',
     children: [],
-    parentId: -1
+    parentId: '-1'
   }
   for (let node of flatArray) {
     if (node.parentId == 0) {

@@ -28,7 +28,7 @@ function getTree(params: { parentId: number }, config?: $AxiosRequestConfig): Ax
 interface AddParams {
   code: string,
   name: string,
-  parentId: number
+  parentId: string
 }
 
 function add(data: AddParams, config?: $AxiosRequestConfig): AxiosPromise {
@@ -36,7 +36,7 @@ function add(data: AddParams, config?: $AxiosRequestConfig): AxiosPromise {
 }
 
 interface UpdateParams extends AddParams {
-  id: number
+  id: string
 }
 
 function update(data: UpdateParams, config?: $AxiosRequestConfig): AxiosPromise {
@@ -44,7 +44,7 @@ function update(data: UpdateParams, config?: $AxiosRequestConfig): AxiosPromise 
 }
 
 interface RemoveParam {
-  id: number
+  id: string
 }
 
 function remove(params: RemoveParam, config?: $AxiosRequestConfig): Promise<any> | boolean {
