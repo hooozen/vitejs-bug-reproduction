@@ -3,6 +3,7 @@
     <edit-dialog
       v-model:visible="dialogVisible"
       v-model:data="dialogData"
+      @updateList="getList"
     ></edit-dialog>
     <div class="view-head"></div>
     <div class="view-panel">
@@ -136,7 +137,7 @@
         getList()
       })
       return {
-        list, loadingList, privilegesStringify, handleSelection,
+        list, loadingList, privilegesStringify, handleSelection, getList,
         dialogVisible, addPosition, editPosition,
         dialogData, deletePositions, deletePosition
       }

@@ -43,6 +43,7 @@
 <script lang="ts">
   import { computed, defineComponent, onBeforeUpdate, onMounted, ref } from 'vue'
   import { privileges, AddParams, add, } from '@api/server/position'
+import { update } from '@/api/server/organization'
 
   const formRules = {
     name: [{
@@ -67,7 +68,7 @@
         required: true,
       }
     },
-    emits: ['update:visible'],
+    emits: ['update:visible', 'updateList'],
 
     setup(props, context) {
       let allPrivileges = ref([])
@@ -85,6 +86,7 @@
           if (valid) {
             add(props.data.formData, '添加成功')
             context.emit('update:visible', false)
+            context.emit('updateList')
             resetForm()
           } else {
             return false
