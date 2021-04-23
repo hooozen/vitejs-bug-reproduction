@@ -1,6 +1,6 @@
 <template>
   <div class="organizations tabs-view">
-    <el-tabs v-model="activeTab" type="card">
+    <el-tabs v-model="activeTab">
       <el-tab-pane label="组织管理" name="organization">
         <tab-organization></tab-organization>
       </el-tab-pane>

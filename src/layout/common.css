@@ -125,3 +125,10 @@
     height: 252px;
   }
 }
+
+.tabs-view {
+  padding: 15px;
+
+  &.el-tabs__content {
+  }
+}

@@ -175,7 +175,7 @@
         const res = await remove({ id: data.id! }, {
           successMsg: '删除成功',
           confirmConfig: {
-            text: `该操作将删除该组织，${data.children?.length ? `及其下 ${data.children.length} 个子组织，` : ''} 是否继续？`
+            text: `该操作将删除该标签，${data.children?.length ? `及其下 ${data.children.length} 个子标签，` : ''} 是否继续？`
           }
         })
         if (res) getIndustries()
