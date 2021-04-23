@@ -1,5 +1,4 @@
-
-const orderBy: OptionData[] = [{
+const keywordTypes: OptionData[] = [{
   value: 1,
   label: '序列号'
 }, {
@@ -25,24 +24,21 @@ const type: OptionData[] = [{
 }]
 
 const isOnline: OptionData[] = [{
-  value: '',
-  label: '在线状态'
-}, {
-  value: true,
+  value: 1,
   label: '在线'
 }, {
-  value: false,
+  value: 2,
   label: '离线'
+}, {
+  value: 3,
+  label: '休眠'
 }]
 
 const status: OptionData[] = [{
-  value: '',
-  label: '设备状态'
-}, {
-  value: 0,
+  value: 1,
   label: '正常'
 }, {
-  value: 1,
+  value: 0,
   label: '预警'
 }, {
   value: 2,
@@ -60,4 +56,4 @@ const isActive: OptionData[] = [{
   label: '否'
 }]
 
-export default { orderBy, isOnline, type, status, isActive }
+export default { isOnline, type, status, isActive, keywordTypes }

@@ -3,7 +3,12 @@
     <div class="view-head"></div>
     <div class="view-panel">
       <div class="panel__filter">
-        <tl-search v-model="searchKey" @search="search"></tl-search>
+        <tl-search
+          v-model:keyword="keyword"
+          v-model:keywordType="keywordType"
+          :keywordTypes="options.keywordTypes"
+          @search="search"
+        ></tl-search>
         <tl-select :options="options.type" v-model="type"></tl-select>
         <tl-select :options="options.isOnline" v-model="isOnline"></tl-select>
         <tl-select :options="options.status" v-model="status"></tl-select>
@@ -32,7 +37,9 @@
         </el-table-column>
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
-            <router-link class="cell-opt" :to="`device-detail?id=${scope.id}`">详情</router-link>
+            <router-link class="cell-opt" :to="`device-detail?id=${scope.id}`"
+              >详情</router-link
+            >
             <span class="cell-opt" @click="deleteItem(scope.id)">删除</span>
           </template>
         </el-table-column>
@@ -46,7 +53,7 @@
         :page-sizes="[10, 50, 100]"
         :page-size="pageSize"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="listLength"
+        :total="totalNum"
       >
       </el-pagination>
     </div>
@@ -54,7 +61,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
-  import { devices, ListParams } from '@api/server'
+  import { devices } from '@api/server/device'
 
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'
@@ -70,28 +77,34 @@
       // table list and pagination
       const list = ref<{ [key: string]: any }[]>([])
       const loadingList = ref(true)
-      const listLength = ref(10)
+      const totalNum = ref(10)
       const currentPage = ref(1)
       const pageSize = ref(10)
-      const currentPageChange = (page: number) => getList({ pageNum: page })
-      const pageSizeChange = (size: number) => getList({ pageSize: size })
-      const getList = async (params?: ListParams) => {
-        params = { pageSize: pageSize.value, ...params }
+      const currentPageChange = (page: number) => getList({ current: page })
+      const pageSizeChange = (size: number) => getList({ size: size })
+      const getList = async (params?: any) => {
+        params = { size: pageSize.value, current: 0, ...params }
         try {
           const resData = (await devices(params, '访问成功')).data
-          list.value = resData.list
-          listLength.value = resData.total
+          list.value = resData.records.map((d: any) => ({
+            ...d,
+            onlineName: (options.isOnline.find(o => o.value == d.online))?.label,
+            statusName: (options.status.find(o => o.value == d.online))?.label,
+            activeName: (options.isActive.find(o => o.value == d.online))?.label,
+          }))
+          totalNum.value = +resData.total
         } catch { }
         loadingList.value = false;
       }
 
       // filter form
-      const searchKey = ref('')
+      const keyword = ref('')
+      const keywordType = ref('') 
       const type = ref(0)
       const isOnline = ref('')
       const status = ref('')
       const isActive = ref('')
-      const search = (searchKey: string) => getList({ keyWord: searchKey })
+      const search = (keyword: string) => getList({ keyword: keyword })
 
       onMounted(() => {
         getList({ pageNum: 1 })
@@ -99,8 +112,8 @@
       return {
         options, columns,
         list, loadingList,
-        searchKey, type, status, isActive, isOnline, search,
-        pageSize, currentPage, listLength, pageSizeChange, currentPageChange,
+        keyword, keywordType, type, status, isActive, isOnline, search,
+        pageSize, currentPage, totalNum, pageSizeChange, currentPageChange,
       }
     },
 
