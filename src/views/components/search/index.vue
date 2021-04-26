@@ -18,7 +18,7 @@
         </el-option>
       </el-select>
     </template>
-    <template #append>
+    <template v-if="showSearchBtn" #append>
       <el-button @click="$emit('search', keyword, keywordType)">
         <i class="el-icon-search"></i>
       </el-button>
@@ -43,6 +43,11 @@
       },
       keywordTypes: {
         type: Array,
+        required: false
+      },
+      showSearchBtn: {
+        type: Boolean,
+        default: false,
         required: false
       }
     },

@@ -46,13 +46,10 @@ const status: OptionData[] = [{
 }]
 
 const isActive: OptionData[] = [{
-  value: '',
-  label: '激活状态'
-}, {
-  value: true,
+  value: 1,
   label: '是'
 }, {
-  value: false,
+  value: 0,
   label: '否'
 }]
 

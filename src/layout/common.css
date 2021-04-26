@@ -31,7 +31,7 @@
   }
 
   & .panel__filter {
-    & > div:not(:first-child) {
+    & > *:not(:first-child) {
       margin-left: 10px;
     }
     display: flex;
@@ -72,8 +72,6 @@
   & .detail-basic {
     flex: 1;
   }
-
-
 
   & .detail-map {
     flex: 0 0 442px;

@@ -7,12 +7,23 @@
           v-model:keyword="keyword"
           v-model:keywordType="keywordType"
           :keywordTypes="options.keywordTypes"
-          @search="search"
         ></tl-search>
-        <tl-select :options="options.type" v-model="type"></tl-select>
-        <tl-select :options="options.isOnline" v-model="isOnline"></tl-select>
-        <tl-select :options="options.status" v-model="status"></tl-select>
-        <tl-select :options="options.isActive" v-model="isActive"></tl-select>
+        <tl-select
+          :options="options.isOnline"
+          v-model="isOnline"
+          placeholder="在线状态"
+        ></tl-select>
+        <tl-select
+          :options="options.status"
+          v-model="status"
+          placeholder="设备状态"
+        ></tl-select>
+        <tl-select
+          :options="options.isActive"
+          v-model="isActive"
+          placeholder="激活状态"
+        ></tl-select>
+        <el-button type="primary" @click="search">查询</el-button>
       </div>
       <div class="panel__opt">
         <el-button type="primary">新增</el-button>
@@ -68,6 +79,7 @@
 
   import options from './options'
   import columns from './columns'
+  import { stat } from 'node:fs'
 
   export default defineComponent({
     name: 'Devices',
@@ -88,9 +100,9 @@
           const resData = (await devices(params, '访问成功')).data
           list.value = resData.records.map((d: any) => ({
             ...d,
-            onlineName: (options.isOnline.find(o => o.value == d.online))?.label,
-            statusName: (options.status.find(o => o.value == d.online))?.label,
-            activeName: (options.isActive.find(o => o.value == d.online))?.label,
+            onlineName: (options.isOnline.find(o => o.value === d.online))?.label,
+            statusName: (options.status.find(o => o.value === d.status))?.label,
+            activeName: (options.isActive.find(o => o.value === d.active))?.label,
           }))
           totalNum.value = +resData.total
         } catch { }
@@ -99,12 +111,18 @@
 
       // filter form
       const keyword = ref('')
-      const keywordType = ref('') 
+      const keywordType = ref(1)
       const type = ref(0)
       const isOnline = ref('')
       const status = ref('')
       const isActive = ref('')
-      const search = (keyword: string) => getList({ keyword: keyword })
+      const search = () => getList({
+        online: isOnline.value,
+        status: status.value,
+        keyword: keyword.value,
+        keywordType: keywordType.value,
+        active: isActive.value
+      })
 
       onMounted(() => {
         getList({ pageNum: 1 })
