@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-view device-detail">
+  <div class="detail-view operator-detail">
     <nav-bar class="detail-nav" :title="title">
       <el-button v-if="editable" type="primary" @click="submitForm">
         保存

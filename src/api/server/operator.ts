@@ -8,10 +8,6 @@ export interface QueryParams {
   size: number,
 }
 
-function getByKeyword(params: QueryParams, config?: $AxiosRequestConfig) {
-  return axios('post', 'admin/operator/getOperatorByKeyword', params, config)
-}
-
 export interface AddParams {
   account: string
   accountBank: string
@@ -37,6 +33,10 @@ export interface AddParams {
 
 export interface UpdateParams extends AddParams {
   id: string
+}
+
+function getByKeyword(params: QueryParams, config?: $AxiosRequestConfig) {
+  return axios('post', 'admin/operator/getOperatorByKeyword', params, config)
 }
 
 function add(params: AddParams, config?: $AxiosRequestConfig): AxiosPromise {

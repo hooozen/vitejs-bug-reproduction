@@ -1,5 +1,33 @@
 <template>
   <div class="devices table-view">
+    <el-dialog v-model="dialogVisible" title="新增设备" width="400px">
+      <el-form
+        label-width="100px"
+        :model="addForm"
+        :rules="addFormRules"
+        ref="formEl"
+      >
+        <el-form-item label="设备序列号" prop="sequence">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="设备验证码" prop="code">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="设备型号" prop="type">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="设备名称" prop="name">
+          <el-input></el-input>
+        </el-form-item>
+        <el-form-item label="归属" prop="store">
+          <el-input></el-input>
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button type="primary" @click="submitAddForm">确定</el-button>
+        <el-button @click="dialogVisible = false">取消</el-button>
+      </template>
+    </el-dialog>
     <div class="view-head"></div>
     <div class="view-panel">
       <div class="panel__filter">
@@ -23,10 +51,10 @@
           v-model="isActive"
           placeholder="激活状态"
         ></tl-select>
-        <el-button type="primary" @click="search">查询</el-button>
+        <el-button type="primary" @click="getList">查询</el-button>
       </div>
       <div class="panel__opt">
-        <el-button type="primary">新增</el-button>
+        <el-button type="primary" @click="dialogVisible = true">新增</el-button>
         <el-button type="danger">删除</el-button>
         <el-button>导入</el-button>
         <el-button>导出</el-button>
@@ -48,18 +76,20 @@
         </el-table-column>
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
-            <router-link class="cell-opt" :to="`device-detail?id=${scope.id}`"
+            <router-link
+              class="cell-opt"
+              :to="`device-detail?id=${scope.row.id}`"
               >详情</router-link
             >
-            <span class="cell-opt" @click="deleteItem(scope.id)">删除</span>
+            <span class="cell-opt" @click="deleteItem(scope.row.id)">删除</span>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="view-foot">
       <el-pagination
-        @size-change="pageSizeChange"
-        @current-change="currentPageChange"
+        @size-change="getList"
+        @current-change="getList"
         :current-page="currentPage"
         :page-sizes="[10, 50, 100]"
         :page-size="pageSize"
@@ -72,14 +102,15 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
-  import { devices } from '@api/server/device'
+  import { getByKeyword, add } from '@api/server/device'
 
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'
 
   import options from './options'
   import columns from './columns'
-  import { stat } from 'node:fs'
+
+  import { addFormRules } from './formRules'
 
   export default defineComponent({
     name: 'Devices',
@@ -92,12 +123,18 @@
       const totalNum = ref(10)
       const currentPage = ref(1)
       const pageSize = ref(10)
-      const currentPageChange = (page: number) => getList({ current: page })
-      const pageSizeChange = (size: number) => getList({ size: size })
       const getList = async (params?: any) => {
-        params = { size: pageSize.value, current: 0, ...params }
+        params = {
+          size: pageSize.value,
+          current: currentPage.value || 1,
+          online: isOnline.value,
+          status: status.value,
+          keyword: keyword.value,
+          keywordType: keywordType.value,
+          active: isActive.value
+        }
         try {
-          const resData = (await devices(params, '访问成功')).data
+          const resData = (await getByKeyword(params, '访问成功')).data
           list.value = resData.records.map((d: any) => ({
             ...d,
             onlineName: (options.isOnline.find(o => o.value === d.online))?.label,
@@ -116,22 +153,23 @@
       const isOnline = ref('')
       const status = ref('')
       const isActive = ref('')
-      const search = () => getList({
-        online: isOnline.value,
-        status: status.value,
-        keyword: keyword.value,
-        keywordType: keywordType.value,
-        active: isActive.value
-      })
+
+      // addForm
+      const formEl = ref(null)
+      const dialogVisible = ref(false)
+      const submitAddForm = () => {
+
+      }
 
       onMounted(() => {
-        getList({ pageNum: 1 })
+        getList()
       })
       return {
         options, columns,
         list, loadingList,
-        keyword, keywordType, type, status, isActive, isOnline, search,
-        pageSize, currentPage, totalNum, pageSizeChange, currentPageChange,
+        keyword, keywordType, type, status, isActive, isOnline,
+        pageSize, currentPage, totalNum,
+        formEl, addFormRules, dialogVisible, submitAddForm
       }
     },
 
