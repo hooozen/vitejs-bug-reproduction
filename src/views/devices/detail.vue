@@ -67,6 +67,26 @@
         </el-form>
       </div>
       <div class="main-item">
+        <div class="main-item-title">设备状态</div>
+        <el-form class="main-item-body" style="align-items: center">
+          <div class="item-body-column" style="flex-basis: 120px">
+            <el-form-item label="工作状态:">正常</el-form-item>
+            <el-form-item label="气压:">0.3Mpa</el-form-item>
+            <el-form-item label="环境温度:">25</el-form-item>
+            <el-form-item label="内部温度:">5</el-form-item>
+          </div>
+          <div class="item-body-column">
+            <img class="device-photo" src="/img/device-1.png" />
+          </div>
+          <div class="item-body-column" style="flex-bisis: 160px">
+            <el-form-item label="啤酒1:">6.1kg 61%</el-form-item>
+            <el-form-item label="啤酒2:">6.1kg 61%</el-form-item>
+            <el-form-item label="啤酒3:">6.1kg 61%</el-form-item>
+            <el-form-item label="啤酒4:">6.1kg 61%</el-form-item>
+          </div>
+        </el-form>
+      </div>
+      <div class="main-item">
         <div class="main-item-body">
           <el-tabs v-model="activeTab" type="card">
             <el-tab-pane label="设备数据" name="data">
