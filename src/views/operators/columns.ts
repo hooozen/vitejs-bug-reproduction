@@ -3,13 +3,13 @@ const columns: TableColumnData[] = [{
   label: '组织代码',
 }, {
   prop: 'name',
-  label: '单位名称',
+  label: '运营商名称',
 }, {
   prop: 'address',
   label: '单位地址',
 }, {
   prop: 'businessArea',
-  label: '负责区域',
+  label: '管辖组织',
 }, {
   prop: 'contacts',
   label: '联系人',
@@ -19,6 +19,9 @@ const columns: TableColumnData[] = [{
 }, {
   prop: 'businessLicense',
   label: '营业执照',
+}, {
+  prop: 'statusName',
+  label: '状态'
 }]
 
 export default columns

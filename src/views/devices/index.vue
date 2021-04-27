@@ -123,8 +123,8 @@
       const totalNum = ref(10)
       const currentPage = ref(1)
       const pageSize = ref(10)
-      const getList = async (params?: any) => {
-        params = {
+      const getList = async () => {
+        const params = {
           size: pageSize.value,
           current: currentPage.value || 1,
           online: isOnline.value,
@@ -148,11 +148,11 @@
 
       // filter form
       const keyword = ref('')
-      const keywordType = ref(1)
+      const keywordType = ref<1 | 2 | 3>(1)
       const type = ref(0)
-      const isOnline = ref('')
-      const status = ref('')
-      const isActive = ref('')
+      const isOnline = ref<1 | 2 | 3>()
+      const status = ref<0 | 1>()
+      const isActive = ref<number>()
 
       // addForm
       const formEl = ref(null)

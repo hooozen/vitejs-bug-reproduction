@@ -4,16 +4,18 @@
     <div class="view-panel">
       <div class="panel__filter">
         <tl-search
-          v-model:keyword="searchKey"
+          v-model:keyword="keyword"
           v-model:keywordType="keywordType"
           :keywordTypes="options.keywordTypes"
-          @search="doSearch"
         ></tl-search>
         <tl-address v-model:district="filterRegion" :clearable="true">
         </tl-address>
+        <el-button @click="inquery"> 查询 </el-button>
       </div>
       <div class="panel__opt">
-        <el-button type="primary" @click="router.push('add-operator')">新增</el-button>
+        <el-button type="primary" @click="router.push('add-operator')">
+          新增
+        </el-button>
         <el-button>导入</el-button>
         <el-button>导出</el-button>
       </div>
@@ -40,7 +42,9 @@
             >
               详情
             </router-link>
-            <span class="cell-opt--warning" @click="deleteItem(scope.row.id)">删除</span>
+            <span class="cell-opt--warning" @click="deleteItem(scope.row.id)">
+              删除
+            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -76,7 +80,8 @@
     keyword?: string,
     keywordType?: number,
     current?: number,
-    size?: number
+    size?: number,
+    orgId?: number,
   }
 
   export default defineComponent({
@@ -95,19 +100,30 @@
       const currentPageChange = (page: number) => getList({ current: page })
       const pageSizeChange = (size: number) => getList({ size })
       const getList = async (_params?: ListParams) => {
-        const params: QueryParams = { size: pageSize.value, current: 1, ..._params }
+        const params: QueryParams = {
+          size: pageSize.value,
+          current: currentPage.value,
+          keyword: keyword.value,
+          keywordType: keywordType.value,
+          ..._params
+        }
         const resData = (await getByKeyword(params, '访问成功')).data
-        list.value = resData.records
+        list.value = resData.records.map((item: any) => ({
+          ...item,
+          statusName: options.status.find(opt => item.status === opt.value)?.label
+        }))
         totalNum.value = +resData.total
         currentPage.value = +resData.current
+        pageSize.value = +resData.size
         loadingList.value = false;
       }
 
       // filter form
-      const searchKey = ref('')
-      const keywordType = ref(0)
+      const keyword = ref<string>()
+      const keywordType = ref<number>(0)
       const filterRegion = ref<string>()
-      const doSearch = (keyword: string, keywordType: number) => getList({ keyword, keywordType })
+      const orgId = ref<number>()
+      const inquery = () => getList({ current: 1 })
 
       onMounted(() => getList())
 
@@ -120,8 +136,8 @@
         router,
         options, columns,
         list, loadingList,
-        deleteItem,
-        keywordType, searchKey, status, doSearch, filterRegion,
+        deleteItem, getList,
+        keywordType, keyword, status, inquery, filterRegion,
         pageSize, currentPage, totalNum, pageSizeChange, currentPageChange,
       }
     },

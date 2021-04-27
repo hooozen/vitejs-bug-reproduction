@@ -5,7 +5,7 @@ interface TableColumnData {
 }
 
 interface OptionData {
-  value: string | number | boolean,
+  value: string | number | boolean | null,
   label: string
 }
 
