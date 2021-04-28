@@ -45,15 +45,18 @@
                 :full="true"
               ></tl-address>
             </el-form-item>
-            <el-form-item prop="_businessScope" label="经营范围:">
-              <tl-address
-                v-model:district="formData._businessScope"
-                @change="updateFormBusinessScopeName"
-                :deepth="4"
-              ></tl-address>
+            <el-form-item prop="_businessScope" label="管辖组织:">
+              <tl-organization v-model="formData._businessScope">
+              </tl-organization>
             </el-form-item>
           </div>
           <div class="item-body-column" style="flex-basis: 300px">
+            <el-form-item label="运营商状态:" prop="status">
+              <tl-select
+                :options="options.status"
+                v-model="formData.status"
+              ></tl-select>
+            </el-form-item>
             <el-form-item v-if="type === 'edit'" label="单位编号:">
               {{ formData.code }}
             </el-form-item>
@@ -80,112 +83,102 @@
           </div>
         </el-form>
       </div>
-      <div class="main-item">
-        <div class="main-item-body">
-          <el-tabs v-model="activeTab" type="card">
-            <el-tab-pane label="设备数据" name="data">
-              <el-table></el-table>
-            </el-tab-pane>
-            <el-tab-pane label="已绑定门店" name="store">
-              <el-table border></el-table>
-            </el-tab-pane>
-            <el-tab-pane label="预警记录" name="warning">
-              <el-table border></el-table>
-            </el-tab-pane>
-            <el-tab-pane label="故障记录" name="breakdow">
-              <el-table border></el-table>
-            </el-tab-pane>
-            <el-tab-pane label="设备参数" name="params">
-              <el-table border></el-table>
-            </el-tab-pane>
-            <el-tab-pane label="运行记录" name="working">
-              <el-table border></el-table>
-            </el-tab-pane>
-            <el-tab-pane label="操作记录" name="operator">
-              <el-table border></el-table>
-            </el-tab-pane>
-          </el-tabs>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, onMounted, ref } from "vue";
-  import NavBar from "../components/navBar/index.vue";
-  import TMap from "../components/TMap/index.vue";
-  import TlAddress from "../components/address/index.vue";
-  import { add, AddParams, UpdateParams, update, getById } from '@/api/server/operator'
-  import { useRoute } from "vue-router";
+import { computed, defineComponent, onMounted, ref } from "vue"
+import NavBar from "../components/navBar/index.vue"
+import TMap from "../components/TMap/index.vue"
+import TlAddress from "../components/address/index.vue"
+import TlSelect from "../components/selector/index.vue"
+import TlOrganization from "../components/org-select/index.vue"
 
-  import formRules from './formRules'
-  import { template as formDataTemplate, generateFormData } from './formDataTemplate'
+import { add, AddParams, UpdateParams, update, getById } from "@/api/server/operator"
+import { useRoute } from "vue-router"
 
-  export default defineComponent({
-    components: {
-      NavBar,
-      TMap,
-      TlAddress
+import options from './options'
+import formRules from "./formRules"
+import { template as formDataTemplate, generateFormData } from "./formDataTemplate"
+
+export default defineComponent({
+  components: {
+    NavBar,
+    TMap,
+    TlAddress,
+    TlOrganization,
+    TlSelect
+  },
+  props: {
+    type: {
+      type: String,
+      required: true,
     },
-    props: {
-      type: {
-        type: String,
-        required: true,
-      }
-    },
-    setup(props) {
-      const formData = ref<AddParams>({} as any)
-      const formEl = ref(null)
+  },
+  setup(props) {
+    const formData = ref<AddParams>({} as any);
+    const formEl = ref(null);
 
-      formData.value = formDataTemplate
+    formData.value = formDataTemplate;
 
-      const route = useRoute()
-      const id = computed(() => route.query.id)
+    const route = useRoute();
+    const id = computed(() => route.query.id);
 
-      const editable = ref<boolean>(true)
-      // const editable = ref<boolean>(false)
-      // if (props.type === 'add') editable.value = true
+    const editable = ref<boolean>(true);
+    // const editable = ref<boolean>(false)
+    // if (props.type === 'add') editable.value = true
 
-      const title = computed(() => props.type === 'edit' ? '运营商详情' : '新增运营商')
+    const mapCenter = ref<number[]>([39.90689, 116.3976])
 
-      const activeTab = ref("data");
+    const title = computed(() =>
+      props.type === "edit" ? "运营商详情" : "新增运营商"
+    );
 
-      const submitForm = () => {
-        (formEl.value as any).validate(async (valid: any) => {
-          if (!valid) return
-          let _formData: { [key: string]: any } = {}
-          for (const [k, v] of Object.entries(formData.value)) {
-            if (k.substring(0, 1) === '_') continue
-            _formData[k] = v
-          }
-          if (props.type === 'add')
-            await add(_formData as AddParams, '新增成功')
-          else await update(_formData as UpdateParams, '保存成功')
-        })
-      }
+    const activeTab = ref("data");
 
-      const updateFormDistrictName = (value: string[], name: string[]) => {
-        console.log(name.join('/'))
-      }
-      const updateFormBusinessScopeName = (value: string[], name: string[]) => {
-        console.log(name.join('/'))
-      }
-
-
-      onMounted(async () => {
-        if (id.value) {
-          const originalForm = (await getById(id.value as string)).data
-          formData.value = generateFormData(originalForm)
+    const submitForm = () => {
+      (formEl.value as any).validate(async (valid: any) => {
+        if (!valid) return;
+        let _formData: { [key: string]: any } = {};
+        for (const [k, v] of Object.entries(formData.value)) {
+          if (k.substring(0, 1) === "_") continue;
+          _formData[k] = v;
         }
-      })
+        if (props.type === "add") await add(_formData as AddParams, "新增成功");
+        else await update(_formData as UpdateParams, "保存成功");
+      });
+    };
 
-      return {
-        title, editable,
-        updateFormDistrictName,
-        updateFormBusinessScopeName,
-        location, activeTab, formData, formRules, submitForm, formEl
-      };
-    },
-  });
+    const updateFormDistrictName = (value: string[], name: string[]) => {
+      console.log(name.join("/"));
+    };
+    const updateFormBusinessScopeName = (value: string[], name: string[]) => {
+      console.log(name.join("/"));
+    };
+
+    onMounted(async () => {
+      if (id.value) {
+        const originalForm = (await getById(id.value as string)).data;
+        formData.value = generateFormData(originalForm);
+        mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
+      }
+    });
+
+    return {
+      mapCenter,
+      title,
+      editable,
+      options,
+      updateFormDistrictName,
+      updateFormBusinessScopeName,
+      location,
+      activeTab,
+      formData,
+      formRules,
+      submitForm,
+      formEl,
+    };
+  },
+});
 </script>
 <style lang="postcss"></style>

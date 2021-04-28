@@ -71,6 +71,7 @@ const generateFormData = (_formData: AddParams): FormData => {
     get _position() {
       if (!this.latitude) this.latitude = '39.90689'
       if (!this.longitude) this.longitude = '116.3976'
+      console.log(this.longitude, this.latitude, 'get')
       return [+this.latitude, +this.longitude]
     },
 

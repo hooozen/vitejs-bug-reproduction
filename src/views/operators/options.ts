@@ -24,4 +24,15 @@ const regions: OptionData[] = [{
   label: '6 头设备'
 }]
 
-export default { keywordTypes, regions }
+const status: OptionData[] = [{
+  value: 1,
+  label: '正常营业'
+}, {
+  value: 2,
+  label: '停止营业'
+}, {
+  value: 3,
+  label: '考核期'
+}]
+
+export default { keywordTypes, regions, status }

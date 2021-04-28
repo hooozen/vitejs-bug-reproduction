@@ -18,4 +18,14 @@ interface Dictionary {
   [key: string]: string
 }
 
+interface OrganizationNode {
+  code: string,
+  id?: string,
+  name: string,
+  parentId: string,
+  parentName?: string,
+  children?: OrganizationNode[]
+}
+
+
 
