@@ -4,11 +4,7 @@ import axios, { $AxiosRequestConfig } from '../axios'
 import { PagingQueryParams } from './interface'
 
 export interface DevicesQueryParams extends PagingQueryParams {
-<<<<<<< HEAD
   active?: 0 | 1
-=======
-  active?: number
->>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
   keywordType?: 1 | 2 | 3
   deviceTypeId?: number
   online?: 1 | 2 | 3

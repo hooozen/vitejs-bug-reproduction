@@ -16,15 +16,6 @@ const columns: TableColumnData[] = [{
 }, {
   prop: 'tel',
   label: '联系电话',
-<<<<<<< HEAD
-=======
-}, {
-  prop: 'businessLicense',
-  label: '营业执照',
-}, {
-  prop: 'statusName',
-  label: '状态'
->>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
 }]
 
 export default columns
