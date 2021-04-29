@@ -7,18 +7,26 @@
           v-model:keyword="keyword"
           v-model:keywordType="keywordType"
           :keywordTypes="options.keywordTypes"
-          @search="doSearch"
         ></tl-search>
+<<<<<<< HEAD
         <tl-address
           v-model:district="filterRegion"
           :clearable="true"
         ></tl-address>
+=======
+        <tl-address v-model:district="filterRegion" :clearable="true">
+        </tl-address>
+        <el-button @click="inquery"> 查询 </el-button>
+>>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
       </div>
       <div class="panel__opt">
         <el-button type="primary" @click="router.push('add-operator')">
           新增
         </el-button>
+<<<<<<< HEAD
         <el-button type="warning" @click="batchDelete">删除</el-button>
+=======
+>>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
         <el-button>导入</el-button>
         <el-button>导出</el-button>
       </div>
@@ -71,7 +79,11 @@
             >
               详情
             </router-link>
+<<<<<<< HEAD
             <span class="text-btn--warning" @click="deleteItem(scope.row.id)">
+=======
+            <span class="cell-opt--warning" @click="deleteItem(scope.row.id)">
+>>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
               删除
             </span>
           </template>
@@ -104,12 +116,22 @@ import TlAddress from '../components/address/index.vue'
 import options from './options'
 import columns from './columns'
 
+<<<<<<< HEAD
 interface ListParams {
   keyword?: string
   keywordType?: number
   current?: number
   size?: number
 }
+=======
+  interface ListParams {
+    keyword?: string,
+    keywordType?: number,
+    current?: number,
+    size?: number,
+    orgId?: number,
+  }
+>>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
 
 export default defineComponent({
   name: 'Operators',
@@ -118,6 +140,7 @@ export default defineComponent({
   setup() {
     const router = useRouter()
 
+<<<<<<< HEAD
     // table list and pagination
     const list = ref<{ [key: string]: any }[]>([])
     const loadingList = ref(true)
@@ -133,6 +156,33 @@ export default defineComponent({
         size: pageSize.value,
         current: 1,
         ..._params,
+=======
+      // table list and pagination
+      const list = ref<{ [key: string]: any }[]>([])
+      const loadingList = ref(true)
+      const totalNum = ref<number>()
+      const currentPage = ref(1)
+      const pageSize = ref(10)
+      const currentPageChange = (page: number) => getList({ current: page })
+      const pageSizeChange = (size: number) => getList({ size })
+      const getList = async (_params?: ListParams) => {
+        const params: QueryParams = {
+          size: pageSize.value,
+          current: currentPage.value,
+          keyword: keyword.value,
+          keywordType: keywordType.value,
+          ..._params
+        }
+        const resData = (await getByKeyword(params, '访问成功')).data
+        list.value = resData.records.map((item: any) => ({
+          ...item,
+          statusName: options.status.find(opt => item.status === opt.value)?.label
+        }))
+        totalNum.value = +resData.total
+        currentPage.value = +resData.current
+        pageSize.value = +resData.size
+        loadingList.value = false;
+>>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
       }
       const resData = (await getByKeyword(params, '访问成功')).data
       list.value = resData.records
@@ -144,12 +194,21 @@ export default defineComponent({
       selectedItems.value = value
     }
 
+<<<<<<< HEAD
     const viewingImage = ref<string>('')
     const viewerShowing = ref<boolean>(false)
     const viewLicense = (value: string) => {
       viewerShowing.value = true
       viewingImage.value = value
     }
+=======
+      // filter form
+      const keyword = ref<string>()
+      const keywordType = ref<number>(0)
+      const filterRegion = ref<string>()
+      const orgId = ref<number>()
+      const inquery = () => getList({ current: 1 })
+>>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
 
     // filter form
     const keyword= ref('')
@@ -160,10 +219,22 @@ export default defineComponent({
 
     onMounted(() => getList())
 
+<<<<<<< HEAD
     const deleteItem = async (id: string) => {
       await remove(id)
       getList()
     }
+=======
+      return {
+        router,
+        options, columns,
+        list, loadingList,
+        deleteItem, getList,
+        keywordType, keyword, status, inquery, filterRegion,
+        pageSize, currentPage, totalNum, pageSizeChange, currentPageChange,
+      }
+    },
+>>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
 
     const batchDelete = async () => {
       const ids = selectedItems.value.map((item: any) => item.id).join(',')
