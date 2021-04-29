@@ -19,7 +19,7 @@ export default defineComponent({
   name: "TlOrganization",
   props: {
     modelValue: {
-      type: Array,
+      type: [String, Number],
       required: false,
     },
     clearable: {

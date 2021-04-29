@@ -31,7 +31,7 @@
       },
       district: {
         type: Array,
-        required: true
+        required: false
       },
       address: {
         type: String,

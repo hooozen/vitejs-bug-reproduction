@@ -16,9 +16,6 @@ const columns: TableColumnData[] = [{
 }, {
   prop: 'tel',
   label: '联系电话',
-}, {
-  prop: 'businessLicense',
-  label: '营业执照',
 }]
 
 export default columns

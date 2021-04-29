@@ -8,19 +8,7 @@
     padding: 10px;
   }
 
-  & .cell-opt {
-    text-decoration: none;
-    color: #409eff;
-    cursor: pointer;
-    &:not(:first-child) {
-      margin-left: 8px;
-    }
-    &:hover {
-      color: #66b1ff;
-    }
-  }
-
-  & .cell-opt--warning {
+  & .text-btn--warning {
     color: red;
   }
 
@@ -87,7 +75,7 @@
     padding: 0 10px;
 
     &::before {
-      content: "";
+      content: '';
       left: 0;
       top: 0;
       bottom: 0;

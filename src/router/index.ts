@@ -64,10 +64,12 @@ const router = createRouter({
   routes,
 });
 
+/*
 router.beforeEach((to, from) => {
   if (to.path !== '/login' && !store.getters.token) {
     router.push('/login')
   }
 })
+*/
 
 export default router

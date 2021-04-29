@@ -20,7 +20,7 @@
 
             <div class="user-face"></div>
           </div>
-          <i class="el-icon-message-solid" style="margin-right: 20px"></i>
+          <i class="el-icon-message-solid" style="margin-right: 20px;"></i>
         </div>
         <div class="view-outer">
           <router-view></router-view>
@@ -31,21 +31,21 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from "vue";
-import AsideMenu from "./components/asideMenu.vue";
+import { ref, defineComponent } from 'vue'
+import AsideMenu from './components/asideMenu.vue'
 
 export default defineComponent({
-  name: "Layout",
+  name: 'Layout',
   components: {
     AsideMenu,
   },
   data() {
     return {
       menuCollapse: false,
-    };
+    }
   },
   setup: () => {},
-});
+})
 </script>
 <style lang="postcss">
 @import url(./common.css);
@@ -104,6 +104,17 @@ export default defineComponent({
 .view-outer {
   flex: 1;
   height: calc(100% - 50px);
+  & .text-btn {
+    text-decoration: none;
+    color: #409eff;
+    cursor: pointer;
+    &:not(:first-child) {
+      margin-left: 8px;
+    }
+    &:hover {
+      color: #66b1ff;
+    }
+  }
 }
 .user {
   display: flex;

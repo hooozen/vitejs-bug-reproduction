@@ -2,7 +2,6 @@ import { AddParams } from '@api/server/operator'
 
 interface FormData extends AddParams {
   _district: Array<string>,
-  _businessScope: Array<string>
   _position: Array<string> | Array<number>
 }
 
@@ -14,11 +13,7 @@ const template: FormData = {
   addressCity: '',
   addressProvince: '',
   addressStreet: '',
-  businessArea: '',
-  businessCity: '',
   businessLicense: '',
-  businessProvince: '',
-  businessStreet: '',
   code: '',
   contacts: '',
   description: '',
@@ -33,13 +28,12 @@ const template: FormData = {
     this.longitude = value[1].toString() || '116.3976'
   },
   get _position() {
-    if (!this.latitude) this.latitude = '39.90689'
-    if (!this.longitude) this.longitude = '116.3976'
+    if (isNaN(+this.latitude)) this.latitude = '39.90689'
+    if (isNaN(+this.longitude)) this.longitude = '116.3976'
     return [+this.latitude, +this.longitude]
   },
 
   set _district(value: string[]) {
-    console.log(value)
     this.addressProvince = value[0] || ''
     this.addressCity = value[1] || ''
     this.addressArea = value[2] || ''
@@ -49,15 +43,6 @@ const template: FormData = {
     return [this.addressProvince, this.addressCity, this.addressArea, this.addressStreet].filter(item => item)
   },
 
-  set _businessScope(value: string[]) {
-    this.businessProvince = value[0] || ''
-    this.businessCity = value[1] || ''
-    this.businessArea = value[2] || ''
-    this.businessStreet = value[3] || ''
-  },
-  get _businessScope() {
-    return [this.businessProvince, this.businessCity, this.businessArea, this.businessStreet].filter(item => item)
-  }
 }
 
 const generateFormData = (_formData: AddParams): FormData => {
@@ -69,14 +54,12 @@ const generateFormData = (_formData: AddParams): FormData => {
       this.longitude = value[1].toString() || '116.3976'
     },
     get _position() {
-      if (!this.latitude) this.latitude = '39.90689'
-      if (!this.longitude) this.longitude = '116.3976'
-      console.log(this.longitude, this.latitude, 'get')
+      if (isNaN(+this.latitude)) this.latitude = '39.90689'
+      if (isNaN(+this.longitude)) this.longitude = '116.3976'
       return [+this.latitude, +this.longitude]
     },
 
     set _district(value: string[]) {
-      console.log(value)
       this.addressProvince = value[0] || ''
       this.addressCity = value[1] || ''
       this.addressArea = value[2] || ''
@@ -85,16 +68,6 @@ const generateFormData = (_formData: AddParams): FormData => {
     get _district() {
       return [this.addressProvince, this.addressCity, this.addressArea, this.addressStreet].filter(item => item)
     },
-
-    set _businessScope(value: string[]) {
-      this.businessProvince = value[0] || ''
-      this.businessCity = value[1] || ''
-      this.businessArea = value[2] || ''
-      this.businessStreet = value[3] || ''
-    },
-    get _businessScope() {
-      return [this.businessProvince, this.businessCity, this.businessArea, this.businessStreet].filter(item => item)
-    }
   }
 }
 

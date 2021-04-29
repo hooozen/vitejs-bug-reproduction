@@ -77,19 +77,19 @@
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
             <router-link
-              class="cell-opt"
+              class="text-btn"
               :to="`device-detail?id=${scope.row.id}`"
               >详情</router-link
             >
-            <span class="cell-opt" @click="deleteItem(scope.row.id)">删除</span>
+            <span class="text-btn" @click="deleteItem(scope.row.id)">删除</span>
           </template>
         </el-table-column>
       </el-table>
     </div>
     <div class="view-foot">
       <el-pagination
-        @size-change="getList"
-        @current-change="getList"
+        @size-change="sizeChange"
+        @current-change="currentPageChange"
         :current-page="currentPage"
         :page-sizes="[10, 50, 100]"
         :page-size="pageSize"
@@ -101,78 +101,85 @@
   </div>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, ref } from 'vue'
-  import { getByKeyword, add } from '@api/server/device'
+import { defineComponent, onMounted, ref } from 'vue'
+import { getByKeyword, add, DevicesQueryParams, remove } from '@api/server/device'
 
-  import TlSelect from '../components/selector/index.vue'
-  import TlSearch from '../components/search/index.vue'
+import TlSelect from '../components/selector/index.vue'
+import TlSearch from '../components/search/index.vue'
 
-  import options from './options'
-  import columns from './columns'
+import options from './options'
+import columns from './columns'
 
-  import { addFormRules } from './formRules'
+import { addFormRules } from './formRules'
 
-  export default defineComponent({
-    name: 'Devices',
-    components: { TlSelect, TlSearch },
+export default defineComponent({
+  name: 'Devices',
+  components: { TlSelect, TlSearch },
 
-    setup() {
-      // table list and pagination
-      const list = ref<{ [key: string]: any }[]>([])
-      const loadingList = ref(true)
-      const totalNum = ref(10)
-      const currentPage = ref(1)
-      const pageSize = ref(10)
-      const getList = async (params?: any) => {
-        params = {
-          size: pageSize.value,
-          current: currentPage.value || 1,
-          online: isOnline.value,
-          status: status.value,
-          keyword: keyword.value,
-          keywordType: keywordType.value,
-          active: isActive.value
-        }
-        try {
-          const resData = (await getByKeyword(params, '访问成功')).data
-          list.value = resData.records.map((d: any) => ({
-            ...d,
-            onlineName: (options.isOnline.find(o => o.value === d.online))?.label,
-            statusName: (options.status.find(o => o.value === d.status))?.label,
-            activeName: (options.isActive.find(o => o.value === d.active))?.label,
-          }))
-          totalNum.value = +resData.total
-        } catch { }
-        loadingList.value = false;
+  setup() {
+    // table list and pagination
+    const list = ref<{ [key: string]: any }[]>([])
+    const loadingList = ref(true)
+    const totalNum = ref(10)
+    const currentPage = ref(1)
+    const pageSize = ref(10)
+    const currentPageChange = (current: number) => {getList({current})}
+    const sizeChange = (size: number) => {getList(size)}
+
+    const getList = async (_params?: any) => {
+      const params: DevicesQueryParams = {
+        size: pageSize.value,
+        current: 1,
+        online: isOnline.value,
+        status: status.value,
+        keyword: keyword.value,
+        keywordType: keywordType.value,
+        active: isActive.value,
+        ..._params
       }
+      const resData = (await getByKeyword(params, '访问成功')).data
+      list.value = resData.records.map((d: any) => ({
+        ...d,
+        onlineName: (options.isOnline.find(o => o.value === d.online))?.label,
+        statusName: (options.status.find(o => o.value === d.status))?.label,
+        activeName: (options.isActive.find(o => o.value === d.active))?.label,
+      }))
+      totalNum.value = +resData.total
+      pageSize.value = +resData.size
+      loadingList.value = false
+    }
 
-      // filter form
-      const keyword = ref('')
-      const keywordType = ref(1)
-      const type = ref(0)
-      const isOnline = ref('')
-      const status = ref('')
-      const isActive = ref('')
+    // filter form
+    const keyword = ref('')
+    const keywordType = ref<1 | 2 | 3>(1)
+    const type = ref(0)
+    const isOnline = ref<1 | 2 | 3>()
+    const status = ref<0 | 1>()
+    const isActive = ref<0 | 1>()
 
-      // addForm
-      const formEl = ref(null)
-      const dialogVisible = ref(false)
-      const submitAddForm = () => {
+    // addForm
+    const formEl = ref(null)
+    const dialogVisible = ref(false)
+    const submitAddForm = () => {
 
-      }
+    }
 
-      onMounted(() => {
-        getList()
-      })
-      return {
-        options, columns,
-        list, loadingList,
-        keyword, keywordType, type, status, isActive, isOnline,
-        pageSize, currentPage, totalNum,
-        formEl, addFormRules, dialogVisible, submitAddForm
-      }
-    },
+    onMounted(() => void getList())
 
-  })
+    const deleteItem = (id: string) => {
+      remove(id)
+    }
+
+    return {
+      options, columns,
+      list, loadingList,
+      keyword, keywordType, type, status, isActive, isOnline,
+      getList, pageSize, currentPage, totalNum, sizeChange, currentPageChange,
+      formEl, addFormRules, dialogVisible, submitAddForm,
+      deleteItem
+    }
+  },
+
+})
 </script>
 

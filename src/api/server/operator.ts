@@ -16,11 +16,7 @@ export interface AddParams {
   addressCity: string
   addressProvince: string
   addressStreet: string
-  businessArea: string
-  businessCity: string
   businessLicense: string
-  businessProvince: string
-  businessStreet: string
   code: string
   contacts: string
   description: string

@@ -39,9 +39,9 @@
           width="100px"
         >
           <template #default="scope">
-            <span class="cell-opt" @click="editPosition(scope.row)">编辑</span>
+            <span class="text-btn" @click="editPosition(scope.row)">编辑</span>
             <span
-              class="cell-opt cell-opt--warning"
+              class="text-btn text-btn--warning"
               @click="deletePosition(scope.row.id)"
               >删除</span
             >

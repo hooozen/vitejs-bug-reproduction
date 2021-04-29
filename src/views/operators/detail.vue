@@ -17,7 +17,7 @@
           class="main-item-body"
           label-width="100px"
         >
-          <div class="item-body-column" style="flex-basis: 400px">
+          <div class="item-body-column" style="flex-basis: 400px;">
             <el-form-item prop="name" label="名称:">
               <el-input v-model="formData.name"></el-input>
             </el-form-item>
@@ -45,12 +45,11 @@
                 :full="true"
               ></tl-address>
             </el-form-item>
-            <el-form-item prop="_businessScope" label="管辖组织:">
-              <tl-organization v-model="formData._businessScope">
-              </tl-organization>
+            <el-form-item prop="orgId" label="管辖组织:">
+              <tl-organization v-model="formData.orgId"></tl-organization>
             </el-form-item>
           </div>
-          <div class="item-body-column" style="flex-basis: 300px">
+          <div class="item-body-column" style="flex-basis: 300px;">
             <el-form-item label="运营商状态:" prop="status">
               <tl-select
                 :options="options.status"
@@ -69,16 +68,43 @@
                 type="textarea"
               ></el-input>
             </el-form-item>
-            <el-form-item label="营业执照:">2021-04-12</el-form-item>
+            <el-form-item prop="businessLicense" label="营业执照:">
+              <span
+                v-if="isShowViewBtn"
+                class="text-btn"
+                @click="isShowViewer = true"
+              >
+                查看
+              </span>
+              <el-image-viewer
+                v-if="isShowViewer"
+                :url-list="[imagePreviewSrc]"
+                @close="isShowViewer = false"
+              ></el-image-viewer>
+              <el-upload
+                action="/beer/admin/common/uploadFile"
+                :on-success="uploadSuccess"
+                :on-error="uploadError"
+                :before-upload="beforeUpload"
+                :showFileList="false"
+              >
+                <el-button size="small" type="primary" v-loading="isUploading">
+                  <i class="el-icon-upload el-icon--right"></i>
+                  上传文件
+                </el-button>
+                <template #tip>
+                  <div class="el-upload__tip">支持扩展名：.jpg .png</div>
+                </template>
+              </el-upload>
+            </el-form-item>
           </div>
           <div class="item-body-column detail-map">
-            <el-form-item label="经纬度" prop="_position">
+            <el-form-item label="单位经纬度" prop="_position">
               <t-map
                 :center="formData._position"
                 v-model:pointer="formData._position"
                 class="el-map-outer"
-              >
-              </t-map>
+              ></t-map>
             </el-form-item>
           </div>
         </el-form>
@@ -87,19 +113,31 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from "vue"
-import NavBar from "../components/navBar/index.vue"
-import TMap from "../components/TMap/index.vue"
-import TlAddress from "../components/address/index.vue"
-import TlSelect from "../components/selector/index.vue"
-import TlOrganization from "../components/org-select/index.vue"
+import { computed, defineComponent, onMounted, ref } from 'vue'
 
-import { add, AddParams, UpdateParams, update, getById } from "@/api/server/operator"
-import { useRoute } from "vue-router"
+import { ElMessage } from 'element-plus'
+
+import NavBar from '../components/navBar/index.vue'
+import TMap from '../components/TMap/index.vue'
+import TlAddress from '../components/address/index.vue'
+import TlSelect from '../components/selector/index.vue'
+import TlOrganization from '../components/org-select/index.vue'
+
+import {
+  add,
+  AddParams,
+  UpdateParams,
+  update,
+  getById,
+} from '@/api/server/operator'
+import { useRoute } from 'vue-router'
 
 import options from './options'
-import formRules from "./formRules"
-import { template as formDataTemplate, generateFormData } from "./formDataTemplate"
+import formRules from './formRules'
+import {
+  template as formDataTemplate,
+  generateFormData,
+} from './formDataTemplate'
 
 export default defineComponent({
   components: {
@@ -107,7 +145,7 @@ export default defineComponent({
     TMap,
     TlAddress,
     TlOrganization,
-    TlSelect
+    TlSelect,
   },
   props: {
     type: {
@@ -116,53 +154,76 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const formData = ref<AddParams>({} as any);
-    const formEl = ref(null);
+    const formData = ref<AddParams>({} as any)
+    const formEl = ref(null)
 
-    formData.value = formDataTemplate;
+    formData.value = formDataTemplate
 
-    const route = useRoute();
-    const id = computed(() => route.query.id);
+    const route = useRoute()
+    const id = computed(() => route.query.id)
 
-    const editable = ref<boolean>(true);
+    const editable = ref<boolean>(true)
     // const editable = ref<boolean>(false)
     // if (props.type === 'add') editable.value = true
 
     const mapCenter = ref<number[]>([39.90689, 116.3976])
 
     const title = computed(() =>
-      props.type === "edit" ? "运营商详情" : "新增运营商"
-    );
+      props.type === 'edit' ? '运营商详情' : '新增运营商',
+    )
 
-    const activeTab = ref("data");
+    const activeTab = ref('data')
 
     const submitForm = () => {
-      (formEl.value as any).validate(async (valid: any) => {
-        if (!valid) return;
-        let _formData: { [key: string]: any } = {};
+      ;(formEl.value as any).validate(async (valid: any) => {
+        if (!valid) return
+        let _formData: { [key: string]: any } = {}
         for (const [k, v] of Object.entries(formData.value)) {
-          if (k.substring(0, 1) === "_") continue;
-          _formData[k] = v;
+          if (k.substring(0, 1) === '_') continue
+          _formData[k] = v
         }
-        if (props.type === "add") await add(_formData as AddParams, "新增成功");
-        else await update(_formData as UpdateParams, "保存成功");
-      });
-    };
+        if (props.type === 'add') await add(_formData as AddParams, '新增成功')
+        else await update(_formData as UpdateParams, '保存成功')
+      })
+    }
 
     const updateFormDistrictName = (value: string[], name: string[]) => {
-      console.log(name.join("/"));
-    };
-    const updateFormBusinessScopeName = (value: string[], name: string[]) => {
-      console.log(name.join("/"));
-    };
+      console.log(name.join('/'))
+    }
 
     onMounted(async () => {
       if (id.value) {
-        const originalForm = (await getById(id.value as string)).data;
-        formData.value = generateFormData(originalForm);
+        const originalForm = (await getById(id.value as string)).data
+        isShowViewBtn.value = true
+        imagePreviewSrc.value= originalForm.businessLicense
+        formData.value = generateFormData(originalForm)
         mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
       }
-    });
+    })
+
+    const isShowViewBtn = ref<boolean>(false)
+    const isShowViewer = ref<boolean>(false)
+    const imagePreviewSrc = ref<string>('')
+    const isUploading = ref<boolean>(false)
+    const isUploadSuccess = ref<boolean>(false)
+    const beforeUpload = (file: File) => {
+      if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+        ElMessage.error('只支持 .jpg .png 格式图片')
+        return false
+      }
+      isUploading.value = true
+    }
+    const uploadSuccess = (res: any, file: any) => {
+      isShowViewBtn.value = true
+      imagePreviewSrc.value = URL.createObjectURL(file.raw)
+      ElMessage.success('文件上传成功')
+      formData.value.businessLicense = res.data
+      isUploading.value = false
+    }
+    const uploadError = (e: any) => {
+      ElMessage.error(`文件上传失败: ${e}`)
+      isUploading.value = false
+    }
 
     return {
       mapCenter,
@@ -170,15 +231,21 @@ export default defineComponent({
       editable,
       options,
       updateFormDistrictName,
-      updateFormBusinessScopeName,
       location,
       activeTab,
       formData,
       formRules,
       submitForm,
       formEl,
-    };
+      imagePreviewSrc,
+      isShowViewer,
+      isShowViewBtn,
+      beforeUpload,
+      uploadSuccess,
+      uploadError,
+      isUploadSuccess,
+    }
   },
-});
+})
 </script>
 <style lang="postcss"></style>
