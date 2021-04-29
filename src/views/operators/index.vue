@@ -4,7 +4,7 @@
     <div class="view-panel">
       <div class="panel__filter">
         <tl-search
-          v-model:keyword="searchKey"
+          v-model:keyword="keyword"
           v-model:keywordType="keywordType"
           :keywordTypes="options.keywordTypes"
           @search="doSearch"
@@ -152,7 +152,7 @@ export default defineComponent({
     }
 
     // filter form
-    const searchKey = ref('')
+    const keyword= ref('')
     const keywordType = ref(0)
     const filterRegion = ref<string>()
     const doSearch = (keyword: string, keywordType: number) =>
@@ -187,7 +187,7 @@ export default defineComponent({
       viewerShowing,
       viewLicense,
       keywordType,
-      searchKey,
+      keyword,
       status,
       doSearch,
       filterRegion,
