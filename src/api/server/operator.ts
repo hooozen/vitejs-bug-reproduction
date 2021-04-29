@@ -4,6 +4,7 @@ import axios, { $AxiosRequestConfig } from '../axios'
 export interface QueryParams {
   keyword?: string,
   keywordType?: number,
+  orgId?: number,
   current: number,
   size: number,
 }

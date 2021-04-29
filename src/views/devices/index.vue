@@ -116,6 +116,7 @@ export default defineComponent({
   name: 'Devices',
   components: { TlSelect, TlSearch },
 
+<<<<<<< HEAD
   setup() {
     // table list and pagination
     const list = ref<{ [key: string]: any }[]>([])
@@ -136,6 +137,36 @@ export default defineComponent({
         keywordType: keywordType.value,
         active: isActive.value,
         ..._params
+=======
+    setup() {
+      // table list and pagination
+      const list = ref<{ [key: string]: any }[]>([])
+      const loadingList = ref(true)
+      const totalNum = ref(10)
+      const currentPage = ref(1)
+      const pageSize = ref(10)
+      const getList = async () => {
+        const params = {
+          size: pageSize.value,
+          current: currentPage.value || 1,
+          online: isOnline.value,
+          status: status.value,
+          keyword: keyword.value,
+          keywordType: keywordType.value,
+          active: isActive.value
+        }
+        try {
+          const resData = (await getByKeyword(params, '访问成功')).data
+          list.value = resData.records.map((d: any) => ({
+            ...d,
+            onlineName: (options.isOnline.find(o => o.value === d.online))?.label,
+            statusName: (options.status.find(o => o.value === d.status))?.label,
+            activeName: (options.isActive.find(o => o.value === d.active))?.label,
+          }))
+          totalNum.value = +resData.total
+        } catch { }
+        loadingList.value = false;
+>>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
       }
       const resData = (await getByKeyword(params, '访问成功')).data
       list.value = resData.records.map((d: any) => ({
@@ -149,6 +180,7 @@ export default defineComponent({
       loadingList.value = false
     }
 
+<<<<<<< HEAD
     // filter form
     const keyword = ref('')
     const keywordType = ref<1 | 2 | 3>(1)
@@ -156,6 +188,15 @@ export default defineComponent({
     const isOnline = ref<1 | 2 | 3>()
     const status = ref<0 | 1>()
     const isActive = ref<0 | 1>()
+=======
+      // filter form
+      const keyword = ref('')
+      const keywordType = ref<1 | 2 | 3>(1)
+      const type = ref(0)
+      const isOnline = ref<1 | 2 | 3>()
+      const status = ref<0 | 1>()
+      const isActive = ref<number>()
+>>>>>>> 5827e0a5a0c3099ba0213bf92cb0bafc8fb6331e
 
     // addForm
     const formEl = ref(null)

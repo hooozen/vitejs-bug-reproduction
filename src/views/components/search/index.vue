@@ -35,7 +35,7 @@
     props: {
       keyword: {
         type: String,
-        required: true,
+        required: false,
       },
       keywordType: {
         type: [Number, String],
