@@ -129,6 +129,11 @@ const menu: MenuItem[] = [
       path: 'users',
       children: [],
     }, {
+      id: 261,
+      label: '设备型号',
+      path: 'device-type',
+      children: [],
+    }, {
       id: 27,
       label: '组织管理',
       path: 'organizations',

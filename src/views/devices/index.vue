@@ -102,7 +102,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue'
-import { getByKeyword, add, DevicesQueryParams, remove } from '@api/server/device'
+import { getByKeyword, add, DevicesQueryParams, remove, AddParams } from '@api/server/device'
 
 import TlSelect from '../components/selector/index.vue'
 import TlSearch from '../components/search/index.vue'
@@ -158,6 +158,7 @@ export default defineComponent({
     const isActive = ref<0 | 1>()
 
     // addForm
+    const addForm = ref<AddParams>()
     const formEl = ref(null)
     const dialogVisible = ref(false)
     const submitAddForm = () => {
@@ -171,6 +172,7 @@ export default defineComponent({
     }
 
     return {
+      addForm,
       options, columns,
       list, loadingList,
       keyword, keywordType, type, status, isActive, isOnline,

@@ -11,6 +11,8 @@ import Staff from '@views/staff/index.vue'
 import Organizations from '@views/organizations/index.vue'
 import Positions from '@views/positions/index.vue'
 import Operators from '@views/operators/index.vue'
+import DeviceType from '@views/device-type/index.vue'
+import DeviceTypeDetail from '@views/device-type/detail.vue'
 import OperationDetail from '@views/operators/detail.vue'
 
 const routes = [
@@ -52,6 +54,14 @@ const routes = [
       path: 'add-operator',
       props: { type: 'add' },
       component: OperationDetail
+    }, {
+      name: 'deviceType',
+      path: 'device-type',
+      component: DeviceType
+    }, {
+      name: 'devictTypeDetail',
+      path: 'device-type-detail',
+      component: DeviceTypeDetail,
     }]
   }, {
     path: '/login',
