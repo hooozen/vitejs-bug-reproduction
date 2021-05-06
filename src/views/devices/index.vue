@@ -60,8 +60,39 @@
         <el-button>导出</el-button>
       </div>
     </div>
+    <div class="view-overview">
+      <div class="overview-item">
+        <div class="overview-text">
+          <div class="overview-text__title">设备总数</div>
+          <div class="overview-text__value">{{ overviewData.total }}</div>
+        </div>
+        <img class="overview-icon" src="@assets/icon-file.png" />
+      </div>
+      <div class="overview-item">
+        <div class="overview-text">
+          <div class="overview-text__title">设备在线率</div>
+          <div class="overview-text__value">{{ overviewData.onlineRate }}%</div>
+        </div>
+        <div class="overview-icon"></div>
+        <img class="overview-icon" src="@assets/icon-connection.png" />
+      </div>
+      <div class="overview-item">
+        <div class="overview-text">
+          <div class="overview-text__title">设备故障率</div>
+          <div class="overview-text__value">{{ overviewData.faultRate }}%</div>
+        </div>
+        <img class="overview-icon" src="@assets/icon-error.png" />
+      </div>
+      <div class="overview-item">
+        <div class="overview-text">
+          <div class="overview-text__title">设备预警率</div>
+          <div class="overview-text__value">{{ overviewData.alarmRate }}%</div>
+        </div>
+        <img class="overview-icon" src="@assets/icon-alarm.png" />
+      </div>
+    </div>
     <div class="view-body">
-      <el-table v-loading="loadingList" :data="list" border height="100%">
+      <el-table v-loading="loadingList" :data="list" height="100%" :stripe="true">
         <el-table-column type="selection" width="40px" align="center">
         </el-table-column>
         <el-table-column type="index" width="40px" align="center">
@@ -101,85 +132,95 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
-import { getByKeyword, add, DevicesQueryParams, remove } from '@api/server/device'
+  import { defineComponent, onMounted, ref } from 'vue'
+  import { getByKeyword, add, DevicesQueryParams, remove, statistics } from '@api/server/device'
 
-import TlSelect from '../components/selector/index.vue'
-import TlSearch from '../components/search/index.vue'
+  import TlSelect from '../components/selector/index.vue'
+  import TlSearch from '../components/search/index.vue'
 
-import options from './options'
-import columns from './columns'
+  import options from './options'
+  import columns from './columns'
 
-import { addFormRules } from './formRules'
+  import { addFormRules } from './formRules'
 
-export default defineComponent({
-  name: 'Devices',
-  components: { TlSelect, TlSearch },
+  export default defineComponent({
+    name: 'Devices',
+    components: { TlSelect, TlSearch },
 
-  setup() {
-    // table list and pagination
-    const list = ref<{ [key: string]: any }[]>([])
-    const loadingList = ref(true)
-    const totalNum = ref(10)
-    const currentPage = ref(1)
-    const pageSize = ref(10)
-    const currentPageChange = (current: number) => {getList({current})}
-    const sizeChange = (size: number) => {getList(size)}
+    setup() {
+      // table list and pagination
+      const list = ref<{ [key: string]: any }[]>([])
+      const loadingList = ref(true)
+      const totalNum = ref(10)
+      const currentPage = ref(1)
+      const pageSize = ref(10)
+      const currentPageChange = (current: number) => { getList({ current }) }
+      const sizeChange = (size: number) => { getList(size) }
 
-    const getList = async (_params?: any) => {
-      const params: DevicesQueryParams = {
-        size: pageSize.value,
-        current: 1,
-        online: isOnline.value,
-        status: status.value,
-        keyword: keyword.value,
-        keywordType: keywordType.value,
-        active: isActive.value,
-        ..._params
+      const getList = async (_params?: any) => {
+        const params: DevicesQueryParams = {
+          size: pageSize.value,
+          current: 1,
+          online: isOnline.value,
+          status: status.value,
+          keyword: keyword.value,
+          keywordType: keywordType.value,
+          active: isActive.value,
+          ..._params
+        }
+        const resData = (await getByKeyword(params, '访问成功')).data
+        list.value = resData.records.map((d: any) => ({
+          ...d,
+          onlineName: (options.isOnline.find(o => o.value === d.online))?.label,
+          statusName: (options.status.find(o => o.value === d.status))?.label,
+          activeName: (options.isActive.find(o => o.value === d.active))?.label,
+        }))
+        totalNum.value = +resData.total
+        pageSize.value = +resData.size
+        loadingList.value = false
       }
-      const resData = (await getByKeyword(params, '访问成功')).data
-      list.value = resData.records.map((d: any) => ({
-        ...d,
-        onlineName: (options.isOnline.find(o => o.value === d.online))?.label,
-        statusName: (options.status.find(o => o.value === d.status))?.label,
-        activeName: (options.isActive.find(o => o.value === d.active))?.label,
-      }))
-      totalNum.value = +resData.total
-      pageSize.value = +resData.size
-      loadingList.value = false
-    }
 
-    // filter form
-    const keyword = ref('')
-    const keywordType = ref<1 | 2 | 3>(1)
-    const type = ref(0)
-    const isOnline = ref<1 | 2 | 3>()
-    const status = ref<0 | 1>()
-    const isActive = ref<0 | 1>()
+      // filter form
+      const keyword = ref('')
+      const keywordType = ref<1 | 2 | 3>(1)
+      const type = ref(0)
+      const isOnline = ref<1 | 2 | 3>()
+      const status = ref<0 | 1>()
+      const isActive = ref<0 | 1>()
 
-    // addForm
-    const formEl = ref(null)
-    const dialogVisible = ref(false)
-    const submitAddForm = () => {
+      // addForm
+      const formEl = ref(null)
+      const dialogVisible = ref(false)
+      const submitAddForm = () => {
 
-    }
+      }
 
-    onMounted(() => void getList())
+      // overview data
+      const overviewData = ref({})
 
-    const deleteItem = (id: string) => {
-      remove(id)
-    }
+      const init = async () => {
+        getList()
+        overviewData.value = (await statistics()).data
+        console.log(overviewData.value)
+      }
 
-    return {
-      options, columns,
-      list, loadingList,
-      keyword, keywordType, type, status, isActive, isOnline,
-      getList, pageSize, currentPage, totalNum, sizeChange, currentPageChange,
-      formEl, addFormRules, dialogVisible, submitAddForm,
-      deleteItem
-    }
-  },
+      onMounted(() => void init())
 
-})
+      const deleteItem = (id: string) => {
+        remove(id)
+      }
+
+      return {
+        options, columns,
+        list, loadingList,
+        keyword, keywordType, type, status, isActive, isOnline,
+        getList, pageSize, currentPage, totalNum, sizeChange, currentPageChange,
+        formEl, addFormRules, dialogVisible, submitAddForm,
+        overviewData,
+        deleteItem
+      }
+    },
+
+  })
 </script>
 

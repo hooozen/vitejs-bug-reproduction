@@ -2,6 +2,7 @@
   <el-input
     class="tl-search"
     :modelValue="keyword"
+    :placeholder="placeholder"
     @input="$emit('update:keyword', $event)"
   >
     <template v-if="keywordTypes" #prepend>
@@ -49,6 +50,10 @@
         type: Boolean,
         default: false,
         required: false
+      },
+      placeholder: {
+        type: String,
+        default: '请输入'
       }
     },
     setup(props) {

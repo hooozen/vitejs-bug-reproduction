@@ -52,7 +52,7 @@
 <style lang="postcss">
   .tl-select {
     & .el-input {
-      width: 100px;
+      width: 120px;
     }
   }
 </style>
