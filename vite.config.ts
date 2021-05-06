@@ -18,6 +18,7 @@ export default defineConfig({
       '@store': path.resolve(__dirname, 'src/store'),
       '@router': path.resolve(__dirname, 'src/router'),
       '@views': path.resolve(__dirname, 'src/views'),
+      '@assets': path.resolve(__dirname, 'src/assets'),
     },
     extensions: ['.ts', '.js']
   },

@@ -11,11 +11,11 @@
       </div>
       <el-scrollbar class="aside__body">
         <el-menu
-          background-color="#3a3f51"
-          text-color="#fff"
-          active-text-color="#4f94d4"
+          background-color="#32353E"
+          text-color="#909399"
           :uniqueOpened="true"
           :default-active="currentPath"
+          active-text-color="#fff"
           :router="true"
           class="el-menu-outer"
           :collapse="isCollapse"
@@ -98,7 +98,7 @@
   }
   .aside .aside__body {
     box-sizing: border-box;
-    border-top: 1px solid #545c64;
+    border: none;
     margin-top: 50px;
     height: calc(100% - 50px);
     padding-bottom: 20px;

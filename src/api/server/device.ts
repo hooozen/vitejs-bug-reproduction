@@ -43,4 +43,8 @@ function remove(id: string, config?: $AxiosRequestConfig) {
   return axios('delete', '/admin/device/delete', { id }, config)
 }
 
-export { getByKeyword, add, getById, remove, update }
+function statistics(config?: $AxiosRequestConfig) {
+ return  axios('get',  '/admin/device/statistics', {}, config)
+}
+
+export { getByKeyword, add, getById, remove, update, statistics }

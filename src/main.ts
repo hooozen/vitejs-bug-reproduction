@@ -7,11 +7,12 @@ import 'dayjs/locale/zh-cn'
 import locale from 'element-plus/lib/locale/lang/zh-cn'
 
 import ElementPlus from 'element-plus'
-import 'element-plus/lib/theme-chalk/index.css'
+// import 'element-plus/lib/theme-chalk/index.css'
+import './custome.scss'
 
 
 createApp(App)
   .use(store)
   .use(router)
-  .use(ElementPlus, { locale, size: 'small' })
+  .use(ElementPlus, { locale })
   .mount('#app')
