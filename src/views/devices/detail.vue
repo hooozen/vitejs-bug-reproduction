@@ -122,7 +122,7 @@
   import { computed, defineComponent, onMounted, ref } from "vue";
   import { useRoute } from "vue-router";
 
-  import NavBar from "../components/navBar/index.vue";
+  import NavBar from "../components/nav-bar/index.vue";
   import TMap from "../components/TMap/index.vue";
   import TlAddress from "../components/address/index.vue";
 

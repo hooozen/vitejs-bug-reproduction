@@ -1,9 +1,13 @@
 import { AxiosPromise } from 'axios'
 import { $AxiosRequestConfig, post } from '../axios'
-import { ListParams } from './interface'
+import { PagingQueryParams } from './interface'
 
-function getByKeyword(string: string, config?: $AxiosRequestConfig) {
-  return post('/admin/store/getByKeyword', { string }, config)
+interface StoreQueryParams extends PagingQueryParams {
+  name?: string,
+}
+
+function getByKeyword(params: StoreQueryParams, config?: $AxiosRequestConfig) {
+  return post('/admin/store/getByKeyword', params, config)
 }
 
 export { getByKeyword }

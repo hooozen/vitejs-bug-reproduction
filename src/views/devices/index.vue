@@ -36,7 +36,7 @@
       <el-input width="100px" v-model="sequence" placeholder="请输入设备序列号">
       </el-input>
       <el-input v-model="name" placeholder="请输入设备名称"> </el-input>
-      <el-input v-model="storeId" placeholder="请输入当前归属"> </el-input>
+      <tl-store v-model="storeId"></tl-store>
       <el-date-picker v-model="createTime" type="date" placeholder="添加日期">
       </el-date-picker>
     </div>
@@ -149,6 +149,7 @@
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'
   import TlAddress from '../components/address/index.vue'
+  import TlStore from '../components/store-select/index.vue'
 
   import options from './options'
   import columns from './columns'
@@ -157,7 +158,7 @@
 
   export default defineComponent({
     name: 'Devices',
-    components: { TlSelect, TlSearch, TlAddress },
+    components: { TlSelect, TlSearch, TlAddress, TlStore },
 
     setup() {
       // table list and pagination

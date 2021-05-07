@@ -117,7 +117,7 @@ import { computed, defineComponent, onMounted, ref } from 'vue'
 
 import { ElMessage } from 'element-plus'
 
-import NavBar from '../components/navBar/index.vue'
+import NavBar from '../components/nav-bar/index.vue'
 import TMap from '../components/TMap/index.vue'
 import TlAddress from '../components/address/index.vue'
 import TlSelect from '../components/selector/index.vue'

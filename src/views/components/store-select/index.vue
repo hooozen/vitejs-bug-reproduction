@@ -2,11 +2,9 @@
   <el-select
     :modelValue="modelValue"
     @change="updateValue"
-    multiple
     filterable
     remote
-    reserve-keyword
-    placeholder="请输入关键词"
+    :placeholder="placeholder"
     :remote-method="remoteMethod"
     :loading="loading"
   >
@@ -21,11 +19,14 @@
 </template>
 <script lang="ts">
   import { defineComponent, ref } from 'vue'
+  import { getByKeyword } from '@api/server/stores'
 
   export default defineComponent({
+    name: 'TlStore',
     props: {
       modelValue: {
         type: [String, Number],
+        require: false,
       },
       placeholder: {
         type: String,
@@ -38,24 +39,24 @@
       const loading = ref<Boolean>(false)
       const options = ref<OptionData[]>([])
 
-      const remoteMethod = (query: string) {
+      const remoteMethod = async (query: string) => {
         if (query !== '') {
-          loading.value = true;
-          setTimeout(() => {
-            loading.value = false;
-            options.value = this.list.filter(item => {
-              return item.label.toLowerCase()
-                .indexOf(query.toLowerCase()) > -1;
-            });
-          }, 200);
+          loading.value = true
+          const res = (await getByKeyword({name: query, current: 0, size: 10})).data
+          options.value = res.records.map((item: any) => ({
+            value: item.id,
+            label: item.name
+          }))
+          loading.value = false
         } else {
-          this.options = [];
+          options.value = [];
         }
       }
       const updateValue = (value: string | number) => {
+        console.log(value)
         context.emit('update:modelValue', value)
       }
-      return { updateValue }
+      return { updateValue, options, remoteMethod, loading }
     },
   })
 </script>
