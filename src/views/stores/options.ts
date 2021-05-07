@@ -7,17 +7,14 @@ const region: OptionData[] = [{
 }]
 
 const status: OptionData[] = [{
-  label: '门店状态',
-  value: '0',
-}, {
   label: '营业中',
-  value: '1'
+  value: 1
 }, {
   label: '歇业中',
-  value: '2'
+  value: 2
 }, {
   label: '闭店',
-  value: '3'
+  value: 3
 }]
 
 const type: OptionData[] = [{

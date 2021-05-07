@@ -2,7 +2,6 @@ import { AddParams } from '@api/server/operator'
 
 interface FormData extends AddParams {
   _district: Array<string>,
-  _businessScope: Array<string>
   _position: Array<string> | Array<number>
 }
 
@@ -13,12 +12,8 @@ const template: FormData = {
   addressArea: '',
   addressCity: '',
   addressProvince: '',
-  addressStreet: '',
-  businessArea: '',
-  businessCity: '',
   businessLicense: '',
-  businessProvince: '',
-  businessStreet: '',
+  addressStreet: '',
   code: '',
   contacts: '',
   description: '',
@@ -49,15 +44,6 @@ const template: FormData = {
     return [this.addressProvince, this.addressCity, this.addressArea, this.addressStreet].filter(item => item)
   },
 
-  set _businessScope(value: string[]) {
-    this.businessProvince = value[0] || ''
-    this.businessCity = value[1] || ''
-    this.businessArea = value[2] || ''
-    this.businessStreet = value[3] || ''
-  },
-  get _businessScope() {
-    return [this.businessProvince, this.businessCity, this.businessArea, this.businessStreet].filter(item => item)
-  }
 }
 
 const generateFormData = (_formData: AddParams): FormData => {
@@ -84,16 +70,6 @@ const generateFormData = (_formData: AddParams): FormData => {
     get _district() {
       return [this.addressProvince, this.addressCity, this.addressArea, this.addressStreet].filter(item => item)
     },
-
-    set _businessScope(value: string[]) {
-      this.businessProvince = value[0] || ''
-      this.businessCity = value[1] || ''
-      this.businessArea = value[2] || ''
-      this.businessStreet = value[3] || ''
-    },
-    get _businessScope() {
-      return [this.businessProvince, this.businessCity, this.businessArea, this.businessStreet].filter(item => item)
-    }
   }
 }
 

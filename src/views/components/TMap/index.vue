@@ -107,4 +107,12 @@ export default defineComponent({
 </script>
 
 <style lang="postcss">
+.tl-map {
+  & .el-input-number {
+    width: 100px;
+  }
+  & .map-outer {
+    margin-top: 10px;
+  }
+}
 </style>

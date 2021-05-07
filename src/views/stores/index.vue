@@ -43,7 +43,7 @@
         </el-table-column>
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
-            <router-link class="text-btn" :to="`/device-detail?id=${scope.row.id}`">
+            <router-link class="text-btn" :to="`/store-detail?id=${scope.row.id}`">
               详情
             </router-link>
             <span class="text-btn" href="#" @click="deleteItem(scope.row.id)"
@@ -69,7 +69,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
-  import { getByKeyword, remove } from '@api/server/stores'
+  import { getByKeyword, remove } from '@/api/server/store'
 
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'

@@ -4,6 +4,7 @@
     @change="updateValue"
     filterable
     remote
+    multiple
     :placeholder="placeholder"
     :remote-method="remoteMethod"
     :loading="loading"
@@ -19,31 +20,32 @@
 </template>
 <script lang="ts">
   import { defineComponent, ref } from 'vue'
-  import { getByKeyword } from '@/api/server/store'
+  import { getByKeyword } from '@/api/server/tag'
 
   export default defineComponent({
-    name: 'TlStore',
+    name: 'TlTag',
     props: {
       modelValue: {
-        type: [String, Number],
+        type: Array,
         require: false,
       },
       placeholder: {
         type: String,
-        default: '输入门店名称',
+        default: '输入标签',
       }
     },
-    emits: ['update:modelValue'],
+    emits: ['update:modelValue', 'change'],
 
     setup(props, context) {
       const loading = ref<Boolean>(false)
       const options = ref<OptionData[]>([])
 
       const remoteMethod = async (query: string) => {
+        console.log(query)
         if (query !== '') {
           loading.value = true
-          const res = (await getByKeyword({name: query, current: 0, size: 10})).data
-          options.value = res.records.map((item: any) => ({
+          const res = (await getByKeyword(query)).data
+          options.value = res.map((item: any) => ({
             value: item.id,
             label: item.name
           }))
@@ -55,6 +57,7 @@
       const updateValue = (value: string | number) => {
         console.log(value)
         context.emit('update:modelValue', value)
+        context.emit('change', value)
       }
       return { updateValue, options, remoteMethod, loading }
     },
