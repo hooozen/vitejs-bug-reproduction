@@ -29,12 +29,26 @@
           :prop="col.prop"
         >
         </el-table-column>
+        <el-table-column label="设备状态" min-width="140px">
+          <template #default="scope">
+            <div
+              v-for="d in scope.row.deviceList"
+              :key="d.sequence"
+              class="device-list"
+            >
+              <div :style="`background: ${d.status == 1 ? '#75F94C' : d.status == 0 ? '#EB3223' : 'transport'}`" class="status-dot"></div>
+              {{ d.name }} : {{ d.sequence }}
+            </div>
+          </template>
+        </el-table-column>
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
-            <router-link :to="`/device-detail?id=${scope.id}`"
-              >详情</router-link
+            <router-link class="text-btn" :to="`/device-detail?id=${scope.row.id}`">
+              详情
+            </router-link>
+            <span class="text-btn" href="#" @click="deleteItem(scope.row.id)"
+              >删除</span
             >
-            <a href="#" @click="deleteItem(scope.id)">删除</a>
           </template>
         </el-table-column>
       </el-table>
@@ -55,14 +69,13 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
-  import { getByKeyword } from '@api/server/stores'
+  import { getByKeyword, remove } from '@api/server/stores'
 
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'
 
   import options from './options'
   import columns from './columns'
-  import { ListParams } from '@/api/axios'
 
   export default defineComponent({
     name: 'Stores',
@@ -73,17 +86,41 @@
       const list = ref<{ [key: string]: any }[]>([])
       const loadingList = ref(true)
       const listLength = ref(10)
-      const currentPage = ref(1)
+      const code = ref<string>()
+      const contacts = ref<string>()
+      const createTime = ref<string>()
+      const status = ref<1 | 2 | 3>()
+      const tag = ref<string>()
+      const tel = ref<string>()
+      const currentPage = ref<number>(1)
       const pageSize = ref(10)
-      const currentPageChange = (page: number) => getList({ pageNum: page })
-      const pageSizeChange = (size: number) => getList({ pageSize: size })
-      const getList = async (params?: ListParams) => {
-        params = { pageSize: pageSize.value, ...params }
-        try {
-          const resData = (await getByKeyword(params, '访问成功')).data
-          list.value = resData.list
-          listLength.value = resData.total
-        } catch { }
+      const currentPageChange = (current: number) => {
+        console.log(current)
+        console.log('page change')
+        getList({ current })
+      }
+      const pageSizeChange = (size: number) => {
+        console.log('size change')
+        getList({ size })
+      }
+      const getList = async (_params?: any) => {
+        const params = {
+          size: pageSize.value,
+          current: 1,
+          code: code.value,
+          contacts: contacts.value,
+          createTime: createTime.value,
+          tag: tag.value,
+          tel: tel.value,
+          ..._params
+        }
+        const resData = (await getByKeyword(params, '访问成功')).data
+        list.value = resData.records.map((item: any) => ({
+          ...item,
+          tagName: item.tags.join(';')
+        }))
+        listLength.value = +resData.total
+        pageSize.value = +resData.size
         loadingList.value = false;
       }
 
@@ -91,21 +128,42 @@
       const searchKey = ref('')
       const type = ref(0)
       const isOnline = ref('')
-      const status = ref('')
       const isActive = ref('')
       const search = (searchKey: string) => getList({ keyWord: searchKey })
 
-      onMounted(() => {
-        getList({ pageNum: 1 })
-      })
+      const init = () => {
+        getList({ current: 1 })
+      }
+
+      const deleteItem = (id: string) => {
+        remove(id)
+      }
+
+      onMounted(() => void init())
       return {
         options, columns,
         list, loadingList,
         searchKey, type, status, isActive, isOnline, search,
         pageSize, currentPage, listLength, pageSizeChange, currentPageChange,
+        deleteItem,
       }
     },
 
   })
 </script>
-
+<style lang="scss" scoped>
+  .store {
+    .device-list {
+      display: flex;
+      align-items: center;
+      .status-dot {
+        background: #bbb;
+        height: 6px;
+        margin-right: 6px;
+        transform: translateY(-1px);
+        width: 6px;
+        border-radius: 3px;
+      }
+    }
+  }
+</style>

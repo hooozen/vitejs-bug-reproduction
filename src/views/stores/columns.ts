@@ -1,20 +1,15 @@
 const columns: TableColumnData[] = [{
-  label: '组织代码',
-  sortable: true,
+  label: '门店编号',
   prop: 'code',
 }, {
   label: '门店名称',
-  sortable: true,
   prop: 'name',
-}, {
-  label: '门店类型',
-  prop: 'type',
 }, {
   label: '门店状态',
   prop: 'status',
 }, {
   label: '联系人',
-  prop: 'owner',
+  prop: 'contacts',
 }, {
   label: '联系电话',
   prop: 'tel'
@@ -23,10 +18,12 @@ const columns: TableColumnData[] = [{
   prop: 'address'
 }, {
   label: '代理商',
-  prop: 'agent'
-}, {
-  label: '注册时间',
-  prop: 'registerDate'
+  prop: 'operatorName'
 }]
+/*,{
+  label: '注册时间',
+  prop: 'createTime'
+}]
+*/
 
 export default columns

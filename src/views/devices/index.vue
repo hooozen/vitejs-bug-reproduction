@@ -23,7 +23,7 @@
           <el-input v-model="addForm.name"></el-input>
         </el-form-item>
         <el-form-item label="归属" prop="storeId">
-          <el-input v-model="addForm.storeId"></el-input>
+          <tl-store v-model="addForm.storeId"></tl-store>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -213,7 +213,7 @@
         deviceTypeId: ''
       })
       const formEl = ref(null)
-      const dialogVisible = ref(false)
+      const dialogVisible = ref<Boolean>(false)
       const deviceTypeName = ref<string>('')
 
       const getDeviceTypeName = async (event: any) => {
