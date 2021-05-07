@@ -87,7 +87,6 @@
     display: flex;
     flex: 1;
     background: #fff;
-    background: #131620;
     flex-direction: column;
     overflow: hidden;
   }

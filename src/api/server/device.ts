@@ -4,18 +4,23 @@ import axios, { $AxiosRequestConfig } from '../axios'
 import { PagingQueryParams } from './interface'
 
 export interface DevicesQueryParams extends PagingQueryParams {
+  area?: string
+  createTime?: string
   active?: 0 | 1
-  keywordType?: 1 | 2 | 3
-  deviceTypeId?: number
+  name?: string
+  orgId?: string
+  storeId?: string
+  sequence?: string
   online?: 1 | 2 | 3
   status?: 0 | 1
 }
 
 export interface AddParams {
-  name?: string,
+  authCode: string,
+  name: string,
   sequence: string,
-  deviceTypeId: number,
-  storeId: number,
+  deviceTypeId: number | string,
+  storeId: number | string,
 }
 
 

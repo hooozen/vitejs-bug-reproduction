@@ -2,16 +2,16 @@ const columns: TableColumnData[] = [{
   prop: 'sequence',
   label: '序列号',
 }, {
-  prop: '',
+  prop: 'authCode',
   label: '验证码',
 }, {
   prop: 'name',
   label: '设备名称',
 }, {
-  prop: 'storeId',
+  prop: 'storeName',
   label: '当前归属',
 }, {
-  prop: 'deviceTypeId',
+  prop: 'deviceTypeName',
   label: '设备型号',
 }, {
   prop: 'onlineName',

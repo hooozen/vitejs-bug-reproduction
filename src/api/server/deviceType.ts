@@ -13,6 +13,12 @@ export interface UpdateParams extends AddParams {
   id: number | string 
 }
 
+function getByDeviceSequence (sequence: string, config?:$AxiosRequestConfig) {
+  return axios('get', '/admin/device/type/getByDeviceSequence', {sequence}, config)
+}
+
+
+
 function getByKeyword(params: PagingQueryParams, config?: $AxiosRequestConfig) {
   return axios('post', 'admin/device/type/getByKeyword', params, config)
 }
@@ -33,5 +39,5 @@ function remove(id: string, config?: $AxiosRequestConfig) {
   return axios('delete', '/admin/device/type/delete', { id }, config)
 }
 
-export { getByKeyword, add, getById, remove, update }
+export { getByKeyword, add, getById, remove, update, getByDeviceSequence }
 

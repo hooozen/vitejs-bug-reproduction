@@ -18,15 +18,33 @@
     padding: 10px 10px 0;
   }
 
+  & .view-panel-line {
+    display: flex;
+    padding: 10px 10px 0;
+    & .el-select .el-input {
+      width: 160px;
+    }
+    & .el-input {
+      width: 280px;
+      margin: 0 10px;
+    }
+  }
+
   & .panel__filter {
     & > *:not(:first-child) {
       margin-left: 10px;
     }
     display: flex;
+    flex-wrap: wrap;
   }
 
   & .panel__opt {
     display: flex;
+  }
+
+  & .panel__btns {
+    display: flex;
+    justify-content: flex-end;
   }
 
   & .view-overview {

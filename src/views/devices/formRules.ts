@@ -2,14 +2,17 @@ const addFormRules = {
   sequence: [{
     required: true, message: '请输入设备序列号'
   }],
-  code: [{
+  authCode: [{
     required: true, message: '请输入设备验证码'
   }],
   name: [{
     required: true, message: '请输入设备名称'
   }],
-  store: [{
+  storeId: [{
     required: true, message: '请选择归属门店'
+  }],
+  deviceTypeId: [{
+    required: true, message: '请输入设备序列号'
   }]
 }
 
