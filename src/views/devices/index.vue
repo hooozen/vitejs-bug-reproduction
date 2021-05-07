@@ -221,8 +221,10 @@
         addForm.value.deviceTypeId = deviceInfo.id
       }
 
-      const submitAddForm = () => {
-        console.log(addForm.value)
+      const submitAddForm = async () => {
+        await add(addForm.value)
+        dialogVisible.value = false
+        getList()
       }
 
       // overview data

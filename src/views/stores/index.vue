@@ -55,13 +55,14 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
-  import { stores, ListParams } from '@api/server'
+  import { getByKeyword } from '@api/server/stores'
 
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'
 
   import options from './options'
   import columns from './columns'
+  import { ListParams } from '@/api/axios'
 
   export default defineComponent({
     name: 'Stores',
@@ -79,7 +80,7 @@
       const getList = async (params?: ListParams) => {
         params = { pageSize: pageSize.value, ...params }
         try {
-          const resData = (await stores(params, '访问成功')).data
+          const resData = (await getByKeyword(params, '访问成功')).data
           list.value = resData.list
           listLength.value = resData.total
         } catch { }

@@ -19,16 +19,16 @@
         >
           <div class="item-body-column" style="flex-basis: 400px">
             <el-form-item prop="sequence" label="设备序列号:">
-              {{ formData.sequence }}
+              {{ deviceInfo.sequence }}
             </el-form-item>
             <el-form-item prop="type" label="设备型号:">
-              {{ formData.type }}
+              {{ deviceInfo.deviceType.name }}
             </el-form-item>
             <el-form-item prop="name" label="设备名称:">
-              <el-input v-model="formData.name"></el-input>
+              <el-input v-model="deviceInfo.name"></el-input>
             </el-form-item>
             <el-form-item prop="store" label="当前归属:">
-              <el-input v-model="formData.store"></el-input>
+              <el-input v-model="deviceInfo.store.name"></el-input>
             </el-form-item>
             <el-form-item prop="online" label="在线状态:">
               {{ formData.online }}
@@ -45,7 +45,7 @@
               {{ formData.active }}
             </el-form-item>
             <el-form-item label="添加时间:">
-              {{ formData.code }}
+              {{ deviceInfo.createTime }}
             </el-form-item>
             <el-form-item label="激活时间:">
               {{ formData.createTime }}
@@ -54,6 +54,7 @@
               {{ formData.createTime }}
             </el-form-item>
           </div>
+          <!--
           <div class="item-body-column detail-map">
             <el-form-item label="经纬度" prop="_position">
               <t-map
@@ -64,6 +65,7 @@
               </t-map>
             </el-form-item>
           </div>
+          -->
         </el-form>
       </div>
       <div class="main-item">
@@ -142,10 +144,8 @@
       }
     },
     setup(props) {
-      const formData = ref<AddParams>({} as any)
+      const formData = ref({})
       const formEl = ref(null)
-
-      formData.value = formDataTemplate
 
       const route = useRoute()
       const id = computed(() => route.query.id)
@@ -179,19 +179,34 @@
         console.log(name.join('/'))
       }
 
+      const deviceInfo = ref({
+        createTime: '',
+        name: '',
+        sequence: '',
+        deviceType: {},
+        store: {}
+      })
+      const getDeviceInfo = async () => {
+        const data = (await getById(id.value as string)).data
+        deviceInfo.value = data.deviceInfo
+      }
 
-      onMounted(async () => {
-        if (id.value) {
-          const originalForm = (await getById(id.value as string)).data
-          formData.value = generateFormData(originalForm)
-        }
+      const init = () => {
+        if (id.value) getDeviceInfo()
+      }
+
+
+      onMounted(() => {
+        console.log('xxxx')
+        void init()
       })
 
       return {
         title, editable,
         updateFormDistrictName,
         updateFormBusinessScopeName,
-        location, activeTab, formData, formRules, submitForm, formEl
+        location, activeTab, formData, formRules, submitForm, formEl,
+        deviceInfo, 
       };
     },
   });
