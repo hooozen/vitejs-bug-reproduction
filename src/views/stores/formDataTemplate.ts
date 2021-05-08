@@ -1,11 +1,18 @@
 import { AddParams } from '@api/server/store'
 import moment from 'moment'
 
+interface Tag {
+  id: number | string,
+  name: string,
+  [propName: string]: any,
+}
+
 interface FormData extends AddParams {
   _district: Array<string>
   _position: Array<string> | Array<number>
   _timeRange: Array<string> | Array<Date>
-  _tags: string[]
+  _tags: Tag[]
+  __tags: Tag[]
 }
 
 const template: FormData = {
@@ -20,21 +27,25 @@ const template: FormData = {
   code: '',
   contacts: '',
   description: '',
-  latitude: '',
-  longitude: '',
+  latitude: '39.90689',
+  longitude: '116.3976',
   name: '',
   openingTimeEnd: '',
   openingTimeStart: '',
   status: '',
   orgId: '',
   tel: '',
+  photo: '',
+  socialCreditCode: '',
+  __tags: [],
 
-  set _tags(value: string[]) {
-    this.tag = value.join(',')
+  set _tags(value: Tag[]) {
+    this.__tags = value
+    this.tag = value.map((t: Tag) => t.id).join(',')
   },
 
   get _tags() {
-    return this.tag?.split(',') || []
+    return this.__tags
   },
 
   set _timeRange(value: | string[] | Date[]) {
@@ -44,9 +55,9 @@ const template: FormData = {
   },
 
   get _timeRange() {
-    const openingTimeEnd = this.openingTimeEnd ? new Date(this.openingTimeEnd) : new Date(1949, 9, 1, 17, 0)
-    const openingTimeStart = this.openingTimeStart ? new Date(this.openingTimeStart) : new Date(1949, 9, 1, 8, 0)
-    return [openingTimeStart, openingTimeEnd]
+    this.openingTimeEnd = this.openingTimeEnd || "1949-10-01 09:00:00"
+    this.openingTimeStart = this.openingTimeStart || "1949-10-01 17:00:00"
+    return [new Date(this.openingTimeStart), new Date(this.openingTimeEnd)]
   },
 
   set _position(value: number[] | string[]) {
@@ -71,19 +82,25 @@ const template: FormData = {
 
 }
 
-const generateFormData = (_formData: AddParams): FormData => {
+interface GotData extends AddParams {
+  tags: Tag[]
+}
+
+
+const generateFormData = (_formData: GotData): FormData => {
   return {
     ..._formData,
 
+    __tags: _formData.tags,
 
-    set _tags(value: string[]) {
-      this.tag = value.join(',')
+    set _tags(value: Tag[]) {
+      this.__tags = value
+      this.tag = value.map((t: Tag) => t.id).join(',')
     },
 
     get _tags() {
-      return this.tag?.split(',') || []
+      return this.__tags
     },
-
 
     set _timeRange(value: | string[] | Date[]) {
       console.log(value)
@@ -92,9 +109,9 @@ const generateFormData = (_formData: AddParams): FormData => {
     },
 
     get _timeRange() {
-      const openingTimeEnd = this.openingTimeEnd ? new Date(this.openingTimeEnd) : new Date(1949, 9, 1, 17, 0)
-      const openingTimeStart = this.openingTimeStart ? new Date(this.openingTimeStart) : new Date(1949, 9, 1, 8, 0)
-      return [openingTimeStart, openingTimeEnd]
+      this.openingTimeEnd = this.openingTimeEnd || "1949-10-01 09:00:00"
+      this.openingTimeStart = this.openingTimeStart || "1949-10-01 17:00:00"
+      return [new Date(this.openingTimeStart), new Date(this.openingTimeEnd)]
     },
 
     set _position(value: number[] | string[]) {

@@ -9,7 +9,9 @@
         <tl-select :options="options.status" v-model="status"></tl-select>
       </div>
       <div class="panel__opt">
-        <el-button type="primary">新增</el-button>
+        <el-button type="primary" @click="router.push('add-store')"
+          >新增</el-button
+        >
         <el-button type="danger">删除</el-button>
         <el-button>导入</el-button>
         <el-button>导出</el-button>
@@ -36,14 +38,26 @@
               :key="d.sequence"
               class="device-list"
             >
-              <div :style="`background: ${d.status == 1 ? '#75F94C' : d.status == 0 ? '#EB3223' : 'transport'}`" class="status-dot"></div>
+              <div
+                :style="`background: ${
+                  d.status == 1
+                    ? '#75F94C'
+                    : d.status == 0
+                    ? '#EB3223'
+                    : 'transport'
+                }`"
+                class="status-dot"
+              ></div>
               {{ d.name }} : {{ d.sequence }}
             </div>
           </template>
         </el-table-column>
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
-            <router-link class="text-btn" :to="`/store-detail?id=${scope.row.id}`">
+            <router-link
+              class="text-btn"
+              :to="`/store-detail?id=${scope.row.id}`"
+            >
               详情
             </router-link>
             <span class="text-btn" href="#" @click="deleteItem(scope.row.id)"
@@ -69,6 +83,7 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
+  import { useRouter } from 'vue-router'
   import { getByKeyword, remove } from '@/api/server/store'
 
   import TlSelect from '../components/selector/index.vue'
@@ -139,6 +154,8 @@
         remove(id)
       }
 
+      const router = useRouter()
+
       onMounted(() => void init())
       return {
         options, columns,
@@ -146,6 +163,7 @@
         searchKey, type, status, isActive, isOnline, search,
         pageSize, currentPage, listLength, pageSizeChange, currentPageChange,
         deleteItem,
+        router,
       }
     },
 

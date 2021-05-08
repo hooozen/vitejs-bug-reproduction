@@ -17,8 +17,8 @@ const columns: TableColumnData[] = [{
   label: '门店地址',
   prop: 'address'
 }, {
-  label: '代理商',
-  prop: 'operatorName'
+  label: '组织',
+  prop: 'orgName'
 }]
 /*,{
   label: '注册时间',

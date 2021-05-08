@@ -13,7 +13,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from "vue";
-import { add, update, remove, getTree } from "@api/server/organization";
+import { getTree } from "@api/server/organization";
 
 export default defineComponent({
   name: "TlOrganization",

@@ -39,6 +39,11 @@ const routes = [
       props: { type: 'edit' },
       component: StoreDetail
     }, {
+      name: 'add-store',
+      path: 'add-store',
+      props: { type: 'add' },
+      component: StoreDetail
+    }, {
       path: 'staff',
       component: Staff,
     }, {

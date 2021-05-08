@@ -49,7 +49,11 @@ function remove(id: string, config?: $AxiosRequestConfig) {
 }
 
 function statistics(config?: $AxiosRequestConfig) {
- return  axios('get',  '/admin/device/statistics', {}, config)
+  return axios('get', '/admin/device/statistics', {}, config)
 }
 
-export { getByKeyword, add, getById, remove, update, statistics }
+function getByStoreId(storeId: string | number, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('get', '/admin/device/getByStoreId', { storeId }, config)
+}
+
+export { getByKeyword, add, getById, remove, update, statistics, getByStoreId }

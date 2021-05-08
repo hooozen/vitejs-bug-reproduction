@@ -244,6 +244,7 @@ export default defineComponent({
       uploadSuccess,
       uploadError,
       isUploadSuccess,
+      isUploading,
     }
   },
 })

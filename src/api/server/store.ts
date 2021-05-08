@@ -22,6 +22,7 @@ export interface AddParams {
   addressProvince: string
   addressStreet: string
   businessLicense: string
+  socialCreditCode: string
   code?: string
   contacts: string
   description?: string
@@ -31,7 +32,7 @@ export interface AddParams {
   openingTimeEnd: string
   openingTimeStart: string
   operatorId?: number | string
-  orgId: number | string 
+  orgId: number | string
   photo?: string
   status: number | string
   tag?: string

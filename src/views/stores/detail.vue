@@ -21,8 +21,8 @@
             <el-form-item prop="name" label="名称:">
               <el-input v-model="formData.name"></el-input>
             </el-form-item>
-            <el-form-item prop="orgId" label="组织代码:">
-              <el-input v-model="formData.orgId"></el-input>
+            <el-form-item prop="socialCreditCode" label="组织代码:">
+              <el-input v-model="formData.socialCreditCode"></el-input>
             </el-form-item>
             <el-form-item prop="contacts" label="联系人:">
               <el-input v-model="formData.contacts"></el-input>
@@ -45,13 +45,13 @@
                 :full="true"
               ></tl-address>
             </el-form-item>
-            <el-form-item prop="orgId" label="门店状态:">
+            <el-form-item prop="status" label="门店状态:">
               <tl-select
                 :options="options.status"
                 v-model="formData.status"
               ></tl-select>
             </el-form-item>
-            <el-form-item prop="orgId" label="营业时间:">
+            <el-form-item prop="_timeRange" label="营业时间:">
               <el-time-picker
                 is-range
                 v-model="formData._timeRange"
@@ -68,9 +68,14 @@
               <el-input v-model="formData.code"></el-input>
             </el-form-item>
             <el-form-item label="门店标签:" prop="tag">
-              <tl-tags :tags="formData.tags"></tl-tags>
+              <tl-tags v-model="formData._tags"></tl-tags>
             </el-form-item>
-            <el-form-item label="组织:" prop="status"> </el-form-item>
+            <el-form-item
+              v-if="type == 'edit'"
+              label="添加时间:"
+              prop="status"
+              >{{ formData.createTime }}</el-form-item
+            >
             <el-form-item label="备注:">
               <el-input
                 v-model="formData.description"
@@ -79,9 +84,9 @@
             </el-form-item>
             <el-form-item prop="businessLicense" label="营业执照:">
               <span
-                v-if="isShowViewBtn"
+                v-if="isShowLicenseViewBtn"
                 class="text-btn"
-                @click="isShowViewer = true"
+                @click="viewLicense"
               >
                 查看
               </span>
@@ -92,7 +97,7 @@
               ></el-image-viewer>
               <el-upload
                 action="/beer/admin/common/uploadFile"
-                :on-success="uploadSuccess"
+                :on-success="uploadLicenseSuccess"
                 :on-error="uploadError"
                 :before-upload="beforeUpload"
                 :showFileList="false"
@@ -105,6 +110,38 @@
                   <div class="el-upload__tip">支持扩展名：.jpg .png</div>
                 </template>
               </el-upload>
+            </el-form-item>
+            <el-form-item prop="storePhoto" label="门头照片:">
+              <span
+                v-if="isShowPhotoViewBtn"
+                class="text-btn"
+                @click="viewPhoto"
+              >
+                查看
+              </span>
+              <el-image-viewer
+                v-if="isShowViewer"
+                :url-list="[imagePreviewSrc]"
+                @close="isShowViewer = false"
+              ></el-image-viewer>
+              <el-upload
+                action="/beer/admin/common/uploadFile"
+                :on-success="uploadPhotoSuccess"
+                :on-error="uploadError"
+                :before-upload="beforeUpload"
+                :showFileList="false"
+              >
+                <el-button size="small" type="primary" v-loading="isUploading">
+                  <i class="el-icon-upload el-icon--right"></i>
+                  上传文件
+                </el-button>
+                <template #tip>
+                  <div class="el-upload__tip">支持扩展名：.jpg .png</div>
+                </template>
+              </el-upload>
+            </el-form-item>
+            <el-form-item prop="orgId" label="组织">
+              <tl-organization v-model="formData.orgId"></tl-organization>
             </el-form-item>
           </div>
           <div class="item-body-column detail-map">
@@ -122,7 +159,7 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, onMounted, ref } from 'vue'
+  import { computed, defineComponent, onMounted, ref, watchEffect } from 'vue'
 
   import { ElMessage } from 'element-plus'
 
@@ -182,19 +219,20 @@
       const mapCenter = ref<number[]>([39.90689, 116.3976])
 
       const title = computed(() =>
-        props.type === 'edit' ? '运营商详情' : '新增运营商',
+        props.type === 'edit' ? '门店详情' : '新增门店',
       )
 
       const activeTab = ref('data')
 
       const submitForm = () => {
-        ; (formEl.value as any).validate(async (valid: any) => {
+        (formEl.value as any).validate(async (valid: any) => {
           if (!valid) return
           let _formData: { [key: string]: any } = {}
           for (const [k, v] of Object.entries(formData.value)) {
             if (k.substring(0, 1) === '_') continue
             _formData[k] = v
           }
+          console.log(_formData)
           if (props.type === 'add') await add(_formData as AddParams, '新增成功')
           else await update(_formData as UpdateParams, '保存成功')
         })
@@ -207,14 +245,25 @@
       onMounted(async () => {
         if (id.value) {
           const originalForm = (await getById(id.value as string)).data
-          isShowViewBtn.value = true
-          imagePreviewSrc.value = originalForm.businessLicense
+          isShowLicenseViewBtn.value = true
+          isShowPhotoViewBtn.value = true
           formData.value = generateFormData(originalForm)
           mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
         }
       })
 
-      const isShowViewBtn = ref<boolean>(false)
+      const viewLicense = () => {
+        imagePreviewSrc.value = formData.value.businessLicense;
+        isShowViewer.value = true
+      }
+
+      const viewPhoto = () => {
+        imagePreviewSrc.value = formData.value.photo!
+        isShowViewer.value = true
+      }
+
+      const isShowLicenseViewBtn = ref<boolean>(false)
+      const isShowPhotoViewBtn = ref<boolean>(false)
       const isShowViewer = ref<boolean>(false)
       const imagePreviewSrc = ref<string>('')
       const isUploading = ref<boolean>(false)
@@ -226,8 +275,15 @@
         }
         isUploading.value = true
       }
-      const uploadSuccess = (res: any, file: any) => {
-        isShowViewBtn.value = true
+      const uploadPhotoSuccess = (res: any, file: any) => {
+        isShowPhotoViewBtn.value = true
+        imagePreviewSrc.value = URL.createObjectURL(file.raw)
+        ElMessage.success('文件上传成功')
+        formData.value.photo = res.data
+        isUploading.value = false
+      }
+      const uploadLicenseSuccess = (res: any, file: any) => {
+        isShowLicenseViewBtn.value = true
         imagePreviewSrc.value = URL.createObjectURL(file.raw)
         ElMessage.success('文件上传成功')
         formData.value.businessLicense = res.data
@@ -252,9 +308,13 @@
         formEl,
         imagePreviewSrc,
         isShowViewer,
-        isShowViewBtn,
+        isShowLicenseViewBtn,
+        isShowPhotoViewBtn,
+        viewLicense,
+        viewPhoto,
         beforeUpload,
-        uploadSuccess,
+        uploadLicenseSuccess,
+        uploadPhotoSuccess,
         uploadError,
         isUploadSuccess,
         isUploading,

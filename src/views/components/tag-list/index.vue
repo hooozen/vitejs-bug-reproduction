@@ -2,7 +2,7 @@
   <div class="tl-tags">
     <el-tag
       :key="tag.id"
-      v-for="tag in tags"
+      v-for="tag in modelValue"
       closable
       :disable-transitions="false"
       @close="removeTag(tag.id)"
@@ -39,7 +39,7 @@
   export default defineComponent({
     name: 'TlTags',
     props: {
-      tags: {
+      modelValue: {
         type: Array,
         default: []
       },
@@ -48,7 +48,7 @@
         default: '输入标签'
       },
     },
-    emits: ['add', 'remove', 'change'],
+    emits: ['add', 'remove', 'change', 'update:modelValue'],
     setup(props, context) {
       const loading = ref<Boolean>(false)
       const newTag = ref()
@@ -56,11 +56,10 @@
       const showAddBtn = ref<Boolean>(true)
 
       const tagIds = computed(() => {
-        return props.tags.map((tag: any) => tag.id)
+        return props.modelValue.map((tag: any) => tag.id)
       })
 
       const remoteMethod = async (query: string) => {
-        console.log(query)
         if (query !== '') {
           loading.value = true
           const res = (await getByKeyword(query)).data
@@ -75,19 +74,25 @@
       }
 
       const selectTag = (value: string | number) => {
-        console.log(value, props.tags)
         if (!value) return
-        if (props.tags.find((t: any) => t.id == value)) return void (showAddBtn.value = true)
-        const addingTag = options.value.find(o => o.value == value)
-        console.log({ id: addingTag?.value, name: addingTag?.label })
-        props.tags.push({ id: addingTag?.value, name: addingTag?.label })
+        if (props.modelValue.find((t: any) => t.id == value)) return void (showAddBtn.value = true)
         context.emit('add', value)
+        const addingTag = options.value.find(o => o.value == value)
+        const _newTags = [...props.modelValue]
+        _newTags.push({ id: addingTag?.value, name: addingTag?.label })
+        context.emit('change', _newTags)
+        context.emit('update:modelValue', _newTags)
         showAddBtn.value = true
       }
 
 
       const removeTag = (id: string) => {
-        props.tags.splice(props.tags.findIndex((node: any) => node.id == id), 1)
+        const _newTags = [...props.modelValue]
+        const removedTag = _newTags.find((t: any) => t.id == id)
+        context.emit('remove', removedTag)
+        _newTags.splice(props.modelValue.findIndex((node: any) => node.id == id), 1)
+        context.emit('change', _newTags)
+        context.emit('update:modelValue', _newTags)
       }
 
       return { removeTag, options, remoteMethod, loading, selectTag, newTag, showAddBtn }
@@ -97,10 +102,10 @@
 <style lang="scss">
   .tl-tags {
     .el-tag + .el-tag {
-      margin-right: 0 10px;
+      margin-left: 10px;
     }
     .el-button {
-      margin-right: 0 10px;
+      margin-left: 10px;
     }
   }
 </style>
