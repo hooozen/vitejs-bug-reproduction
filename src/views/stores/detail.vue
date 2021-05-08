@@ -155,6 +155,17 @@
           </div>
         </el-form>
       </div>
+      <div class="main-item">
+        <div class="main-item-title">设备列表</div>
+        <el-table :data="devices">
+          <el-table-column
+            v-for="col in deviceColumns"
+            :key="col.prop"
+            :label="col.label"
+            :prop="col.prop"
+          ></el-table-column>
+        </el-table>
+      </div>
     </div>
   </div>
 </template>
@@ -171,21 +182,15 @@
   import TlTag from '../components/tag-select/index.vue'
   import TlTags from '../components/tag-list/index.vue'
 
-  import {
-    add,
-    AddParams,
-    UpdateParams,
-    update,
-    getById,
-  } from '@/api/server/store'
+  import { add, AddParams, UpdateParams, update, getById } from '@/api/server/store'
+  import { getByStoreId } from '@api/server/device'
+
   import { useRoute } from 'vue-router'
 
   import options from './options'
   import formRules from './formRules'
-  import {
-    template as formDataTemplate,
-    generateFormData,
-  } from './formDataTemplate'
+  import { blankFormData as formDataTemplate, generateFormData, } from './formDataTemplate'
+  import deviceColumns from './deviceColumns'
 
   export default defineComponent({
     components: {
@@ -242,15 +247,28 @@
         console.log(name.join('/'))
       }
 
-      onMounted(async () => {
-        if (id.value) {
-          const originalForm = (await getById(id.value as string)).data
-          isShowLicenseViewBtn.value = true
-          isShowPhotoViewBtn.value = true
-          formData.value = generateFormData(originalForm)
-          mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
-        }
-      })
+      const setFormData = async () => {
+        if (!id.value) return
+        const originalForm = (await getById(id.value as string)).data
+        isShowLicenseViewBtn.value = true
+        isShowPhotoViewBtn.value = true
+        formData.value = generateFormData(originalForm)
+        mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
+      }
+
+      const devices = ref([])
+      const getDevices = async () => {
+        console.log(id.value)
+        if (!id.value) return
+        devices.value = (await getByStoreId(id.value as string)).data
+      }
+
+      const init = async () => {
+        setFormData()
+        getDevices()
+      }
+
+      onMounted(async () => void init())
 
       const viewLicense = () => {
         imagePreviewSrc.value = formData.value.businessLicense;
@@ -318,6 +336,8 @@
         uploadError,
         isUploadSuccess,
         isUploading,
+        deviceColumns,
+        devices,
       }
     },
   })

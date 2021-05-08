@@ -9,6 +9,7 @@ import DeviceDetail from '@views/devices/detail.vue'
 import Stores from '@views/stores/index.vue'
 import StoreDetail from '@views/stores/detail.vue'
 import Staff from '@views/staff/index.vue'
+import StaffDetail from '@views/staff/detail.vue'
 import Organizations from '@views/organizations/index.vue'
 import Positions from '@views/positions/index.vue'
 import Operators from '@views/operators/index.vue'
@@ -46,6 +47,11 @@ const routes = [
     }, {
       path: 'staff',
       component: Staff,
+    }, {
+      name: 'add-staff',
+      path: 'add-staff',
+      props: { type: 'add' },
+      component: StaffDetail
     }, {
       path: 'organizations',
       component: Organizations

@@ -60,9 +60,9 @@
             >
               详情
             </router-link>
-            <span class="text-btn" href="#" @click="deleteItem(scope.row.id)"
-              >删除</span
-            >
+            <span class="text-btn" href="#" @click="deleteItem(scope.row.id)">
+              删除
+            </span>
           </template>
         </el-table-column>
       </el-table>
@@ -150,8 +150,9 @@
         getList({ current: 1 })
       }
 
-      const deleteItem = (id: string) => {
-        remove(id)
+      const deleteItem = async (id: string) => {
+        await remove(id)
+        getList({ current: 1 })
       }
 
       const router = useRouter()

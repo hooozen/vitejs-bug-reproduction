@@ -14,16 +14,16 @@ const columns:TableColumnData[] = [{
   prop: 'identityNo',
   label: '身份证号',
 }, {
-  prop: '',
+  prop: 'censusAddressName',
   label: '户籍地址',
 }, {
-  prop: '',
+  prop: 'houseAddressName',
   label: '现住地址',
 }, {
   prop: 'education',
   label: '学历',
 }, {
-  prop: '',
+  prop: 'operatorName',
   label: '归属',
 }, {
   prop: 'joinedDate',
