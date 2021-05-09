@@ -10,11 +10,11 @@ import Stores from '@views/stores/index.vue'
 import StoreDetail from '@views/stores/detail.vue'
 import Staff from '@views/staff/index.vue'
 import StaffDetail from '@views/staff/detail.vue'
-import Organizations from '@views/organizations/index.vue'
-import Positions from '@views/positions/index.vue'
+import Dict from '@views/system/dict/index.vue'
 import Operators from '@views/operators/index.vue'
-import DeviceType from '@views/device-type/index.vue'
-import DeviceTypeDetail from '@views/device-type/detail.vue'
+import DeviceType from '@views/system/device-type/index.vue'
+import DeviceTypeDetail from '@views/system/device-type/detail.vue'
+import Roles from '@views/system/roles/index.vue'
 import OperationDetail from '@views/operators/detail.vue'
 
 const routes = [
@@ -53,11 +53,11 @@ const routes = [
       props: { type: 'add' },
       component: StaffDetail
     }, {
-      path: 'organizations',
-      component: Organizations
+      path: 'dict',
+      component: Dict
     }, {
-      path: 'positions',
-      component: Positions
+      path: 'roles',
+      component: Roles
     }, {
       path: 'operators',
       component: Operators

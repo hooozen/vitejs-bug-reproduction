@@ -8,7 +8,7 @@
         :value="formData"
         :rules="formRules"
       >
-        <el-form-item label="上级组织" prop="parentId">
+        <el-form-item label="上级设备" prop="parentId">
           <el-cascader
             :options="[options]"
             :props="{ checkStrictly: true, emitPath: false }"
@@ -17,10 +17,10 @@
           ></el-cascader>
         </el-form-item>
         <el-form-item label="名称" prop="name">
-          <el-input v-model="formData.name" prop="name"></el-input>
+          <el-input v-model="formData.name"></el-input>
         </el-form-item>
-        <el-form-item label="代码" prop="code">
-          <el-input v-model="formData.code" prop="name"></el-input>
+        <el-form-item label="型号对应序列号标识" prop="sequencePrefix">
+          <el-input v-model="formData.sequencePrefix"></el-input>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -66,18 +66,18 @@
 <script lang="ts">
   import { defineComponent, ref, reactive, onMounted, computed } from 'vue'
 
-  import { add, update, remove } from "@api/server/deviceType"
+  import { add, update, remove, getTreeByParentId } from "@api/server/deviceType"
   import { DeviceTypeNode } from './tree'
 
   const formRules = {
     name: [{
-      required: true, message: '请填写组织名称'
+      required: true, message: '请填写设备名称'
     }],
-    code: [{
-      required: true, message: '请填写组织代码'
+    sequencePrefix: [{
+      required: true, message: '请填写序列号标识'
     }],
     parentId: [{
-      required: true, message: '请选择上级组织'
+      required: true, message: '请选择上级设备'
     }]
   }
 
@@ -109,9 +109,10 @@
       const dialogData = reactive({
         type: '',
         get title() {
-          return this.type === 'add' ? '添加组织' : '编辑组织'
+          return this.type === 'add' ? '添加设备' : '编辑组织'
         }
       })
+
       const options = computed(() => {
         const setBasicFiled = (_node: any) => {
           return {
@@ -119,28 +120,23 @@
             value: _node.id,
           }
         }
-
         const configOptions = (node: DeviceTypeNode): any => {
-
           if (formData.id === node.id) return {
             ...setBasicFiled(node),
             disabled: true
           }
-
           if (!node.children || !node.children.length) return setBasicFiled(node)
-
           return {
             ...setBasicFiled(node),
             children: node.children.map(child => configOptions(child))
           }
         }
         const res = configOptions(deviceTypeTree.value as any)
-        console.log(res)
         return res
       })
 
       const getIndustries = async () => {
-        // industries.value = (await getTree({ parentId: 0 })).data
+        industries.value = (await getTreeByParentId(0)).data
         isLoading.value = false
       }
 

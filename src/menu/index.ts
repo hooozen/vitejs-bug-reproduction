@@ -47,7 +47,7 @@ const menu: MenuItem[] = [
     path: 'staff',
     icon: 's-custom',
     children: [],
-  }, {
+  },/* {
     id: 11,
     label: '商品管理',
     icon: 'goods',
@@ -118,7 +118,7 @@ const menu: MenuItem[] = [
     path: 'deliver',
     icon: 'info',
     children: [],
-  }, {
+  }, */{
     id: 25,
     label: '系统管理',
     icon: 's-platform',
@@ -135,13 +135,13 @@ const menu: MenuItem[] = [
       children: [],
     }, {
       id: 27,
-      label: '组织管理',
-      path: 'organizations',
+      label: '字典管理',
+      path: 'dict',
       children: [],
     }, {
       id: 28,
-      label: '职位管理',
-      path: 'positions',
+      label: '角色管理',
+      path: 'roles',
       children: [],
     }, {
       id: 29,
@@ -154,7 +154,7 @@ const menu: MenuItem[] = [
       path: 'logs',
       children: [],
     }],
-  }, {
+  },/* {
     id: 31,
     label: '台账管理',
     path: 'statement-m',
@@ -170,7 +170,7 @@ const menu: MenuItem[] = [
       path: 'operator-statement',
       children: [],
     }],
-  }
+  }*/
 ]
 
 export default menu

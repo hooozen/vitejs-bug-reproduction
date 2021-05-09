@@ -10,14 +10,16 @@ export interface AddParams {
 }
 
 export interface UpdateParams extends AddParams {
-  id: number | string 
+  id: number | string
 }
 
-function getByDeviceSequence (sequence: string, config?:$AxiosRequestConfig) {
-  return axios('get', '/admin/device/type/getByDeviceSequence', {sequence}, config)
+function getByDeviceSequence(sequence: string, config?: $AxiosRequestConfig) {
+  return axios('get', '/admin/device/type/getByDeviceSequence', { sequence }, config)
 }
 
-
+function getTreeByParentId(parentId: string | number, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('get', '/admin/device/type/getTreeByParentId', { parentId }, config)
+}
 
 function getByKeyword(params: PagingQueryParams, config?: $AxiosRequestConfig) {
   return axios('post', 'admin/device/type/getByKeyword', params, config)
@@ -39,5 +41,5 @@ function remove(id: string, config?: $AxiosRequestConfig) {
   return axios('delete', '/admin/device/type/delete', { id }, config)
 }
 
-export { getByKeyword, add, getById, remove, update, getByDeviceSequence }
+export { getByKeyword, add, getById, remove, update, getByDeviceSequence, getTreeByParentId }
 
