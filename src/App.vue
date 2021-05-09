@@ -11,7 +11,7 @@
   })
 </script>
 
-<style lang="postcss">
+<style lang="scss">
   html,
   body,
   div {
@@ -23,5 +23,12 @@
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+
+    .el-input.is-disabled .el-input__inner {
+      background-color: white;
+      border-color: white;
+      color: #606266;
+      cursor: default;
+    }
   }
 </style>

@@ -16,6 +16,7 @@ import DeviceType from '@views/system/device-type/index.vue'
 import DeviceTypeDetail from '@views/system/device-type/detail.vue'
 import Roles from '@views/system/roles/index.vue'
 import OperationDetail from '@views/operators/detail.vue'
+import UserInfo from '@views/system/user-info.vue'
 
 const routes = [
   {
@@ -79,6 +80,10 @@ const routes = [
       name: 'devictTypeDetail',
       path: 'device-type-detail',
       component: DeviceTypeDetail,
+    }, {
+      name: 'userInfo',
+      path: 'user-info',
+      component: UserInfo
     }]
   }, {
     path: '/login',
