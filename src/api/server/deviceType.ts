@@ -37,7 +37,7 @@ function getById(id: string | number, config?: $AxiosRequestConfig): AxiosPromis
   return axios('get', '/admin/device/type/getById', { id }, config)
 }
 
-function remove(id: string, config?: $AxiosRequestConfig) {
+function remove(id: string | number, config?: $AxiosRequestConfig) {
   return axios('delete', '/admin/device/type/delete', { id }, config)
 }
 

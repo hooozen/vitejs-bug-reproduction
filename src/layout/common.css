@@ -8,10 +8,6 @@
     padding: 10px;
   }
 
-  & .text-btn--warning {
-    color: red;
-  }
-
   & .view-panel {
     display: flex;
     justify-content: space-between;

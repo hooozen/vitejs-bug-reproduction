@@ -1,9 +1,9 @@
 interface DeviceTypeNode {
-  code: string,
-  id?: string,
-  name: string,
-  parentId: string,
-  parentName?: string,
+  id: number | string
+  devicePhoto: string
+  name: string
+  parentId: number | string
+  sequencePrefix: string
   children?: DeviceTypeNode[]
 }
 

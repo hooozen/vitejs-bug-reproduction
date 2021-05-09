@@ -41,13 +41,6 @@
     justify-content: space-between;
     font-size: 14px;
     padding-right: 8px;
-
-    & a {
-      color: #409eff;
-      cursor: pointer;
-      text-decoration: none;
-      margin: 0 4px;
-    }
   }
 </style>
 <style lang="postcss">

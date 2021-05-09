@@ -115,6 +115,12 @@
         color: #66b1ff;
       }
     }
+    & .text-btn--warning {
+      color: red;
+      &:not(:first-child) {
+        margin-left: 8px;
+      }
+    }
   }
   .user {
     display: flex;

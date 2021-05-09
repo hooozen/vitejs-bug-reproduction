@@ -1,8 +1,8 @@
 <template>
-  <div class="deviceType">
-    <el-dialog v-model="dialogVisible" :title="dialogData.title">
+  <div class="device-type tabs-view">
+    <el-dialog width="600px" v-model="dialogVisible" title="新增设备">
       <el-form
-        label-width="80px"
+        label-width="180px"
         ref="formEl"
         :model="formData"
         :value="formData"
@@ -13,7 +13,6 @@
             :options="[options]"
             :props="{ checkStrictly: true, emitPath: false }"
             v-model="formData.parentId"
-            clearable
           ></el-cascader>
         </el-form-item>
         <el-form-item label="名称" prop="name">
@@ -21,6 +20,22 @@
         </el-form-item>
         <el-form-item label="型号对应序列号标识" prop="sequencePrefix">
           <el-input v-model="formData.sequencePrefix"></el-input>
+        </el-form-item>
+        <el-form-item label="设备照片" prop="devicePhoto">
+          <el-upload
+            class="photo-uploader"
+            action="/beer/admin/common/uploadFile"
+            :show-file-list="false"
+            :on-success="onUploadSuccess"
+            :before-upload="beforeUpload"
+          >
+            <img
+              v-if="devicePhotoUrl"
+              :src="devicePhotoUrl"
+              class="device-photo"
+            />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
         </el-form-item>
       </el-form>
       <template #footer>
@@ -41,18 +56,18 @@
         <span class="custom-tree-node">
           <span>{{ node.label }}</span>
           <span>
-            <a @click="showDialog(data, 'add')">添加</a>
-            <a
+            <a class="text-btn" @click="showDialog(data, 'add')">添加</a>
+            <router-link
               v-if="+data.id"
-              style="color: inherit"
-              @click.stop="showDialog(data, 'edit')"
+              class="text-btn"
+              :to="`device-type-detail?id=${data.id}`"
             >
               编辑
-            </a>
+            </router-link>
             <a
               v-if="+data.id"
-              style="color: red"
-              @click.stop="removeIndustry(data)"
+              class="text-btn--warning"
+              @click.stop="removeDeviceType(data)"
             >
               删除
             </a>
@@ -66,8 +81,9 @@
 <script lang="ts">
   import { defineComponent, ref, reactive, onMounted, computed } from 'vue'
 
-  import { add, update, remove, getTreeByParentId } from "@api/server/deviceType"
+  import { add, update, remove, getTreeByParentId, AddParams } from "@api/server/deviceType"
   import { DeviceTypeNode } from './tree'
+  import { ElMessage } from 'element-plus'
 
   const formRules = {
     name: [{
@@ -78,6 +94,9 @@
     }],
     parentId: [{
       required: true, message: '请选择上级设备'
+    }],
+    devicePhoto: [{
+      required: true, message: '请上传设备照片'
     }]
   }
 
@@ -87,30 +106,24 @@
 
       const isLoading = ref(true)
 
-      const industries = ref<DeviceTypeNode[]>([])
+      const deviceTypes = ref<DeviceTypeNode[]>([])
       const deviceTypeTree = computed(() => {
         return {
           code: 'root',
-          name: '全部组织',
+          name: '全部设备',
           id: '0',
-          children: industries.value || undefined,
+          children: deviceTypes.value || undefined,
           parentId: -1
         }
       })
 
       const formEl = ref(null)
       const dialogVisible = ref(false)
-      const formData = reactive<DeviceTypeNode>({
-        code: '',
+      const formData = reactive<AddParams>({
+        devicePhoto: '',
+        sequencePrefix: '',
         name: '',
-        id: '0',
         parentId: '0',
-      })
-      const dialogData = reactive({
-        type: '',
-        get title() {
-          return this.type === 'add' ? '添加设备' : '编辑组织'
-        }
       })
 
       const options = computed(() => {
@@ -121,10 +134,6 @@
           }
         }
         const configOptions = (node: DeviceTypeNode): any => {
-          if (formData.id === node.id) return {
-            ...setBasicFiled(node),
-            disabled: true
-          }
           if (!node.children || !node.children.length) return setBasicFiled(node)
           return {
             ...setBasicFiled(node),
@@ -135,58 +144,58 @@
         return res
       })
 
-      const getIndustries = async () => {
-        industries.value = (await getTreeByParentId(0)).data
+      const getDeviceTypes = async () => {
+        deviceTypes.value = (await getTreeByParentId(0)).data
         isLoading.value = false
       }
 
       const showDialog = (data: DeviceTypeNode, type: string) => {
-        dialogData.type = type
-        if (type === 'add') {
-          formData.parentId = data.id!
-          formData.code = ''
-          formData.name = ''
-          formData.id = undefined!
-        } else {
-          formData.id = data.id!
-          formData.parentId = data.parentId!
-          formData.name = data.name
-          formData.code = data.code
-        }
+        formData.parentId = data.id!
+        formData.name = ''
         dialogVisible.value = true
       }
 
       const submitForm = async () => {
         (formEl.value as any).validate(async (valid: Boolean) => {
-          console.log(formData)
           if (!valid) return false
-          dialogData.type === 'add' ?
-            await add(formData, '添加成功') :
-            await update(formData as any, '更新成功')
-          getIndustries()
+          await add(formData, '添加成功')
+          getDeviceTypes()
           dialogVisible.value = false
         })
       }
 
-      const removeIndustry = async (data: DeviceTypeNode) => {
-        const res = await remove({ id: data.id! }, {
+      const removeDeviceType = async (data: DeviceTypeNode) => {
+        const res = await remove(data.id!, {
           successMsg: '删除成功',
           confirmConfig: {
             text: `该操作将删除该组织，${data.children?.length ? `及其下 ${data.children.length} 个子组织，` : ''} 是否继续？`
           }
         })
-        if (res) getIndustries()
+        if (res) getDeviceTypes()
+      }
+
+      const devicePhotoUrl = ref<string>()
+      const onUploadSuccess = (res: any, file: any) => {
+        devicePhotoUrl.value = res.data
+        formData.devicePhoto = res.data
+      }
+      const beforeUpload = (file: File) => {
+        const typeValide = file.type == 'image/jpeg' || file.type == 'image/png';
+        if (!typeValide) {
+          ElMessage.error('上传头像图片只能是 JPG 或 PNG 格式!');
+        }
       }
 
       onMounted(async () => {
-        await getIndustries()
+        await getDeviceTypes()
       })
 
       return {
         deviceTypeTree, isLoading, options,
-        dialogVisible, dialogData, showDialog,
+        dialogVisible, showDialog,
         formEl, formRules, formData,
-        submitForm, removeIndustry
+        submitForm, removeDeviceType,
+        devicePhotoUrl, onUploadSuccess, beforeUpload,
       }
     },
   })
@@ -202,16 +211,12 @@
     justify-content: space-between;
     font-size: 14px;
     padding-right: 8px;
-
-    & a {
-      color: #409eff;
-      cursor: pointer;
-      text-decoration: none;
-      margin: 0 4px;
-    }
   }
-</style>
-<style lang="postcss">
-  .deviceType {
+  .device-type {
+    & .device-photo {
+      width: 178px;
+      height: 178px;
+      display: block;
+    }
   }
 </style>
