@@ -7,6 +7,19 @@ interface OrganizationNode {
   children?: OrganizationNode[]
 }
 
+interface TagNode {
+  code: string,
+  id?: string,
+  name: string,
+}
+
+interface BeerNode {
+  code: string,
+  id?: string,
+  name: string,
+}
+
+
 /*
 const breadthTravel = (node: any, condition: (node: any) => boolean, callback?: (parent: any, index?: number, target?: any) => any): any => {
   if (!node.children) return false
@@ -63,4 +76,4 @@ const treeGenerate = (flatArray: any[]): OrganizationNode => {
   return res
 }
 
-export { OrganizationNode, treeGenerate }
+export { OrganizationNode, TagNode, BeerNode, treeGenerate }

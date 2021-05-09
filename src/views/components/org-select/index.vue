@@ -1,5 +1,5 @@
 <template>
-  <div class="tl-address">
+  <div class="tl-org">
     <el-cascader
       ref="selectEl"
       :modelValue="modelValue"
@@ -70,7 +70,11 @@ export default defineComponent({
 });
 </script>
 <style lang="postcss">
-.tl-address {
+.tl-org{
+  & .el-cascader {
+    width: 100%;
+  }
+
   & > div:not(:first-child) {
     margin-top: 8px;
   }

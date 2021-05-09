@@ -8,14 +8,6 @@
         :value="formData"
         :rules="formRules"
       >
-        <el-form-item label="上级组织" prop="parentId">
-          <el-cascader
-            :options="[options]"
-            :props="{ checkStrictly: true, emitPath: false }"
-            v-model="formData.parentId"
-            clearable
-          ></el-cascader>
-        </el-form-item>
         <el-form-item label="名称" prop="name">
           <el-input v-model="formData.name" prop="name"></el-input>
         </el-form-item>
@@ -32,7 +24,7 @@
     </el-dialog>
     <el-tree
       :props="{ key: 'id', label: 'name', children: 'children' }"
-      :data="[organizationTree]"
+      :data="[beerTree]"
       :default-expanded-keys="[0]"
       v-loading="isLoading"
       node-key="id"
@@ -41,7 +33,9 @@
         <span class="custom-tree-node">
           <span>{{ node.label }}</span>
           <span>
-            <a @click.stop="showDialog(data, 'add')">添加</a>
+            <a v-if="data.id == '0'" @click.stop="showDialog(data, 'add')"
+              >添加</a
+            >
             <a
               v-if="+data.id"
               style="color: inherit"
@@ -49,11 +43,7 @@
             >
               编辑
             </a>
-            <a
-              v-if="+data.id"
-              style="color: red"
-              @click.stop="removeIndustry(data)"
-            >
+            <a v-if="+data.id" style="color: red" @click.stop="removeBeer(data)">
               删除
             </a>
           </span>
@@ -65,94 +55,64 @@
 <script lang="ts">
   import { defineComponent, ref, reactive, onMounted, computed } from 'vue'
 
-  import { add, update, remove, getTree } from "@api/server/organization"
-  import { OrganizationNode } from './tree'
+  import { add, update, remove, getByKeyword } from "@/api/server/beer"
+  import { BeerNode } from './tree'
 
   const formRules = {
     name: [{
-      required: true, message: '请填写组织名称'
+      required: true, message: '请填写酒名'
     }],
     code: [{
-      required: true, message: '请填写组织代码'
+      required: true, message: '请填写酒名代码'
     }],
-    parentId: [{
-      required: true, message: '请选择上级组织'
-    }]
   }
 
   export default defineComponent({
-    name: 'tab-insduties',
+    name: 'tab-beer',
     setup() {
 
       const isLoading = ref(true)
 
-      const industries = ref<OrganizationNode[]>([])
-      const organizationTree = computed(() => {
+      const beers = ref<BeerNode[]>([])
+      const beerTree = computed(() => {
         return {
           code: 'root',
-          name: '全部组织',
+          name: '全部酒名',
           id: '0',
-          children: industries.value || undefined,
-          parentId: -1
+          children: beers.value || undefined,
         }
       })
+      const getBeers = async () => {
+        beers.value = (await getByKeyword()).data
+        isLoading.value = false
+      }
+      const removeBeer = async (data: BeerNode) => {
+        await remove(data.id!)
+        getBeers()
+      }
 
       const formEl = ref(null)
       const dialogVisible = ref(false)
-      const formData = reactive<OrganizationNode>({
+      const formData = reactive<BeerNode>({
         code: '',
         name: '',
         id: '0',
-        parentId: '0',
       })
       const dialogData = reactive({
         type: '',
         get title() {
-          return this.type === 'add' ? '添加组织' : '编辑组织'
+          return this.type === 'add' ? '添加酒名' : '编辑酒名'
         }
       })
-      const options = computed(() => {
-        const setBasicFiled = (_node: any) => {
-          return {
-            label: _node.name,
-            value: _node.id,
-          }
-        }
 
-        const configOptions = (node: OrganizationNode): any => {
-
-          if (formData.id === node.id) return {
-            ...setBasicFiled(node),
-            disabled: true
-          }
-
-          if (!node.children || !node.children.length) return setBasicFiled(node)
-
-          return {
-            ...setBasicFiled(node),
-            children: node.children.map(child => configOptions(child))
-          }
-        }
-        const res = configOptions(organizationTree.value as any)
-        console.log(res)
-        return res
-      })
-
-      const getIndustries = async () => {
-        industries.value = (await getTree({ parentId: 0 })).data
-        isLoading.value = false
-      }
-
-      const showDialog = (data: OrganizationNode, type: string) => {
+      const showDialog = (data: BeerNode, type: string) => {
         dialogData.type = type
         if (type === 'add') {
-          formData.parentId = data.id!
           formData.code = ''
           formData.name = ''
           formData.id = undefined!
         } else {
           formData.id = data.id!
-          formData.parentId = data.parentId!
           formData.name = data.name
           formData.code = data.code
         }
@@ -166,30 +126,22 @@
           dialogData.type === 'add' ?
             await add(formData, '添加成功') :
             await update(formData as any, '更新成功')
-          getIndustries()
+          getBeers()
           dialogVisible.value = false
         })
       }
 
-      const removeIndustry = async (data: OrganizationNode) => {
-        const res = await remove({ id: data.id! }, {
-          successMsg: '删除成功',
-          confirmConfig: {
-            text: `该操作将删除该组织，${data.children?.length ? `及其下 ${data.children.length} 个子组织，` : ''} 是否继续？`
-          }
-        })
-        if (res) getIndustries()
+      const init = async () => {
+        getBeers()
       }
 
-      onMounted(async () => {
-        await getIndustries()
-      })
+      onMounted(() => void init())
 
       return {
-        organizationTree, isLoading, options,
+        beerTree, isLoading,
         dialogVisible, dialogData, showDialog,
         formEl, formRules, formData,
-        submitForm, removeIndustry
+        submitForm, removeBeer
       }
     },
   })

@@ -154,6 +154,7 @@
 
 .tabs-view {
   padding: 15px;
+  max-width: 800px;
 
   &.el-tabs__content {
   }
