@@ -30,8 +30,10 @@ const routes = [
       path: 'devices',
       component: Devices,
     }, {
+      name: 'device-detail',
       path: 'device-detail',
       component: DeviceDetail,
+      props: { type: 'edit' }
     }, {
       path: 'stores',
       component: Stores,

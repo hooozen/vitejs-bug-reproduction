@@ -9,8 +9,9 @@ declare module 'axios' {
     center?: boolean
   }
   export interface AxiosRequestConfig {
-    successMsg?: string,
+    successMsg?: string
     confirmConfig?: DeleteConfirmConfig
+    silent?: boolean
   }
 }
 

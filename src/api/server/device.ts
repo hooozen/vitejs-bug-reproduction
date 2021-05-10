@@ -40,7 +40,7 @@ function update(params: UpdateParams, config?: $AxiosRequestConfig): AxiosPromis
   return axios('post', '/admin/device/update', params, config)
 }
 
-function getById(id: string, config?: $AxiosRequestConfig): AxiosPromise {
+function getById(id: string | number, config?: $AxiosRequestConfig): AxiosPromise {
   return axios('get', '/admin/device/getById', { id }, config)
 }
 

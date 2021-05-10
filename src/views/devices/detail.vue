@@ -19,16 +19,19 @@
         >
           <div class="item-body-column" style="flex-basis: 400px">
             <el-form-item prop="sequence" label="设备序列号:">
-              {{ deviceInfo.sequence }}
+              {{ formData.sequence }}
             </el-form-item>
             <el-form-item prop="type" label="设备型号:">
               {{ deviceInfo.deviceType.name }}
             </el-form-item>
             <el-form-item prop="name" label="设备名称:">
-              <el-input v-model="deviceInfo.name"></el-input>
+              <el-input v-model="formData.name"></el-input>
             </el-form-item>
-            <el-form-item prop="store" label="当前归属:">
-              <el-input v-model="deviceInfo.store.name"></el-input>
+            <el-form-item prop="storeId" label="当前归属:">
+              <tl-store
+                v-model="formData.storeId"
+                :initial-option="storeOption"
+              ></tl-store>
             </el-form-item>
             <el-form-item prop="online" label="在线状态:">
               {{ formData.online }}
@@ -125,17 +128,18 @@
   import NavBar from "../components/nav-bar/index.vue";
   import TMap from "../components/TMap/index.vue";
   import TlAddress from "../components/address/index.vue";
+  import TlStore from "../components/store-select/index.vue";
 
   import { add, AddParams, UpdateParams, update, getById } from '@/api/server/device'
 
   import formRules from './formRules'
-  import { template as formDataTemplate, generateFormData } from './formDataTemplate'
 
   export default defineComponent({
     components: {
       NavBar,
       TMap,
-      TlAddress
+      TlAddress,
+      TlStore
     },
     props: {
       type: {
@@ -144,7 +148,13 @@
       }
     },
     setup(props) {
-      const formData = ref({})
+      const formData = ref({
+        deviceTypeId: '',
+        id: '',
+        name: '',
+        sequence: '',
+        storeId: ''
+      })
       const formEl = ref(null)
 
       const route = useRoute()
@@ -154,7 +164,7 @@
       // const editable = ref<boolean>(false)
       // if (props.type === 'add') editable.value = true
 
-      const title = computed(() => props.type === 'edit' ? '运营商详情' : '新增运营商')
+      const title = computed(() => props.type === 'edit' ? '设备详情' : '新增设备')
 
       const activeTab = ref("data");
 
@@ -180,15 +190,27 @@
       }
 
       const deviceInfo = ref({
-        createTime: '',
-        name: '',
-        sequence: '',
         deviceType: {},
         store: {}
       })
+      const storeOption = ref<OptionData[]>([])
       const getDeviceInfo = async () => {
-        const data = (await getById(id.value as string)).data
-        deviceInfo.value = data.deviceInfo
+        console.log('ddddd', id)
+        const data = (await getById(+id.value!)).data
+        const _deviceInfo = data.deviceInfo
+        deviceInfo.value = _deviceInfo
+        formData.value = {
+          id: +id.value!,
+          name: _deviceInfo.name,
+          sequence: _deviceInfo.sequence,
+          storeId: _deviceInfo.store.id,
+          deviceTypeId: _deviceInfo.deviceType.id
+        }
+        console.log(formData.value)
+        storeOption.value = [{
+          value: (_deviceInfo.store as any).id,
+          label: (_deviceInfo.store as any).name
+        }]
       }
 
       const init = () => {
@@ -196,17 +218,14 @@
       }
 
 
-      onMounted(() => {
-        console.log('xxxx')
-        void init()
-      })
+      onMounted(() => void init())
 
       return {
         title, editable,
         updateFormDistrictName,
         updateFormBusinessScopeName,
         location, activeTab, formData, formRules, submitForm, formEl,
-        deviceInfo, 
+        deviceInfo, storeOption
       };
     },
   });

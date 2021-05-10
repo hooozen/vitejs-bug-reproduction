@@ -58,7 +58,7 @@
         placeholder="激活状态"
       ></tl-select>
       <el-button type="primary" @click="getList">查询</el-button>
-      <el-button @click="getList">重置</el-button>
+      <el-button @click="resetQueryForm">重置</el-button>
     </div>
     <div class="view-overview">
       <div class="overview-item">
@@ -93,13 +93,14 @@
     </div>
     <div class="panel__btns">
       <el-button type="primary" @click="dialogVisible = true">新增</el-button>
-      <el-button type="danger">删除</el-button>
+      <el-button type="danger" @click="batchDelete">删除</el-button>
       <el-button disabled>导入</el-button>
       <el-button>导出</el-button>
     </div>
 
     <div class="view-body">
       <el-table
+        @selection-change="onSelectionChange"
         v-loading="loadingList"
         :data="list"
         height="100%"
@@ -155,6 +156,7 @@
   import columns from './columns'
 
   import { addFormRules } from './formRules'
+import { ElMessage } from 'element-plus'
 
   export default defineComponent({
     name: 'Devices',
@@ -170,6 +172,7 @@
       const currentPageChange = (current: number) => { getList({ current }) }
       const sizeChange = (size: number) => { getList(size) }
 
+
       const getList = async (_params?: any) => {
         const params: DevicesQueryParams = {
           size: pageSize.value,
@@ -182,7 +185,7 @@
           active: isActive.value,
           ..._params
         }
-        const resData = (await getByKeyword(params, '访问成功')).data
+        const resData = (await getByKeyword(params)).data
         list.value = resData.records.map((d: any) => ({
           ...d,
           onlineName: (options.isOnline.find(o => o.value === d.online))?.label,
@@ -199,10 +202,18 @@
       const sequence = ref<string>()
       const storeId = ref<string>()
       const createTime = ref<string>()
-      const type = ref(0)
       const isOnline = ref<1 | 2 | 3>()
       const status = ref<0 | 1>()
       const isActive = ref<0 | 1>()
+      const resetQueryForm = () => {
+        name.value = ''
+        sequence.value = ''
+        storeId.value = ''
+        createTime.value = ''
+        isOnline.value = undefined
+        status.value = undefined
+        isActive.value = undefined
+      }
 
       // addForm
       const addForm = ref<AddParams>({
@@ -237,21 +248,37 @@
         console.log(overviewData.value)
       }
 
-      onMounted(() => void init())
-
-      const deleteItem = (id: string) => {
-        remove(id)
+      const deleteItem = async (id: string) => {
+        await remove(id)
+        getList()
       }
 
+      const selectedItems = ref<any[]>([])
+
+      const onSelectionChange = (value: any[]) => {
+        selectedItems.value = value;
+      }
+      const batchDelete = async () => {
+        const length = selectedItems.value.length
+        if (!length) return ElMessage.warning('未选中任何记录')
+        const ids: string = selectedItems.value.map(item => item.id).join(',')
+        await remove(ids, {
+          confirmConfig: { text: `确认批量删除 ${length} 项记录?` },
+        })
+        getList()
+      }
+
+      onMounted(() => void init())
       return {
         options, columns,
         list, loadingList,
-        storeId, createTime, sequence, name, type, status, isActive, isOnline,
+        storeId, createTime, sequence, name, status, isActive, isOnline,
         getList, pageSize, currentPage, totalNum, sizeChange, currentPageChange,
         formEl, addFormRules, dialogVisible, submitAddForm,
         overviewData,
         addForm, getByDeviceSequence, getDeviceTypeName, deviceTypeName,
-        deleteItem
+        deleteItem, batchDelete, onSelectionChange,
+        resetQueryForm
       }
     },
 

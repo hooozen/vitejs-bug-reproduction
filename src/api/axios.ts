@@ -1,5 +1,5 @@
 import axios, { AxiosPromise, DeleteConfirmConfig, AxiosRequestConfig, AxiosResponse, Method } from "axios"
-import { ElMessage, ElMessageBox } from "element-plus"
+import { ElMessage, ElMessageBox, ElLoading } from "element-plus"
 import router from "@router/index"
 // import store from "@/store/index"
 
@@ -25,7 +25,21 @@ api.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig =>
 })
 */
 
+let LOADINGSERVICE: any = null
+
+api.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig => {
+  if (!config.silent) LOADINGSERVICE = ElLoading.service({background: 'rgb(0,0,0,0.4)'})
+  return config
+}, (err) => {
+  console.error(err)
+  throw Error(err)
+})
+
 api.interceptors.response.use((response: AxiosResponse<any>): AxiosPromise => {
+  if (LOADINGSERVICE) {
+    LOADINGSERVICE.close()
+    LOADINGSERVICE = null
+  }
   if (response.data.success !== undefined && !response.data.success) {
     if (response.data.code === 'token.expired') {
       ElMessage.error('身份验证过期，重新登录')

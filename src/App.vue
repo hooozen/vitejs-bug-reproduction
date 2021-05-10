@@ -13,6 +13,10 @@
 
 <style lang="scss">
   html,
+  body {
+    height: 100%;
+  }
+  html,
   body,
   div {
     margin: 0;
@@ -23,6 +27,7 @@
     font-family: Avenir, Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    height: 100%;
 
     .el-input.is-disabled .el-input__inner {
       background-color: white;
