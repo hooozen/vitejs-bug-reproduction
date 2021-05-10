@@ -1,5 +1,5 @@
 <template>
-  <el-table :data="propeties"> </el-table>
+  <el-table :data="services"> </el-table>
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
@@ -16,7 +16,7 @@
     setup(props) {
       const services = ref<{ [key: string]: any }>([])
       const getServeices = async () => {
-        services.value = getByDeviceTypeId(props.id)
+        services.value = (await getByDeviceTypeId(props.id)).data
       }
 
       const init = () => {

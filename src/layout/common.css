@@ -89,10 +89,6 @@
     overflow-x: hidden;
   }
 
-  & .main-item {
-    width: 100%;
-  }
-
   & .detail-basic {
     flex: 1;
   }
@@ -102,6 +98,8 @@
   }
 
   & .main-item {
+    box-sizing: border-box;
+    width: 100%;
     margin: 10px 0 20px;
   }
 

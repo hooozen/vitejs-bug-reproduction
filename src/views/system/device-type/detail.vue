@@ -28,14 +28,18 @@
       <div class="main-item">
         <el-tabs v-model="activeTab" type="card">
           <el-tab-pane :lazy="true" label="属性" name="property">
-            <device-property-table :id="deviceTypeId"></device-property-table>
+            <device-property-table
+              :deviceTypeId="deviceTypeId"
+            ></device-property-table>
           </el-tab-pane>
+          <!--
           <el-tab-pane label="事件" name="event">
             <device-event-table :id="deviceTypeId"></device-event-table>
           </el-tab-pane>
           <el-tab-pane label="服务" name="service">
             <device-service-table :id="deviceTypeId"></device-service-table>
           </el-tab-pane>
+          -->
         </el-tabs>
       </div>
     </div>
@@ -100,9 +104,14 @@
         })
       }
 
+
+
       onMounted(() => void init())
 
-      return { pageTitle, deviceTypeData, formRules, formEl, submitForm, deviceTypeId, activeTab }
+      return {
+        pageTitle, deviceTypeData, formRules, formEl, submitForm, deviceTypeId, activeTab,
+      }
+
     },
   })
 </script>
