@@ -7,30 +7,27 @@ export interface StaffQueryParams extends PagingQueryParams {
 }
 
 export interface AddParams {
-  account: string,
-  accountBank: string,
-  address: string,
-  addressArea: string,
-  addressCity: string,
-  addressProvince: string,
-  addressStreet: string,
-  businessArea: string,
-  businessCity: string,
-  businessLicense: string,
-  businessProvince: string,
-  businessStreet: string,
-  code: string,
-  contacts: string,
-  description: string,
-  id: number | string,
-  latitude: string,
-  logo: string,
-  longitude: string,
-  name: string,
-  orgId: string,
-  status: number | string,
-  systemName: string,
-  tel: string
+  censusAddress: string,
+  censusArea: string,
+  censusCity: string,
+  censusProvince: string,
+  censusStreet: string,
+  department: string,
+  education: string,
+  fullName: string,
+  houseAddress: string,
+  houseArea: string,
+  houseCity: string,
+  houseProvince: string,
+  houseStreet: string,
+  identityNo: string,
+  joinedDate: string,
+  mobile: string,
+  nation: string,
+  operatorId: number | string,
+  post: string,
+  profilePhoto: string,
+  sex: string
 }
 
 export interface UpdateParams extends AddParams {
@@ -38,7 +35,7 @@ export interface UpdateParams extends AddParams {
 }
 
 function remove(id: string, config?: $AxiosRequestConfig) {
-  return axios('delete', '/admin/store/delete', { id }, config)
+  return axios('delete', '/admin/employee/delete', { id }, config)
 }
 
 function getByKeyword(params: StaffQueryParams, config?: $AxiosRequestConfig): AxiosPromise {
@@ -46,15 +43,15 @@ function getByKeyword(params: StaffQueryParams, config?: $AxiosRequestConfig): A
 }
 
 function add(params: AddParams, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('post', '/admin/store/add', params, config)
+  return axios('post', '/admin/employee/add', params, config)
 }
 
 function update(params: UpdateParams, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('post', '/admin/store/update', params, config)
+  return axios('post', '/admin/employee/update', params, config)
 }
 
 function getById(id: string, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('get', '/admin/store/getById', { id }, config)
+  return axios('get', '/admin/employee/getById', { id }, config)
 }
 
 export { add, update, getByKeyword, remove, getById }

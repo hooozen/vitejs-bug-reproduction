@@ -19,10 +19,10 @@
 </template>
 <script lang="ts">
   import { defineComponent, onMounted, ref, watchEffect } from 'vue'
-  import { getByKeyword } from '@/api/server/store'
+  import { getByKeyword } from '@/api/server/operator'
 
   export default defineComponent({
-    name: 'TlStore',
+    name: 'TlOperator',
     props: {
       modelValue: {
         type: [String, Number],
@@ -46,7 +46,7 @@
       const remoteMethod = async (query: string) => {
         if (query !== '') {
           loading.value = true
-          const res = (await getByKeyword({ name: query, current: 0, size: 10 }, { silent: true })).data
+          const res = (await getByKeyword({ keywordType: 2, keyword: query, current: 0, size: 10 }, { silent: true })).data
           options.value = res.records.map((item: any) => ({
             value: item.id,
             label: item.name

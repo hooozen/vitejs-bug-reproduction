@@ -46,7 +46,7 @@
               <el-input v-model="formData.post"></el-input>
             </el-form-item>
           </div>
-          <div class="item-body-column" style="flex-basis: 200px">
+          <div class="item-body-column" style="flex-basis: 300px">
             <el-form-item label="入职日期">
               <el-date-picker
                 v-model="formData.joinedDate"
@@ -55,37 +55,39 @@
               >
               </el-date-picker>
             </el-form-item>
-            <el-form-item prop="_censusAddress" label="户籍地址:">
+            <el-form-item prop="_district" label="户籍地址:">
               <tl-address
                 v-model:district="formData._censusDistrict"
                 v-model:address="formData.censusAddress"
                 :deepth="4"
+                @change="updateFormDistrictName"
                 :full="true"
               ></tl-address>
             </el-form-item>
-            <el-form-item prop="_houseAddress" label="现住地址:">
+            <el-form-item prop="_district" label="现住地址:">
               <tl-address
-                v-model:district="formData._houseDistrict"
-                v-model:address="formData.houseAddress"
+                v-model:district="formData._district"
+                v-model:address="formData.address"
                 :deepth="4"
+                @change="updateFormDistrictName"
                 :full="true"
               ></tl-address>
             </el-form-item>
             <el-form-item prop="operatorId" label="员工归属:">
-              <tl-operator v-model="formData.operatorId"></tl-operator>
+              <tl-operator></tl-operator>
             </el-form-item>
           </div>
-          <div class="item-body-column" style="flex-basis: 400px">
+          <div class="item-body-column" style="flex-basis: 300px">
             <el-form-item prop="profilePhoto" label="照片:">
               <el-upload
                 class="avatar-uploader"
                 action="/beer/admin/common/uploadFile"
                 :show-file-list="false"
-                :on-success="uploadSuccess"
+                :on-success="uploadLicenseSuccess"
                 :on-error="uploadError"
                 :before-upload="beforeUpload"
               >
-                <img v-if="avatarUrl" :src="avatarUrl" class="avatar" />
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
                 <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 <template #tip>
                   <div class="el-upload__tip">
@@ -109,9 +111,10 @@
   import TlAddress from '../components/address/index.vue'
   import TlSelect from '../components/selector/index.vue'
   import TlOrganization from '../components/org-select/index.vue'
-  import TlOperator from '../components/operator-select/index.vue'
+  import TlTag from '../components/tag-select/index.vue'
+  import TlTags from '../components/tag-list/index.vue'
 
-  import { add, AddParams, UpdateParams, update, getById } from '@/api/server/staff'
+  import { add, AddParams, UpdateParams, update, getById } from '@/api/server/store'
   import { getByStoreId } from '@api/server/device'
 
   import { useRoute } from 'vue-router'
@@ -120,15 +123,14 @@
   import formRules from './formRules'
   import { blankFormData as formDataTemplate, generateFormData, } from './formDataTemplate'
 
-  import moment from 'moment'
-
   export default defineComponent({
     components: {
       NavBar,
       TlAddress,
       TlOrganization,
-      TlOperator,
       TlSelect,
+      TlTag,
+      TlTags
     },
     props: {
       type: {
@@ -149,6 +151,8 @@
       // const editable = ref<boolean>(false)
       // if (props.type === 'add') editable.value = true
 
+      const mapCenter = ref<number[]>([39.90689, 116.3976])
+
       const title = computed(() =>
         props.type === 'edit' ? '员工详情' : '新增员工',
       )
@@ -161,10 +165,8 @@
           let _formData: { [key: string]: any } = {}
           for (const [k, v] of Object.entries(formData.value)) {
             if (k.substring(0, 1) === '_') continue
-            if ((v as any) instanceof Date) _formData[k] = moment(v).format('YYYY-MM-DD')
-            else _formData[k] = v
+            _formData[k] = v
           }
-          console.log('submiting form data: ', _formData)
           if (props.type === 'add') await add(_formData as AddParams, '新增成功')
           else await update(_formData as UpdateParams, '保存成功')
         })
@@ -176,7 +178,10 @@
       const setFormData = async () => {
         if (!id.value) return
         const originalForm = (await getById(id.value as string)).data
+        isShowLicenseViewBtn.value = true
+        isShowPhotoViewBtn.value = true
         formData.value = generateFormData(originalForm)
+        mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
       }
 
       const devices = ref([])
@@ -192,37 +197,72 @@
 
       onMounted(async () => void init())
 
-      const avatarUrl = ref<string>()
+      const viewLicense = () => {
+        imagePreviewSrc.value = formData.value.businessLicense;
+        isShowViewer.value = true
+      }
+
+      const viewPhoto = () => {
+        imagePreviewSrc.value = formData.value.photo!
+        isShowViewer.value = true
+      }
+
+      const isShowLicenseViewBtn = ref<boolean>(false)
+      const isShowPhotoViewBtn = ref<boolean>(false)
+      const isShowViewer = ref<boolean>(false)
+      const imagePreviewSrc = ref<string>('')
+      const isUploading = ref<boolean>(false)
+      const isUploadSuccess = ref<boolean>(false)
       const beforeUpload = (file: File) => {
         if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
           ElMessage.error('只支持 .jpg .png 格式图片')
           return false
         }
+        isUploading.value = true
       }
-      const uploadSuccess = (res: any, file: any) => {
+      const uploadPhotoSuccess = (res: any, file: any) => {
+        isShowPhotoViewBtn.value = true
+        imagePreviewSrc.value = URL.createObjectURL(file.raw)
         ElMessage.success('文件上传成功')
-        avatarUrl.value = res.data
-        formData.value.profilePhoto = res.data
+        formData.value.photo = res.data
+        isUploading.value = false
+      }
+      const uploadLicenseSuccess = (res: any, file: any) => {
+        isShowLicenseViewBtn.value = true
+        imagePreviewSrc.value = URL.createObjectURL(file.raw)
+        ElMessage.success('文件上传成功')
+        formData.value.businessLicense = res.data
+        isUploading.value = false
       }
       const uploadError = (e: any) => {
         ElMessage.error(`文件上传失败: ${e}`)
+        isUploading.value = false
       }
 
       return {
+        mapCenter,
         title,
         editable,
         options,
         updateFormDistrictName,
         location,
-        avatarUrl,
         activeTab,
         formData,
         formRules,
         submitForm,
         formEl,
+        imagePreviewSrc,
+        isShowViewer,
+        isShowLicenseViewBtn,
+        isShowPhotoViewBtn,
+        viewLicense,
+        viewPhoto,
         beforeUpload,
-        uploadSuccess,
+        uploadLicenseSuccess,
+        uploadPhotoSuccess,
         uploadError,
+        isUploadSuccess,
+        isUploading,
         devices,
       }
     },

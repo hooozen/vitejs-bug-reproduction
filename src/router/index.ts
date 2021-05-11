@@ -17,6 +17,7 @@ import DeviceTypeDetail from '@views/system/device-type/detail.vue'
 import Roles from '@views/system/roles/index.vue'
 import OperationDetail from '@views/operators/detail.vue'
 import UserInfo from '@views/system/user-info.vue'
+import Users from '@views/system/users/index.vue'
 
 const routes = [
   {
@@ -56,6 +57,11 @@ const routes = [
       props: { type: 'add' },
       component: StaffDetail
     }, {
+      name: 'staff-detail',
+      path: 'staff-detail',
+      props: { type: 'edit' },
+      component: StaffDetail
+    }, {
       path: 'dict',
       component: Dict
     }, {
@@ -86,6 +92,10 @@ const routes = [
       name: 'userInfo',
       path: 'user-info',
       component: UserInfo
+    }, {
+      name: 'users',
+      path: 'users',
+      component: Users
     }]
   }, {
     path: '/login',

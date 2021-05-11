@@ -8,7 +8,8 @@
           v-model:keywordType="keywordType"
           :keywordTypes="options.keywordTypes"
         ></tl-search>
-        <tl-address :deepth="1" v-model:district="censusProvince"></tl-address>
+        <tl-store v-model="storeId"></tl-store>
+        <tl-select v-model="status" :options="options.status"></tl-select>
         <el-button type="primary" @click="conditionalQuery">查询</el-button>
       </div>
       <div class="panel__opt">
@@ -21,7 +22,7 @@
       </div>
     </div>
     <div class="view-body">
-      <el-table  :data="list" border height="100%">
+      <el-table :data="list" border height="100%">
         <el-table-column type="selection" width="40px" align="center">
         </el-table-column>
         <el-table-column type="index" width="40px" align="center">
@@ -37,7 +38,7 @@
           <template #default="scope">
             <router-link
               class="text-btn"
-              :to="`/staff-detail?id=${scope.row.id}`"
+              :to="`/store-detail?id=${scope.row.id}`"
             >
               详情
             </router-link>
@@ -65,19 +66,19 @@
 <script lang="ts">
   import { defineComponent, onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
-  import { getByKeyword, remove } from '@/api/server/staff'
+  import { getByKeyword } from '@/api/server/user'
   import { getAdressName } from '@api/local/district'
 
-  import TlSelect from '../components/selector/index.vue'
-  import TlSearch from '../components/search/index.vue'
-  import TlAddress from '../components/address/index.vue'
+  import TlSelect from '../../components/selector/index.vue'
+  import TlSearch from '../../components/search/index.vue'
+  import TlStore from '../../components/store-select/index.vue'
 
   import options from './options'
   import columns from './columns'
 
   export default defineComponent({
     name: 'Stores',
-    components: { TlSelect, TlSearch, TlAddress },
+    components: { TlSelect, TlSearch, TlStore },
 
     setup() {
       // table list and pagination
@@ -86,12 +87,9 @@
       const createTime = ref<string>()
       const currentPage = ref<number>(1)
       const pageSize = ref(10)
-      const currentPageChange = (current: number) => {
-        getList({ current })
-      }
-      const pageSizeChange = (size: number) => {
-        getList({ size })
-      }
+      const currentPageChange = (current: number) => void getList({ current })
+      const pageSizeChange = (size: number) => void getList({ size })
+
       const getList = async (_params?: any) => {
         const params = {
           size: pageSize.value,
@@ -99,14 +97,14 @@
           createTime: createTime.value,
           keywordType: keywordType.value,
           keyword: keyword.value,
-          censusProvince: censusProvince.value[0],
+          status: status.value,
+          storeId: storeId.value,
           ..._params
         }
-        const resData = (await getByKeyword(params, '访问成功')).data
+        const resData = (await getByKeyword(params)).data
         list.value = resData.records.map((item: any) => ({
           ...item,
-          censusAddressName: getAdressName(item.censusProvince, item.censusCity),
-          houseAddressName: getAdressName(item.houseProvince, item.city),
+          statusName: options.status.find(s => s.value == item.status)?.label
         }))
         listLength.value = +resData.total
         pageSize.value = +resData.size
@@ -115,7 +113,8 @@
       // filter form
       const keyword = ref<string>()
       const keywordType = ref<1 | 2>(1)
-      const censusProvince = ref<any>([])
+      const status = ref<1 | 2 | 3>()
+      const storeId = ref<string | number>()
       const conditionalQuery = () => void getList({ current: 1 })
 
       const init = () => {
@@ -123,7 +122,6 @@
       }
 
       const deleteItem = (id: string) => {
-        remove(id)
       }
 
       const router = useRouter()
@@ -131,8 +129,8 @@
       onMounted(() => void init())
       return {
         options, columns,
-        list, 
-        censusProvince, keyword, keywordType, conditionalQuery,
+        list,
+        status, keyword, keywordType, conditionalQuery, storeId,
         pageSize, currentPage, listLength, pageSizeChange, currentPageChange,
         deleteItem,
         router,
