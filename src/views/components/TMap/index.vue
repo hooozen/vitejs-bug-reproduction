@@ -44,7 +44,10 @@ export default defineComponent({
     },
     config: {
       type: Object,
-      required: false
+      required: false,
+      default: {
+        zoom: 6
+      }
     },
   },
   emits: ['update:pointer'],

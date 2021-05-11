@@ -5,8 +5,8 @@ interface TableColumnData {
 }
 
 interface OptionData {
-  value: string | number | boolean | null,
-  label: string
+  value?: string | number | boolean | null,
+  label?: string
 }
 
 interface Window {

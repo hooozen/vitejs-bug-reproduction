@@ -9,9 +9,11 @@
           :keywordTypes="options.keywordTypes"
         ></tl-search>
         <tl-address
-          v-model:district="filterRegion"
+          v-model:district="addressProvince"
+          :deepth="1"
           :clearable="true"
         ></tl-address>
+        <el-button type="primary" @click="conditionalQuery">查询</el-button>
       </div>
       <div class="panel__opt">
         <el-button type="primary" @click="router.push('add-operator')">
@@ -30,7 +32,6 @@
       ></el-image-viewer>
       <el-table
         @selection-change="tableSelectionChange"
-        v-loading="loadingList"
         :data="list"
         border
         height="100%"
@@ -52,7 +53,7 @@
           :label="col.label"
           :prop="col.prop"
         ></el-table-column>
-        <el-table-column label="营业执照">
+        <el-table-column label="营业执照" width="80px">
           <template #default="scope">
             <span
               class="text-btn"
@@ -75,6 +76,7 @@
             </span>
           </template>
         </el-table-column>
+        <el-table-column prop="statusName"> </el-table-column>
       </el-table>
     </div>
     <div class="view-foot">
@@ -91,111 +93,114 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue'
-import { getByKeyword, QueryParams, remove } from '@/api/server/operator'
+  import { defineComponent, onMounted, ref } from 'vue'
+  import { getByKeyword, QueryParams, remove } from '@/api/server/operator'
+  import { getAdressName } from '@api/local/district'
 
-import { useRouter } from 'vue-router'
+  import { useRouter } from 'vue-router'
 
-import TlSelect from '../components/selector/index.vue'
-import TlSearch from '../components/search/index.vue'
-import TlAddress from '../components/address/index.vue'
+  import TlSelect from '../components/selector/index.vue'
+  import TlSearch from '../components/search/index.vue'
+  import TlAddress from '../components/address/index.vue'
 
-import options from './options'
-import columns from './columns'
+  import options from './options'
+  import columns from './columns'
 
-interface ListParams {
-  keyword?: string
-  keywordType?: number
-  current?: number
-  size?: number
-}
+  interface ListParams {
+    keyword?: string
+    keywordType?: number
+    current?: number
+    size?: number
+  }
 
-export default defineComponent({
-  name: 'Operators',
-  components: { TlSelect, TlSearch, TlAddress },
+  export default defineComponent({
+    name: 'Operators',
+    components: { TlSelect, TlSearch, TlAddress },
 
-  setup() {
-    const router = useRouter()
+    setup() {
+      const router = useRouter()
 
-    // table list and pagination
-    const list = ref<{ [key: string]: any }[]>([])
-    const loadingList = ref(true)
-    const totalNum = ref<number>()
-    const currentPage = ref(1)
-    const pageSize = ref(10)
-    const selectedItems = ref<any[]>([])
-    const currentPageChange = (page: number) => getList({ current: page })
-    const pageSizeChange = (size: number) => getList({ size })
-    const getList = async (_params?: ListParams) => {
-      loadingList.value = true
-      const params: QueryParams = {
-        size: pageSize.value,
-        current: 1,
-        ..._params,
+      // table list and pagination
+      const list = ref<{ [key: string]: any }[]>([])
+      const totalNum = ref<number>()
+      const currentPage = ref(1)
+      const pageSize = ref(10)
+      const selectedItems = ref<any[]>([])
+      const currentPageChange = (page: number) => getList({ current: page })
+      const pageSizeChange = (size: number) => getList({ size })
+      const getList = async (_params?: ListParams) => {
+        const params: QueryParams = {
+          size: pageSize.value,
+          current: 1,
+          keyword: keyword.value,
+          keywordType: keywordType.value,
+          addressProvince: addressProvince.value,
+          ..._params,
+        }
+        const resData = (await getByKeyword(params)).data
+        list.value = resData.records.map((item: any) => ({
+          ...item,
+          addressName: getAdressName(item.addressProvince, item.addressCity, item.addressArea),
+          statusName: options.status.find(s => s.value == item.status)?.label
+        }))
+        totalNum.value = +resData.total
+        currentPage.value = +resData.current
       }
-      const resData = (await getByKeyword(params, '访问成功')).data
-      list.value = resData.records
-      totalNum.value = +resData.total
-      currentPage.value = +resData.current
-      loadingList.value = false
-    }
-    const tableSelectionChange = (value: any[]) => {
-      selectedItems.value = value
-    }
+      const tableSelectionChange = (value: any[]) => {
+        selectedItems.value = value
+      }
 
-    const viewingImage = ref<string>('')
-    const viewerShowing = ref<boolean>(false)
-    const viewLicense = (value: string) => {
-      viewerShowing.value = true
-      viewingImage.value = value
-    }
+      const viewingImage = ref<string>('')
+      const viewerShowing = ref<boolean>(false)
+      const viewLicense = (value: string) => {
+        viewerShowing.value = true
+        viewingImage.value = value
+      }
 
-    // filter form
-    const keyword= ref('')
-    const keywordType = ref(0)
-    const filterRegion = ref<string>()
-    const doSearch = (keyword: string, keywordType: number) =>
-      getList({ keyword, keywordType })
+      // filter form
+      const keyword = ref('')
+      const keywordType = ref<1 | 2>(1)
+      const addressProvince = ref<string>()
+      const conditionalQuery = () => void getList({ current: 1 })
 
-    onMounted(() => getList())
+      onMounted(() => getList())
 
-    const deleteItem = async (id: string) => {
-      await remove(id)
-      getList()
-    }
+      const deleteItem = async (id: string) => {
+        await remove(id)
+        getList()
+      }
 
-    const batchDelete = async () => {
-      const ids = selectedItems.value.map((item: any) => item.id).join(',')
-      const length = selectedItems.value.length
-      await remove(ids, {
-        confirmConfig: { text: `确认批量删除 ${length} 项记录?` },
-      })
-      getList()
-    }
+      const batchDelete = async () => {
+        const ids = selectedItems.value.map((item: any) => item.id).join(',')
+        const length = selectedItems.value.length
+        await remove(ids, {
+          confirmConfig: { text: `确认批量删除 ${length} 项记录?` },
+        })
+        getList()
+      }
 
-    return {
-      router,
-      options,
-      columns,
-      tableSelectionChange,
-      list,
-      loadingList,
-      deleteItem,
-      batchDelete,
-      viewingImage,
-      viewerShowing,
-      viewLicense,
-      keywordType,
-      keyword,
-      status,
-      doSearch,
-      filterRegion,
-      pageSize,
-      currentPage,
-      totalNum,
-      pageSizeChange,
-      currentPageChange,
-    }
-  },
-})
+      return {
+        router,
+        options,
+        columns,
+        tableSelectionChange,
+        list,
+        deleteItem,
+        batchDelete,
+        viewingImage,
+        viewerShowing,
+        viewLicense,
+        keywordType,
+        keyword,
+        status,
+        conditionalQuery,
+        addressProvince,
+        pageSize,
+        currentPage,
+        totalNum,
+        pageSizeChange,
+        currentPageChange,
+      }
+    },
+  })
 </script>

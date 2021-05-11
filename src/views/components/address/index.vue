@@ -4,6 +4,7 @@
       ref="selectEl"
       :modelValue="district"
       @change="changeSelection"
+      :placeholder="placeholder"
       :props="config"
       :clearable="clearable"
     >
@@ -45,6 +46,11 @@
       clearable: {
         type: Boolean,
         default: false,
+      },
+      placeholder: {
+        type: String,
+        required: false,
+        default: '区域选择'
       }
     },
     emits: ['update:district', 'update:address', 'change', 'input'],

@@ -62,7 +62,7 @@
       const remoteMethod = async (query: string) => {
         if (query !== '') {
           loading.value = true
-          const res = (await getByKeyword(query)).data
+          const res = (await getByKeyword(query, { silent: true })).data
           options.value = res.map((item: any) => ({
             value: item.id,
             label: item.name

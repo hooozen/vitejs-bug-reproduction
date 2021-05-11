@@ -4,7 +4,8 @@
     @change="updateValue"
     filterable
     remote
-    multiple
+    :multiple="multiple"
+    :clearable="clearable"
     :placeholder="placeholder"
     :remote-method="remoteMethod"
     :loading="loading"
@@ -27,11 +28,21 @@
     props: {
       modelValue: {
         type: Array,
-        require: false,
+        required: false,
       },
       placeholder: {
         type: String,
         default: '输入标签',
+      },
+      clearable: {
+        type: Boolean,
+        required: false,
+        default: true
+      },
+      multiple: {
+        type: Boolean,
+        required: false,
+        default: false
       }
     },
     emits: ['update:modelValue', 'change'],
@@ -44,7 +55,7 @@
         console.log(query)
         if (query !== '') {
           loading.value = true
-          const res = (await getByKeyword(query)).data
+          const res = (await getByKeyword(query, { silent: true })).data
           options.value = res.map((item: any) => ({
             value: item.id,
             label: item.name

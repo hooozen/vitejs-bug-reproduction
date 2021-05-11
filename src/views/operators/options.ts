@@ -1,8 +1,5 @@
 
 const keywordTypes: OptionData[] = [{
-  value: 0,
-  label: '全部'
-}, {
   value: 1,
   label: '组织代码'
 }, {

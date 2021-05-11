@@ -27,19 +27,23 @@ api.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig =>
 
 let LOADINGSERVICE: any = null
 
+function closeLoading() {
+  try {
+    LOADINGSERVICE.close()
+  } catch { }
+}
+
 api.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig => {
-  if (!config.silent) LOADINGSERVICE = ElLoading.service({background: 'rgb(0,0,0,0.4)'})
+  if (!config.silent) LOADINGSERVICE = ElLoading.service({ background: 'rgb(0,0,0,0.4)' })
   return config
 }, (err) => {
   console.error(err)
+  closeLoading()
   throw Error(err)
 })
 
 api.interceptors.response.use((response: AxiosResponse<any>): AxiosPromise => {
-  if (LOADINGSERVICE) {
-    LOADINGSERVICE.close()
-    LOADINGSERVICE = null
-  }
+  closeLoading()
   if (response.data.success !== undefined && !response.data.success) {
     if (response.data.code === 'token.expired') {
       ElMessage.error('身份验证过期，重新登录')
@@ -54,6 +58,7 @@ api.interceptors.response.use((response: AxiosResponse<any>): AxiosPromise => {
   }
   return response.data
 }, (err) => {
+  closeLoading()
   console.error(err)
   ElMessage.error(`请求出错：${err}`)
   throw Error(err)

@@ -5,7 +5,7 @@
     :placeholder="placeholder"
     @input="$emit('update:keyword', $event)"
   >
-    <template v-if="keywordTypes" #prepend>
+    <template v-if="keywordTypes" #prepend class="tl-search__prepend">
       <el-select
         :modelValue="keywordType"
         @change="$emit('update:keywordType', $event)"
@@ -67,7 +67,7 @@
       width: 300px;
     }
     & .el-select .el-input {
-      width: 100px;
+      width: 120px;
     }
   }
 </style>

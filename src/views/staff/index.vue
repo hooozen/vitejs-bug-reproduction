@@ -63,7 +63,7 @@
   import { defineComponent, onMounted, ref } from 'vue'
   import { useRouter } from 'vue-router'
   import { getByKeyword, remove } from '@/api/server/staff'
-  import { getRoughAddress } from '@api/local/district'
+  import { getAdressName } from '@api/local/district'
 
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'
@@ -111,8 +111,8 @@
         const resData = (await getByKeyword(params, '访问成功')).data
         list.value = resData.records.map((item: any) => ({
           ...item,
-          censusAddressName: getRoughAddress(item.censusProvince, item.censusCity),
-          houseAddressName: getRoughAddress(item.houseProvince, item.city),
+          censusAddressName: getAdressName(item.censusProvince, item.censusCity),
+          houseAddressName: getAdressName(item.houseProvince, item.city),
         }))
         listLength.value = +resData.total
         pageSize.value = +resData.size

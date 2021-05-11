@@ -1,4 +1,6 @@
-const areas = [
+import {District} from '../types'
+
+const areas: District[] = [
   {
     id: "130102",
     fullname: "长安区",

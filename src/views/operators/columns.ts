@@ -5,11 +5,8 @@ const columns: TableColumnData[] = [{
   prop: 'name',
   label: '运营商名称',
 }, {
-  prop: 'address',
+  prop: 'addressName',
   label: '单位地址',
-}, {
-  prop: 'businessArea',
-  label: '管辖组织',
 }, {
   prop: 'contacts',
   label: '联系人',

@@ -1,24 +1,46 @@
 <template>
   <div class="store table-view">
     <div class="view-head"></div>
-    <div class="view-panel">
-      <div class="panel__filter">
-        <tl-search v-model="searchKey" @search="search"></tl-search>
-        <tl-select :options="options.region" v-model="type"></tl-select>
-        <tl-select :options="options.type" v-model="isOnline"></tl-select>
-        <tl-select :options="options.status" v-model="status"></tl-select>
-      </div>
-      <div class="panel__opt">
-        <el-button type="primary" @click="router.push('add-store')"
-          >新增</el-button
-        >
-        <el-button type="danger">删除</el-button>
-        <el-button>导入</el-button>
-        <el-button>导出</el-button>
-      </div>
+    <div class="view-panel-line">
+      <el-input v-model="code" placeholder="请输入门店编码"></el-input>
+      <el-input v-model="name" placeholder="请输入门店名称"></el-input>
+      <el-input v-model="contacts" placeholder="请输入联系人"></el-input>
+      <el-input v-model="tel" placeholder="请输入联系电话"></el-input>
+      <el-date-picker
+        placeholder="注册时间筛选"
+        v-model="createTime"
+        type="date"
+      >
+      </el-date-picker>
     </div>
+    <div class="view-panel-line">
+      <tl-address :deepth="1" v-model:district="addressProvince"></tl-address>
+      <tl-select
+        :options="options.status"
+        v-model="status"
+        placeholder="选择门店状态"
+      ></tl-select>
+      <tl-tag v-model="tag" placeholder="标签"></tl-tag>
+      <el-button @click="conditionalQuery" type="primary">查询</el-button>
+      <el-button @click="resetCondition">重置</el-button>
+    </div>
+    <div class="panel__btns">
+      <el-button type="primary" @click="router.push('add-store')"
+        >新增</el-button
+      >
+      <el-button @click="batchDelete" type="danger">删除</el-button>
+      <el-button>导入</el-button>
+      <el-button>导出</el-button>
+    </div>
+
     <div class="view-body">
-      <el-table v-loading="loadingList" :data="list" border height="100%">
+      <el-table
+        v-loading="loadingList"
+        :data="list"
+        border
+        height="100%"
+        @selection-change="onSelectionChange"
+      >
         <el-table-column type="selection" width="40px" align="center">
         </el-table-column>
         <el-table-column type="index" width="40px" align="center">
@@ -31,8 +53,10 @@
           :prop="col.prop"
         >
         </el-table-column>
+
         <el-table-column label="设备状态" min-width="140px">
           <template #default="scope">
+            <span v-if="!scope.row.deviceList?.length">无设备</span>
             <div
               v-for="d in scope.row.deviceList"
               :key="d.sequence"
@@ -51,6 +75,16 @@
               {{ d.name }} : {{ d.sequence }}
             </div>
           </template>
+        </el-table-column>
+        <el-table-column label="标签">
+          <template #default="scope">
+            <span v-if="!scope.row.tags?.length">无</span>
+            <el-tag v-for="tag in scope.row.tags" class="text-tag" :key="tag">
+              {{ tag }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="注册时间" prop="createTime" min-width="140px">
         </el-table-column>
         <el-table-column label="操作" fixed="right">
           <template #default="scope">
@@ -88,25 +122,25 @@
 
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'
+  import TlAddress from '../components/address/index.vue'
+  import TlOrganization from '../components/org-select/index.vue'
+  import TlTag from '../components/tag-select/index.vue'
 
   import options from './options'
   import columns from './columns'
 
+  import moment from 'moment'
+  import { ElMessage } from 'element-plus'
+
   export default defineComponent({
     name: 'Stores',
-    components: { TlSelect, TlSearch },
+    components: { TlSelect, TlSearch, TlAddress, TlOrganization, TlTag },
 
     setup() {
       // table list and pagination
       const list = ref<{ [key: string]: any }[]>([])
       const loadingList = ref(true)
       const listLength = ref(10)
-      const code = ref<string>()
-      const contacts = ref<string>()
-      const createTime = ref<string>()
-      const status = ref<1 | 2 | 3>()
-      const tag = ref<string>()
-      const tel = ref<string>()
       const currentPage = ref<number>(1)
       const pageSize = ref(10)
       const currentPageChange = (current: number) => {
@@ -120,18 +154,23 @@
       }
       const getList = async (_params?: any) => {
         const params = {
-          size: pageSize.value,
-          current: 1,
+          addressProvince: addressProvince.value[0],
           code: code.value,
           contacts: contacts.value,
-          createTime: createTime.value,
+          name: name.value,
+          createTime: createTime.value && moment(createTime.value).format('YYYY-MM-DD'),
+          current: 1,
+          size: pageSize.value,
+          status: status.value,
           tag: tag.value,
           tel: tel.value,
           ..._params
         }
+        console.log('conditions of querying: ', params)
         const resData = (await getByKeyword(params, '访问成功')).data
         list.value = resData.records.map((item: any) => ({
           ...item,
+          status: options.status.find(s => s.value == item.status)?.label,
           tagName: item.tags.join(';')
         }))
         listLength.value = +resData.total
@@ -140,16 +179,45 @@
       }
 
       // filter form
-      const searchKey = ref('')
-      const type = ref(0)
-      const isOnline = ref('')
-      const isActive = ref('')
-      const search = (searchKey: string) => getList({ keyWord: searchKey })
+      const addressProvince = ref([])
+      const code = ref<string>()
+      const contacts = ref<string>()
+      const createTime = ref<Date>()
+      const name = ref<string>()
+      const status = ref<1 | 2 | 3>()
+      const tag = ref<string>()
+      const tel = ref<string>()
+
+      const conditionalQuery = () => getList({ current: 1 })
+      const resetCondition = () => {
+        addressProvince.value = []
+        code.value = undefined
+        contacts.value = undefined
+        createTime.value = undefined
+        name.value = undefined
+        status.value = undefined
+        tag.value = undefined
+        tel.value = undefined
+      }
 
       const init = () => {
         getList({ current: 1 })
       }
 
+      const seletedItems = ref<{ [key: string]: any }>([])
+
+      const onSelectionChange = (value: []) => {
+        seletedItems.value = value
+      }
+      const batchDelete = async () => {
+        const length = seletedItems.value.length
+        if (!length) ElMessage.warning('未选中任何记录')
+        const ids = seletedItems.value.map((item: any) => item.id).join(',')
+        await remove(ids, {
+          confirmConfig: { text: `确认批量删除 ${length} 项记录?` },
+        })
+        getList({ current: 1 })
+      }
       const deleteItem = async (id: string) => {
         await remove(id)
         getList({ current: 1 })
@@ -161,9 +229,9 @@
       return {
         options, columns,
         list, loadingList,
-        searchKey, type, status, isActive, isOnline, search,
+        status, addressProvince, code, contacts, createTime, name, tag, tel, conditionalQuery, resetCondition,
         pageSize, currentPage, listLength, pageSizeChange, currentPageChange,
-        deleteItem,
+        deleteItem, batchDelete, onSelectionChange,
         router,
       }
     },
