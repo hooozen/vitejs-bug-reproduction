@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-view store-detail">
+  <div class="detail-view staff-detail">
     <nav-bar class="detail-nav" :title="title">
       <el-button v-if="editable" type="primary" @click="submitForm">
         保存
@@ -18,25 +18,44 @@
           label-width="100px"
         >
           <div class="item-body-column" style="flex-basis: 400px">
-            <el-form-item prop="name" label="名称:">
+            <el-form-item prop="code" label="员工编号:">
+              <el-input v-model="formData.code"></el-input>
+            </el-form-item>
+            <el-form-item prop="name" label="姓名:">
               <el-input v-model="formData.name"></el-input>
             </el-form-item>
-            <el-form-item prop="socialCreditCode" label="组织代码:">
+            <el-form-item prop="socialCreditCode" label="性别:">
               <el-input v-model="formData.socialCreditCode"></el-input>
             </el-form-item>
-            <el-form-item prop="contacts" label="联系人:">
+            <el-form-item prop="contacts" label="民族:">
               <el-input v-model="formData.contacts"></el-input>
             </el-form-item>
             <el-form-item prop="tel" label="电话:">
               <el-input v-model="formData.tel"></el-input>
             </el-form-item>
-            <el-form-item prop="accountBank" label="开户行:">
+            <el-form-item prop="accountBank" label="身份证:">
               <el-input v-model="formData.accountBank"></el-input>
             </el-form-item>
-            <el-form-item prop="account" label="账号:">
+            <el-form-item prop="account" label="学历:">
               <el-input v-model="formData.account"></el-input>
             </el-form-item>
-            <el-form-item prop="_district" label="地址:">
+            <el-form-item prop="account" label="部门:">
+              <el-input v-model="formData.account"></el-input>
+            </el-form-item>
+            <el-form-item prop="account" label="职位:">
+              <el-input v-model="formData.account"></el-input>
+            </el-form-item>
+          </div>
+          <div class="item-body-column" style="flex-basis: 300px">
+            <el-form-item label="入职日期">
+              <el-date-picker
+                v-model="createTime"
+                type="date"
+                placeholder="添加日期"
+              >
+              </el-date-picker>
+            </el-form-item>
+            <el-form-item prop="_district" label="户籍地址:">
               <tl-address
                 v-model:district="formData._district"
                 v-model:address="formData.address"
@@ -45,25 +64,16 @@
                 :full="true"
               ></tl-address>
             </el-form-item>
-            <el-form-item prop="status" label="门店状态:">
-              <tl-select
-                :options="options.status"
-                v-model="formData.status"
-              ></tl-select>
+            <el-form-item prop="_district" label="现住地址:">
+              <tl-address
+                v-model:district="formData._district"
+                v-model:address="formData.address"
+                :deepth="4"
+                @change="updateFormDistrictName"
+                :full="true"
+              ></tl-address>
             </el-form-item>
-            <el-form-item prop="_timeRange" label="营业时间:">
-              <el-time-picker
-                is-range
-                v-model="formData._timeRange"
-                range-separator="至"
-                start-placeholder="开始时间"
-                end-placeholder="结束时间"
-                placeholder="选择时间范围"
-              >
-              </el-time-picker>
-            </el-form-item>
-          </div>
-          <div class="item-body-column" style="flex-basis: 300px">
+            <el-form-item prop="status" label="员工归属:"> </el-form-item>
             <el-form-item label="门店编号:" prop="code">
               <el-input v-model="formData.code"></el-input>
             </el-form-item>
@@ -76,81 +86,23 @@
               prop="status"
               >{{ formData.createTime }}</el-form-item
             >
-            <el-form-item label="备注:">
-              <el-input
-                v-model="formData.description"
-                type="textarea"
-              ></el-input>
-            </el-form-item>
+          </div>
+          <div class="item-body-column" style="flex-basis: 300px">
             <el-form-item prop="businessLicense" label="营业执照:">
-              <span
-                v-if="isShowLicenseViewBtn"
-                class="text-btn"
-                @click="viewLicense"
-              >
-                查看
-              </span>
-              <el-image-viewer
-                v-if="isShowViewer"
-                :url-list="[imagePreviewSrc]"
-                @close="isShowViewer = false"
-              ></el-image-viewer>
               <el-upload
+                class="avatar-uploader"
                 action="/beer/admin/common/uploadFile"
+                :show-file-list="false"
                 :on-success="uploadLicenseSuccess"
                 :on-error="uploadError"
                 :before-upload="beforeUpload"
-                :showFileList="false"
               >
-                <el-button size="small" type="primary" v-loading="isUploading">
-                  <i class="el-icon-upload el-icon--right"></i>
-                  上传文件
-                </el-button>
+                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
                 <template #tip>
-                  <div class="el-upload__tip">支持扩展名：.jpg .png</div>
+                  <div class="el-upload__tip">点击头像上传，支持扩展名：.jpg .png</div>
                 </template>
               </el-upload>
-            </el-form-item>
-            <el-form-item prop="storePhoto" label="门头照片:">
-              <span
-                v-if="isShowPhotoViewBtn"
-                class="text-btn"
-                @click="viewPhoto"
-              >
-                查看
-              </span>
-              <el-image-viewer
-                v-if="isShowViewer"
-                :url-list="[imagePreviewSrc]"
-                @close="isShowViewer = false"
-              ></el-image-viewer>
-              <el-upload
-                action="/beer/admin/common/uploadFile"
-                :on-success="uploadPhotoSuccess"
-                :on-error="uploadError"
-                :before-upload="beforeUpload"
-                :showFileList="false"
-              >
-                <el-button size="small" type="primary" v-loading="isUploading">
-                  <i class="el-icon-upload el-icon--right"></i>
-                  上传文件
-                </el-button>
-                <template #tip>
-                  <div class="el-upload__tip">支持扩展名：.jpg .png</div>
-                </template>
-              </el-upload>
-            </el-form-item>
-            <el-form-item prop="orgId" label="组织">
-              <tl-organization v-model="formData.orgId"></tl-organization>
-            </el-form-item>
-          </div>
-          <div class="item-body-column detail-map">
-            <el-form-item label="单位经纬度" prop="_position">
-              <t-map
-                :center="formData._position"
-                v-model:pointer="formData._position"
-                class="el-map-outer"
-              ></t-map>
             </el-form-item>
           </div>
         </el-form>
@@ -164,7 +116,6 @@
   import { ElMessage } from 'element-plus'
 
   import NavBar from '../components/nav-bar/index.vue'
-  import TMap from '../components/TMap/index.vue'
   import TlAddress from '../components/address/index.vue'
   import TlSelect from '../components/selector/index.vue'
   import TlOrganization from '../components/org-select/index.vue'
@@ -183,7 +134,6 @@
   export default defineComponent({
     components: {
       NavBar,
-      TMap,
       TlAddress,
       TlOrganization,
       TlSelect,
@@ -212,7 +162,7 @@
       const mapCenter = ref<number[]>([39.90689, 116.3976])
 
       const title = computed(() =>
-        props.type === 'edit' ? '门店详情' : '新增门店',
+        props.type === 'edit' ? '员工详情' : '新增员工',
       )
 
       const activeTab = ref('data')
@@ -225,14 +175,12 @@
             if (k.substring(0, 1) === '_') continue
             _formData[k] = v
           }
-          console.log(_formData)
           if (props.type === 'add') await add(_formData as AddParams, '新增成功')
           else await update(_formData as UpdateParams, '保存成功')
         })
       }
 
       const updateFormDistrictName = (value: string[], name: string[]) => {
-        console.log(name.join('/'))
       }
 
       const setFormData = async () => {
@@ -246,7 +194,6 @@
 
       const devices = ref([])
       const getDevices = async () => {
-        console.log(id.value)
         if (!id.value) return
         devices.value = (await getByStoreId(id.value as string)).data
       }
@@ -329,4 +276,35 @@
     },
   })
 </script>
-<style lang="postcss"></style>
+<style lang="postcss">
+  .staff-detail {
+    & .avatar-uploader .el-upload {
+      border: 1px dashed #d9d9d9;
+      border-radius: 6px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      width: 200px;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    & .avatar-uploader .el-upload:hover {
+      border-color: #409eff;
+    }
+    & .avatar-uploader-icon {
+      font-size: 40px;
+      color: #8c939d;
+    }
+    & .avatar {
+      width: 200px;
+      height: 240px;
+      display: block;
+    }
+    & .el-upload__tip {
+      line-height: 20px;
+      margin: 0;
+    }
+  }
+</style>

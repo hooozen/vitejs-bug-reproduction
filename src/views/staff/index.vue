@@ -3,10 +3,13 @@
     <div class="view-head"></div>
     <div class="view-panel">
       <div class="panel__filter">
-        <tl-search v-model="searchKey" @search="search"></tl-search>
-        <tl-select :options="options.region" v-model="type"></tl-select>
-        <tl-select :options="options.type" v-model="isOnline"></tl-select>
-        <tl-select :options="options.status" v-model="status"></tl-select>
+        <tl-search
+          v-model="keyword"
+          v-model:keywordType="keywordType"
+          :keywordTypes="options.keywordTypes"
+        ></tl-search>
+        <tl-address :deepth="1" v-model:district="censusProvince"></tl-address>
+        <el-button type="primary" @click="conditionalQuery">查询</el-button>
       </div>
       <div class="panel__opt">
         <el-button type="primary" @click="router.push('add-staff')"
@@ -18,7 +21,7 @@
       </div>
     </div>
     <div class="view-body">
-      <el-table v-loading="loadingList" :data="list" border height="100%">
+      <el-table  :data="list" border height="100%">
         <el-table-column type="selection" width="40px" align="center">
         </el-table-column>
         <el-table-column type="index" width="40px" align="center">
@@ -67,45 +70,36 @@
 
   import TlSelect from '../components/selector/index.vue'
   import TlSearch from '../components/search/index.vue'
+  import TlAddress from '../components/address/index.vue'
 
   import options from './options'
   import columns from './columns'
 
   export default defineComponent({
     name: 'Stores',
-    components: { TlSelect, TlSearch },
+    components: { TlSelect, TlSearch, TlAddress },
 
     setup() {
       // table list and pagination
       const list = ref<{ [key: string]: any }[]>([])
-      const loadingList = ref(true)
       const listLength = ref(10)
-      const code = ref<string>()
-      const contacts = ref<string>()
       const createTime = ref<string>()
-      const status = ref<1 | 2 | 3>()
-      const tag = ref<string>()
-      const tel = ref<string>()
       const currentPage = ref<number>(1)
       const pageSize = ref(10)
       const currentPageChange = (current: number) => {
-        console.log(current)
-        console.log('page change')
         getList({ current })
       }
       const pageSizeChange = (size: number) => {
-        console.log('size change')
         getList({ size })
       }
       const getList = async (_params?: any) => {
         const params = {
           size: pageSize.value,
           current: 1,
-          code: code.value,
-          contacts: contacts.value,
           createTime: createTime.value,
-          tag: tag.value,
-          tel: tel.value,
+          keywordType: keywordType.value,
+          keyword: keyword.value,
+          censusProvince: censusProvince.value[0],
           ..._params
         }
         const resData = (await getByKeyword(params, '访问成功')).data
@@ -116,15 +110,13 @@
         }))
         listLength.value = +resData.total
         pageSize.value = +resData.size
-        loadingList.value = false;
       }
 
       // filter form
-      const searchKey = ref('')
-      const type = ref(0)
-      const isOnline = ref('')
-      const isActive = ref('')
-      const search = (searchKey: string) => getList({ keyWord: searchKey })
+      const keyword = ref<string>()
+      const keywordType = ref<1 | 2>(1)
+      const censusProvince = ref<any>([])
+      const conditionalQuery = () => void getList({ current: 1 })
 
       const init = () => {
         getList({ current: 1 })
@@ -139,8 +131,8 @@
       onMounted(() => void init())
       return {
         options, columns,
-        list, loadingList,
-        searchKey, type, status, isActive, isOnline, search,
+        list, 
+        censusProvince, keyword, keywordType, conditionalQuery,
         pageSize, currentPage, listLength, pageSizeChange, currentPageChange,
         deleteItem,
         router,

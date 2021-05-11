@@ -2,7 +2,7 @@ import { AxiosPromise } from 'axios'
 import axios, { $AxiosRequestConfig, post } from '../axios'
 import { PagingQueryParams } from './interface'
 
-export interface StoreQueryParams extends PagingQueryParams {
+export interface StaffQueryParams extends PagingQueryParams {
   censusProvince?: string
 }
 
@@ -22,6 +22,7 @@ export interface AddParams {
   code: string,
   contacts: string,
   description: string,
+  id: number | string,
   latitude: string,
   logo: string,
   longitude: string,
@@ -40,7 +41,7 @@ function remove(id: string, config?: $AxiosRequestConfig) {
   return axios('delete', '/admin/store/delete', { id }, config)
 }
 
-function getByKeyword(params: StoreQueryParams, config?: $AxiosRequestConfig): AxiosPromise {
+function getByKeyword(params: StaffQueryParams, config?: $AxiosRequestConfig): AxiosPromise {
   return axios('post', '/admin/employee/getByKeyword', params, config)
 }
 

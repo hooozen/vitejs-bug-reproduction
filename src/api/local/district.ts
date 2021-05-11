@@ -16,7 +16,6 @@ function getAreaByCode(code: string): District | undefined {
 }
 
 function getAdressName(province: string, city: string, area?: string): string {
-  console.log(province, city, area)
   return `${getProvinceByCode(province)?.fullname || ''}${getCityByCode(city)?.fullname || ''}${area && getAreaByCode(area)?.fullname || ''}`
 }
 

@@ -1,9 +1,9 @@
-const regions:OptionData[] = [{
-  value: 0,
-  label: '全部'
-}, {
+const keywordTypes:OptionData[] = [{
   value: 1,
-  label: '北京'
+  label: '姓名'
+}, {
+  value: 2,
+  label: '手机号'
 }]
 
-export default { regions }
+export default { keywordTypes }
