@@ -1,5 +1,5 @@
 <template>
-  <div class="store table-view">
+  <div class="users table-view">
     <div class="view-head"></div>
     <div class="view-panel">
       <div class="panel__filter">
@@ -13,7 +13,7 @@
         <el-button type="primary" @click="conditionalQuery">查询</el-button>
       </div>
       <div class="panel__opt">
-        <el-button type="primary" @click="router.push('add-staff')"
+        <el-button type="primary" @click="router.push('add-user')"
           >新增</el-button
         >
         <el-button type="danger">删除</el-button>
@@ -38,7 +38,7 @@
           <template #default="scope">
             <router-link
               class="text-btn"
-              :to="`/store-detail?id=${scope.row.id}`"
+              :to="`/user-detail?id=${scope.row.id}`"
             >
               详情
             </router-link>
@@ -77,7 +77,7 @@
   import columns from './columns'
 
   export default defineComponent({
-    name: 'Stores',
+    name: 'Users',
     components: { TlSelect, TlSearch, TlStore },
 
     setup() {

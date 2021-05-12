@@ -20,7 +20,6 @@ export interface UserAddParams {
   description: string,
   employeeId: number | string,
   expireDate: string,
-  id: number | string,
   loginName: string,
   mobile: string,
   operatorId: number | string,
@@ -34,8 +33,20 @@ export interface UserAddParams {
   ]
 }
 
-function add(params: UserAddParams, config?: $AxiosRequestConfig):AxiosPromise {
+function add(params: UserAddParams, config?: $AxiosRequestConfig): AxiosPromise {
   return axios('post', '/admin/user/add', params, config)
 }
 
-export { currentUser, getByKeyword, add }
+export interface UserUpdateParams extends UserAddParams {
+  id: number | string,
+}
+
+function update(params: UserAddParams, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('post', '/admin/user/add', params, config)
+}
+
+function getById(id: string, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('get', '/admin/user/getById', { id }, config)
+}
+
+export { currentUser, getByKeyword, add, update, getById }

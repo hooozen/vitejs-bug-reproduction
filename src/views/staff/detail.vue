@@ -47,15 +47,15 @@
             </el-form-item>
           </div>
           <div class="item-body-column" style="flex-basis: 200px">
-            <el-form-item label="入职日期">
+            <el-form-item label="入职日期" prop="joinedDate">
               <el-date-picker
-                v-model="formData.joinedDate"
+                v-model="formData._joinedDate"
                 type="date"
                 placeholder="入职日期"
               >
               </el-date-picker>
             </el-form-item>
-            <el-form-item prop="_censusAddress" label="户籍地址:">
+            <el-form-item prop="_censusDistrict" label="户籍地址:">
               <tl-address
                 v-model:district="formData._censusDistrict"
                 v-model:address="formData.censusAddress"
@@ -63,7 +63,7 @@
                 :full="true"
               ></tl-address>
             </el-form-item>
-            <el-form-item prop="_houseAddress" label="现住地址:">
+            <el-form-item prop="_houseDistrict" label="现住地址:">
               <tl-address
                 v-model:district="formData._houseDistrict"
                 v-model:address="formData.houseAddress"

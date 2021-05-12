@@ -4,8 +4,17 @@
       <el-form-item label="用户名:" prop="loginName">
         <el-input v-model="userInfo.loginName"></el-input>
       </el-form-item>
+      <el-form-item label="姓名:" prop="loginName">
+        <el-input v-model="userInfo.loginName"></el-input>
+      </el-form-item>
       <el-form-item label="联系方式:" prop="mobile">
         <el-input v-model="userInfo.mobile"></el-input>
+      </el-form-item>
+      <el-form-item label="所属组织:" prop="loginName">
+        <el-input v-model="userInfo.loginName"></el-input>
+      </el-form-item>
+      <el-form-item label="所属角色:" prop="loginName">
+        <el-input v-model="userInfo.loginName"></el-input>
       </el-form-item>
       <el-form-item label="备注:" prop="description">
         <el-input type="area" v-model="userInfo.description"></el-input>

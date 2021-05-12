@@ -2,6 +2,7 @@ import { AddParams } from '@api/server/staff'
 import moment from 'moment'
 
 interface FormData extends AddParams {
+  _joinedDate?: Date,
   _censusDistrict?: Array<string>
   _houseDistrict?: Array<string>
 }
@@ -33,6 +34,16 @@ const template: FormData = {
 const generateFormData = (_formData: FormData): FormData => {
   return {
     ..._formData,
+
+    set _joinedDate(value: Date) {
+      this.joinedDate = moment(value).format('YYYY-MM-DD')
+    },
+
+    get _joinedDate() {
+      this.joinedDate = this.joinedDate || moment().format('YYYY-MM-DD')
+      return new Date(this.joinedDate)
+    },
+
 
     set _censusDistrict(value: string[]) {
       this.censusProvince = value[0] || ''

@@ -18,6 +18,7 @@ import Roles from '@views/system/roles/index.vue'
 import OperationDetail from '@views/operators/detail.vue'
 import UserInfo from '@views/system/user-info.vue'
 import Users from '@views/system/users/index.vue'
+import UserDetail from '@views/system/users/detail.vue'
 
 const routes = [
   {
@@ -96,6 +97,16 @@ const routes = [
       name: 'users',
       path: 'users',
       component: Users
+    }, {
+      name: 'add-user',
+      path: 'add-user',
+      component: UserDetail,
+      props: {tyep: 'add'}
+    }, {
+      name: 'user-detail',
+      path: 'user-detail',
+      component: UserDetail,
+      props: {tyep: 'edit'}
     }]
   }, {
     path: '/login',

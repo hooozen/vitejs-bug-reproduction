@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-view staff-detail">
+  <div class="detail-view user-detail">
     <nav-bar class="detail-nav" :title="title">
       <el-button v-if="editable" type="primary" @click="submitForm">
         保存
@@ -18,84 +18,35 @@
           label-width="100px"
         >
           <div class="item-body-column" style="flex-basis: 400px">
-            <el-form-item prop="id" label="员工编号:">
-              {{ formData.id }}
-            </el-form-item>
-            <el-form-item prop="fullName" label="姓名:">
+            <el-form-item prop="id" label="账号名称:">
               <el-input v-model="formData.fullName"></el-input>
             </el-form-item>
-            <el-form-item prop="sex" label="性别:">
+            <el-form-item prop="fullName" label="用户密码:">
+              <el-input v-model="formData.fullName"></el-input>
+            </el-form-item>
+            <el-form-item prop="sex" label="手机号码:">
               <el-input v-model="formData.sex"></el-input>
             </el-form-item>
-            <el-form-item prop="nation" label="民族:">
+            <el-form-item prop="nation" label="用户编号:">
               <el-input v-model="formData.nation"></el-input>
             </el-form-item>
-            <el-form-item prop="mobile" label="电话:">
+            <el-form-item prop="mobile" label="所属运营商:">
               <el-input v-model="formData.mobile"></el-input>
             </el-form-item>
-            <el-form-item prop="identityNo" label="身份证:">
-              <el-input v-model="formData.identityNo"></el-input>
-            </el-form-item>
-            <el-form-item prop="education" label="学历:">
-              <el-input v-model="formData.education"></el-input>
-            </el-form-item>
-            <el-form-item prop="department" label="部门:">
-              <el-input v-model="formData.department"></el-input>
-            </el-form-item>
-            <el-form-item prop="post" label="职位:">
-              <el-input v-model="formData.post"></el-input>
-            </el-form-item>
           </div>
-          <div class="item-body-column" style="flex-basis: 300px">
-            <el-form-item label="入职日期">
+          <div class="item-body-column" style="flex-basis: 200px">
+            <el-form-item label="账户失效时间" prop="joinedDate">
               <el-date-picker
-                v-model="formData.joinedDate"
+                v-model="formData._joinedDate"
                 type="date"
                 placeholder="入职日期"
               >
               </el-date-picker>
             </el-form-item>
-            <el-form-item prop="_district" label="户籍地址:">
-              <tl-address
-                v-model:district="formData._censusDistrict"
-                v-model:address="formData.censusAddress"
-                :deepth="4"
-                @change="updateFormDistrictName"
-                :full="true"
-              ></tl-address>
+            <el-form-item prop="_censusDistrict" label="备注:">
+              <el-input type="textarea"></el-input>
             </el-form-item>
-            <el-form-item prop="_district" label="现住地址:">
-              <tl-address
-                v-model:district="formData._district"
-                v-model:address="formData.address"
-                :deepth="4"
-                @change="updateFormDistrictName"
-                :full="true"
-              ></tl-address>
-            </el-form-item>
-            <el-form-item prop="operatorId" label="员工归属:">
-              <tl-operator></tl-operator>
-            </el-form-item>
-          </div>
-          <div class="item-body-column" style="flex-basis: 300px">
-            <el-form-item prop="profilePhoto" label="照片:">
-              <el-upload
-                class="avatar-uploader"
-                action="/beer/admin/common/uploadFile"
-                :show-file-list="false"
-                :on-success="uploadLicenseSuccess"
-                :on-error="uploadError"
-                :before-upload="beforeUpload"
-              >
-                <img v-if="imageUrl" :src="imageUrl" class="avatar" />
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                <template #tip>
-                  <div class="el-upload__tip">
-                    点击头像上传，支持扩展名：.jpg .png
-                  </div>
-                </template>
-              </el-upload>
-            </el-form-item>
+            <el-form-item prop="_houseDistrict" label="职位:"> </el-form-item>
           </div>
         </el-form>
       </div>
@@ -107,14 +58,13 @@
 
   import { ElMessage } from 'element-plus'
 
-  import NavBar from '../components/nav-bar/index.vue'
-  import TlAddress from '../components/address/index.vue'
-  import TlSelect from '../components/selector/index.vue'
-  import TlOrganization from '../components/org-select/index.vue'
-  import TlTag from '../components/tag-select/index.vue'
-  import TlTags from '../components/tag-list/index.vue'
+  import NavBar from '../../components/nav-bar/index.vue'
+  import TlAddress from '../../components/address/index.vue'
+  import TlSelect from '../../components/selector/index.vue'
+  import TlOrganization from '../../components/org-select/index.vue'
+  import TlOperator from '../../components/operator-select/index.vue'
 
-  import { add, AddParams, UpdateParams, update, getById } from '@/api/server/store'
+  import { add, UserAddParams, UserUpdateParams, update, getById } from '@/api/server/user'
   import { getByStoreId } from '@api/server/device'
 
   import { useRoute } from 'vue-router'
@@ -123,14 +73,15 @@
   import formRules from './formRules'
   import { blankFormData as formDataTemplate, generateFormData, } from './formDataTemplate'
 
+  import moment from 'moment'
+
   export default defineComponent({
     components: {
       NavBar,
       TlAddress,
       TlOrganization,
+      TlOperator,
       TlSelect,
-      TlTag,
-      TlTags
     },
     props: {
       type: {
@@ -151,8 +102,6 @@
       // const editable = ref<boolean>(false)
       // if (props.type === 'add') editable.value = true
 
-      const mapCenter = ref<number[]>([39.90689, 116.3976])
-
       const title = computed(() =>
         props.type === 'edit' ? '员工详情' : '新增员工',
       )
@@ -165,8 +114,10 @@
           let _formData: { [key: string]: any } = {}
           for (const [k, v] of Object.entries(formData.value)) {
             if (k.substring(0, 1) === '_') continue
-            _formData[k] = v
+            if ((v as any) instanceof Date) _formData[k] = moment(v).format('YYYY-MM-DD')
+            else _formData[k] = v
           }
+          console.log('submiting form data: ', _formData)
           if (props.type === 'add') await add(_formData as AddParams, '新增成功')
           else await update(_formData as UpdateParams, '保存成功')
         })
@@ -178,10 +129,7 @@
       const setFormData = async () => {
         if (!id.value) return
         const originalForm = (await getById(id.value as string)).data
-        isShowLicenseViewBtn.value = true
-        isShowPhotoViewBtn.value = true
         formData.value = generateFormData(originalForm)
-        mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
       }
 
       const devices = ref([])
@@ -197,79 +145,44 @@
 
       onMounted(async () => void init())
 
-      const viewLicense = () => {
-        imagePreviewSrc.value = formData.value.businessLicense;
-        isShowViewer.value = true
-      }
-
-      const viewPhoto = () => {
-        imagePreviewSrc.value = formData.value.photo!
-        isShowViewer.value = true
-      }
-
-      const isShowLicenseViewBtn = ref<boolean>(false)
-      const isShowPhotoViewBtn = ref<boolean>(false)
-      const isShowViewer = ref<boolean>(false)
-      const imagePreviewSrc = ref<string>('')
-      const isUploading = ref<boolean>(false)
-      const isUploadSuccess = ref<boolean>(false)
+      const avatarUrl = ref<string>()
       const beforeUpload = (file: File) => {
         if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
           ElMessage.error('只支持 .jpg .png 格式图片')
           return false
         }
-        isUploading.value = true
       }
-      const uploadPhotoSuccess = (res: any, file: any) => {
-        isShowPhotoViewBtn.value = true
-        imagePreviewSrc.value = URL.createObjectURL(file.raw)
+      const uploadSuccess = (res: any, file: any) => {
         ElMessage.success('文件上传成功')
-        formData.value.photo = res.data
-        isUploading.value = false
-      }
-      const uploadLicenseSuccess = (res: any, file: any) => {
-        isShowLicenseViewBtn.value = true
-        imagePreviewSrc.value = URL.createObjectURL(file.raw)
-        ElMessage.success('文件上传成功')
-        formData.value.businessLicense = res.data
-        isUploading.value = false
+        avatarUrl.value = res.data
+        formData.value.profilePhoto = res.data
       }
       const uploadError = (e: any) => {
         ElMessage.error(`文件上传失败: ${e}`)
-        isUploading.value = false
       }
 
       return {
-        mapCenter,
         title,
         editable,
         options,
         updateFormDistrictName,
         location,
+        avatarUrl,
         activeTab,
         formData,
         formRules,
         submitForm,
         formEl,
-        imagePreviewSrc,
-        isShowViewer,
-        isShowLicenseViewBtn,
-        isShowPhotoViewBtn,
-        viewLicense,
-        viewPhoto,
         beforeUpload,
-        uploadLicenseSuccess,
-        uploadPhotoSuccess,
+        uploadSuccess,
         uploadError,
-        isUploadSuccess,
-        isUploading,
         devices,
       }
     },
   })
 </script>
 <style lang="postcss">
-  .staff-detail {
+  .user-detail {
     & .avatar-uploader .el-upload {
       border: 1px dashed #d9d9d9;
       border-radius: 6px;
