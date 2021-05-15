@@ -25,7 +25,7 @@ export interface UserAddParams {
   operatorId: number | string,
   password: string,
   roleId: number | string,
-  userPrivileges?: [
+  userPrivileges: [
     {
       privilegeId: number | string,
       type: number | string

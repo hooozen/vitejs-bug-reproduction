@@ -31,7 +31,7 @@
               <el-input v-model="formData.code"></el-input>
             </el-form-item>
             <el-form-item prop="operatorId" label="所属运营商:">
-              <el-input v-model="formData.operatorId"></el-input>
+              <tl-operator v-model="formData.operatorId"></tl-operator>
             </el-form-item>
           </div>
           <div class="item-body-column" style="flex-basis: 200px">
