@@ -21,6 +21,10 @@ export interface AddParams {
   sequence: string,
   deviceTypeId: number | string,
   storeId: number | string,
+
+  // TODO
+  latitude?: number | string,
+  longitude?: number | string,
 }
 
 

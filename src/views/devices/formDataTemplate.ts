@@ -1,54 +1,32 @@
-import { AddParams } from '@api/server/operator'
+import { AddParams } from '@api/server/device'
 
-interface FormData extends AddParams {
-  _district: Array<string>,
-  _position: Array<string> | Array<number>
+export interface LocalFormData extends AddParams {
+  id?: string | number,
+  _position?: Array<string> | Array<number>
 }
 
-const template: FormData = {
-  account: '',
-  accountBank: '',
-  address: '',
-  addressArea: '',
-  addressCity: '',
-  addressProvince: '',
-  businessLicense: '',
-  addressStreet: '',
-  code: '',
-  contacts: '',
-  description: '',
-  latitude: '',
-  longitude: '',
+const emptyForm: any = {
+  authCode: '',
   name: '',
-  orgId: '',
-  tel: '',
-
-  set _position(value: number[] | string[]) {
-    this.latitude = value[0].toString() || '39.90689'
-    this.longitude = value[1].toString() || '116.3976'
+  sequence: '',
+  store: {
+    id: '',
   },
-  get _position() {
-    if (!this.latitude) this.latitude = '39.90689'
-    if (!this.longitude) this.longitude = '116.3976'
-    return [+this.latitude, +this.longitude]
+  deviceType: {
+    id: '',
   },
-
-  set _district(value: string[]) {
-    console.log(value)
-    this.addressProvince = value[0] || ''
-    this.addressCity = value[1] || ''
-    this.addressArea = value[2] || ''
-    this.addressStreet = value[3] || ''
-  },
-  get _district() {
-    return [this.addressProvince, this.addressCity, this.addressArea, this.addressStreet].filter(item => item)
-  },
-
+  latitude: undefined,
+  longitude: undefined,
 }
 
-const generateFormData = (_formData: AddParams): FormData => {
+const generateLocalFormData = (deviceInfo: any, id?: string | number): LocalFormData => {
   return {
-    ..._formData,
+    id,
+    name: deviceInfo.name,
+    authCode: deviceInfo.authCode,
+    sequence: deviceInfo.sequence,
+    storeId: deviceInfo.store.id,
+    deviceTypeId: deviceInfo.deviceType.id,
 
     set _position(value: number[] | string[]) {
       this.latitude = value[0].toString() || '39.90689'
@@ -59,18 +37,18 @@ const generateFormData = (_formData: AddParams): FormData => {
       if (!this.longitude) this.longitude = '116.3976'
       return [+this.latitude, +this.longitude]
     },
-
-    set _district(value: string[]) {
-      console.log(value)
-      this.addressProvince = value[0] || ''
-      this.addressCity = value[1] || ''
-      this.addressArea = value[2] || ''
-      this.addressStreet = value[3] || ''
-    },
-    get _district() {
-      return [this.addressProvince, this.addressCity, this.addressArea, this.addressStreet].filter(item => item)
-    },
   }
 }
 
-export { template, generateFormData }
+const generateFormData = (lcoalFormData: LocalFormData): AddParams => {
+  const formData: any = {}
+  for (const [k, v] of Object.entries(formData)) {
+    if (k.substring(0, 1) === '_') continue;
+    formData[k] = v
+  }
+  return formData
+}
+
+const emptyLocalForm = generateLocalFormData(emptyForm)
+
+export { emptyLocalForm, generateLocalFormData, generateFormData }

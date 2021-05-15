@@ -15,7 +15,7 @@
           :rules="formRules"
           :model="formData"
           class="main-item-body"
-          label-width="100px"
+          label-width="120px"
         >
           <div class="item-body-column" style="flex-basis: 400px">
             <el-form-item prop="sequence" label="设备序列号:">
@@ -73,27 +73,39 @@
       </div>
       <div class="main-item">
         <div class="main-item-title">设备状态</div>
-        <el-form class="main-item-body" style="align-items: center">
-          <div class="item-body-column" style="flex-basis: 120px">
-            <el-form-item label="工作状态:">正常</el-form-item>
-            <el-form-item label="气压:">0.3Mpa</el-form-item>
-            <el-form-item label="环境温度:">25</el-form-item>
-            <el-form-item label="内部温度:">5</el-form-item>
+        <div class="main-item-body" style="align-items: center">
+          <div class="item-body-column" style="flex-basis: 280px">
+            <div class="device-status-item">
+              工作状态:
+              {{
+                options.status.find((s) => s.value == deviceStatus.status)
+                  ?.label
+              }}
+            </div>
+            <div class="device-status-item">
+              气压: {{ deviceStatus.airPressure }}
+            </div>
+            <div class="device-status-item">
+              环境温度: {{ deviceStatus.envTemp }}
+            </div>
+            <div class="device-status-item">
+              内部温度: {{ deviceStatus.machineTemp }}
+            </div>
           </div>
-          <div class="item-body-column">
+          <div class="item-body-column" style="flex-bisis: 280px">
+            <div class="device-status-item">啤酒1:</div>
+            <div class="device-status-item">啤酒2:</div>
+            <div class="device-status-item">啤酒3:</div>
+            <div class="device-status-item">啤酒4:</div>
+          </div>
+          <div class="item-body-column device-photo-outer">
             <img class="device-photo" src="/img/device-1.png" />
           </div>
-          <div class="item-body-column" style="flex-bisis: 160px">
-            <el-form-item label="啤酒1:">6.1kg 61%</el-form-item>
-            <el-form-item label="啤酒2:">6.1kg 61%</el-form-item>
-            <el-form-item label="啤酒3:">6.1kg 61%</el-form-item>
-            <el-form-item label="啤酒4:">6.1kg 61%</el-form-item>
-          </div>
-        </el-form>
+        </div>
       </div>
       <div class="main-item">
         <div class="main-item-body">
-          <el-tabs v-model="activeTab" type="card">
+          <el-tabs v-model="activeTab">
             <el-tab-pane label="设备数据" name="data">
               <el-table></el-table>
             </el-tab-pane>
@@ -129,10 +141,12 @@
   import TMap from "../components/TMap/index.vue";
   import TlAddress from "../components/address/index.vue";
   import TlStore from "../components/store-select/index.vue";
+  import options from './options'
 
   import { add, AddParams, UpdateParams, update, getById } from '@/api/server/device'
 
   import formRules from './formRules'
+  import { emptyLocalForm, generateLocalFormData, generateFormData } from './formDataTemplate'
 
   export default defineComponent({
     components: {
@@ -148,14 +162,10 @@
       }
     },
     setup(props) {
-      const formData = ref({
-        deviceTypeId: '',
-        id: '',
-        name: '',
-        sequence: '',
-        storeId: ''
-      })
+      const formData = ref<any>({})
       const formEl = ref(null)
+
+      formData.value = emptyLocalForm
 
       const route = useRoute()
       const id = computed(() => route.query.id)
@@ -171,42 +181,29 @@
       const submitForm = () => {
         (formEl.value as any).validate(async (valid: any) => {
           if (!valid) return
-          let _formData: { [key: string]: any } = {}
-          for (const [k, v] of Object.entries(formData.value)) {
-            if (k.substring(0, 1) === '_') continue
-            _formData[k] = v
-          }
+          const _formData = generateFormData(formData.value)
           if (props.type === 'add')
             await add(_formData as AddParams, '新增成功')
           else await update(_formData as UpdateParams, '保存成功')
         })
       }
 
-      const updateFormDistrictName = (value: string[], name: string[]) => {
-        console.log(name.join('/'))
-      }
-      const updateFormBusinessScopeName = (value: string[], name: string[]) => {
-        console.log(name.join('/'))
-      }
-
       const deviceInfo = ref({
         deviceType: {},
         store: {}
       })
+      const deviceStatus = ref<any>({})
+
       const storeOption = ref<OptionData[]>([])
       const getDeviceInfo = async () => {
-        console.log('ddddd', id)
         const data = (await getById(+id.value!)).data
+
+        deviceStatus.value = data.deviceStatus
+
         const _deviceInfo = data.deviceInfo
         deviceInfo.value = _deviceInfo
-        formData.value = {
-          id: +id.value!,
-          name: _deviceInfo.name,
-          sequence: _deviceInfo.sequence,
-          storeId: _deviceInfo.store.id,
-          deviceTypeId: _deviceInfo.deviceType.id
-        }
-        console.log(formData.value)
+        formData.value = generateLocalFormData(_deviceInfo, id.value as string)
+
         storeOption.value = [{
           value: (_deviceInfo.store as any).id,
           label: (_deviceInfo.store as any).name
@@ -222,10 +219,9 @@
 
       return {
         title, editable,
-        updateFormDistrictName,
-        updateFormBusinessScopeName,
         location, activeTab, formData, formRules, submitForm, formEl,
-        deviceInfo, storeOption
+        deviceInfo, storeOption,
+        deviceStatus, options,
       };
     },
   });

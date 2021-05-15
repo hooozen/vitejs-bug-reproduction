@@ -35,7 +35,6 @@
 
     <div class="view-body">
       <el-table
-        v-loading="loadingList"
         :data="list"
         border
         height="100%"
@@ -139,7 +138,6 @@
     setup() {
       // table list and pagination
       const list = ref<{ [key: string]: any }[]>([])
-      const loadingList = ref(true)
       const listLength = ref(10)
       const currentPage = ref<number>(1)
       const pageSize = ref(10)
@@ -175,7 +173,6 @@
         }))
         listLength.value = +resData.total
         pageSize.value = +resData.size
-        loadingList.value = false;
       }
 
       // filter form
@@ -228,7 +225,7 @@
       onMounted(() => void init())
       return {
         options, columns,
-        list, loadingList,
+        list, 
         status, addressProvince, code, contacts, createTime, name, tag, tel, conditionalQuery, resetCondition,
         pageSize, currentPage, listLength, pageSizeChange, currentPageChange,
         deleteItem, batchDelete, onSelectionChange,

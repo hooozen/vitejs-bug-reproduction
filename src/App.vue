@@ -28,12 +28,5 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     height: 100%;
-
-    .el-input.is-disabled .el-input__inner {
-      background-color: white;
-      border-color: white;
-      color: #606266;
-      cursor: default;
-    }
   }
 </style>

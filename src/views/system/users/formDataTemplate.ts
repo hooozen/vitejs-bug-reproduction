@@ -15,6 +15,7 @@ const template: UserAddParams = {
   operatorId: '',
   password: '',
   roleId: '',
+  userPrivileges: [],
 }
 
 const generateLocalFormData = (_formData: UserAddParams): LocalFormData => {

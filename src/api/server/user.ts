@@ -15,6 +15,12 @@ function getByKeyword(params: UserQueryParams, config?: $AxiosRequestConfig): Ax
   return axios('post', '/admin/user/getByKeyword', params, config)
 }
 
+export interface UserPrivileges {
+  privilegeId: number | string,
+  type: number | string
+
+}
+
 export interface UserAddParams {
   code: string,
   description: string,
@@ -25,12 +31,7 @@ export interface UserAddParams {
   operatorId: number | string,
   password: string,
   roleId: number | string,
-  userPrivileges: [
-    {
-      privilegeId: number | string,
-      type: number | string
-    }
-  ]
+  userPrivileges: UserPrivileges[]
 }
 
 function add(params: UserAddParams, config?: $AxiosRequestConfig): AxiosPromise {

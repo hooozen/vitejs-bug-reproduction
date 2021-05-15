@@ -47,8 +47,8 @@
     setup: () => { },
   })
 </script>
-<style lang="postcss">
-  @import url(./common.css);
+<style lang="scss">
+  @import url(./common.scss);
 
   .header-logo {
     position: absolute;
@@ -60,6 +60,7 @@
   }
   .header-logo i {
     color: #909399;
+    color: #fff;
     text-align: center;
     flex: 0 0 64px;
     font-size: 30px;
@@ -78,6 +79,7 @@
     width: 100%;
     display: flex;
     color: #606266;
+    color: #fff;
   }
   .aside-outer {
     border: none;
@@ -107,6 +109,7 @@
     & .text-btn {
       text-decoration: none;
       color: #409eff;
+      color: #fff;
       cursor: pointer;
       &:not(:first-child) {
         margin-left: 8px;

@@ -2,6 +2,7 @@
 html,
 body {
   height: 100%;
+  color: #fff;
   background-color: #fff;
   background-color: #131620;
   font-size: 16px;
@@ -10,6 +11,16 @@ body {
 #app {
   .main {
     background: #131620;
+  }
+  & .el-tabs__item {
+    color: #fff;
+  }
+  & .el-tabs__item.is-active {
+    font-weight: bold;
+  }
+
+  & .el-tabs__active-bar {
+    background-color: #fff;
   }
 
   & .el-table {
@@ -21,13 +32,63 @@ body {
   }
 
   & .el-table tr {
-    background-color: #212534;
+    background-color: $--background-color-block;
   }
 
-  & .el-table--striped .el-table__body tr.el-table__row--striped td {
-    background-color: #373e55;
+  & .el-tag {
+    background-color: $--background-color-base;
+    border-color: $--background-color-base;
+    color: $--color-text-primary;
   }
-  .el-popper.is-light .el-popper__arrow::before {
-    background: #373e55 !important;
+
+  & .el-tree-node__content {
+    height: 60px;
+    border-bottom: 1px solid $--border-color-base-tl;
   }
+
+  input {
+    background-color: $--background-color-base;
+  }
+}
+.el-image-viewer__actions,
+.el-image-viewer__close {
+  background-color: $--background-color-active;
+}
+.el-radio__inner {
+  background-color: $--background-color-active;
+}
+.el-radio__input.is-checked .el-radio__inner {
+  background-color: $--background-color-active;
+}
+
+.el-table--striped .el-table__body tr.el-table__row--striped td {
+  background-color: #373e55 !important;
+}
+.el-popper.is-light .el-popper__arrow::before {
+  background: #373e55 !important;
+}
+
+.el-picker-panel,
+.el-picker__popper.el-popper[role="tooltip"],
+.el-cascader__dropdown.el-popper[role="tooltip"] {
+  background-color: $--background-color-base !important;
+}
+.el-date-table td.today span {
+  color: #3286dc;
+}
+
+.el-cascader-node.in-active-path,
+.el-cascader-node.is-selectable.in-checked-path,
+.el-cascader-node.is-active {
+  color: $--color-text-primary;
+}
+.el-cascader-menu {
+  color: $--color-text-secondary;
+  border-right: 1px solid $--border-color-base-tl;
+}
+.el-message-box {
+  background-color: $--background-color-base;
+}
+.el-tree {
+  background-color: $--background-color-block;
 }

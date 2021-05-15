@@ -101,7 +101,6 @@
     <div class="view-body">
       <el-table
         @selection-change="onSelectionChange"
-        v-loading="loadingList"
         :data="list"
         height="100%"
         :stripe="true"
@@ -165,7 +164,6 @@ import { ElMessage } from 'element-plus'
     setup() {
       // table list and pagination
       const list = ref<{ [key: string]: any }[]>([])
-      const loadingList = ref(true)
       const totalNum = ref(10)
       const currentPage = ref(1)
       const pageSize = ref(10)
@@ -194,7 +192,6 @@ import { ElMessage } from 'element-plus'
         }))
         totalNum.value = +resData.total
         pageSize.value = +resData.size
-        loadingList.value = false
       }
 
       // filter form
@@ -271,7 +268,7 @@ import { ElMessage } from 'element-plus'
       onMounted(() => void init())
       return {
         options, columns,
-        list, loadingList,
+        list,
         storeId, createTime, sequence, name, status, isActive, isOnline,
         getList, pageSize, currentPage, totalNum, sizeChange, currentPageChange,
         formEl, addFormRules, dialogVisible, submitAddForm,
