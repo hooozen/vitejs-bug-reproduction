@@ -32,8 +32,8 @@ function remove(params: RemoveParam | number[], config?: $AxiosRequestConfig): P
   return axios("delete", "/admin/role/delete", params, config)
 }
 
-function positions(successInfo?: string): AxiosPromise {
-  return axios('get', '/admin/role/get', {}, successInfo)
+function positions(config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('get', '/admin/role/get', {}, config)
 }
 
 function privileges(successInfo?: string): AxiosPromise {

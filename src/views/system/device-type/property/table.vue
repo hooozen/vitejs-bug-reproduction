@@ -27,16 +27,16 @@
         <template #default="scope">
           <span
             v-if="
-              scope.row.dataType.type == 'int32' ||
-              scope.row.dataType.type == 'double' ||
-              scope.row.dataType.type == 'float'
+              scope.row.dataType?.type == 'int32' ||
+              scope.row.dataType?.type == 'double' ||
+              scope.row.dataType?.type == 'float'
             "
           >
-            取值范围: {{ scope.row.dataType.dataSpecsMin }} ～
-            {{ scope.row.dataType.dataSpecsMax }}
+            取值范围: {{ scope.row.dataType?.dataSpecsMin }} ～
+            {{ scope.row.dataType?.dataSpecsMax }}
           </span>
-          <span v-else-if="scope.row.dataType.type == 'text'">
-            数据长度: {{ scope.row.dataType.dataSpecsLength }}
+          <span v-else-if="scope.row.dataType?.type == 'text'">
+            数据长度: {{ scope.row.dataType?.dataSpecsLength }}
           </span>
         </template>
       </el-table-column>

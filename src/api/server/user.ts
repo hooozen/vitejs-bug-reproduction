@@ -19,13 +19,13 @@ export interface UserAddParams {
   code: string,
   description: string,
   employeeId: number | string,
-  expireDate: string,
+  expireDate?: string,
   loginName: string,
   mobile: string,
   operatorId: number | string,
   password: string,
   roleId: number | string,
-  userPrivileges: [
+  userPrivileges?: [
     {
       privilegeId: number | string,
       type: number | string

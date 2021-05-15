@@ -134,7 +134,7 @@
           current: 1,
           keyword: keyword.value,
           keywordType: keywordType.value,
-          addressProvince: addressProvince.value,
+          addressProvince: addressProvince.value[0],
           ..._params,
         }
         const resData = (await getByKeyword(params)).data
@@ -160,7 +160,7 @@
       // filter form
       const keyword = ref('')
       const keywordType = ref<1 | 2>(1)
-      const addressProvince = ref<string>()
+      const addressProvince = ref<string[]>([])
       const conditionalQuery = () => void getList({ current: 1 })
 
       onMounted(() => getList())

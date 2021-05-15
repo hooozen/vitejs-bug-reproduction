@@ -63,7 +63,6 @@
 
       watchEffect(() => {
         if (!props.initialOption) return
-        console.log(props.initialOption)
         options.value = (props.initialOption as any) || []
       })
 
