@@ -48,7 +48,7 @@
   })
 </script>
 <style lang="scss">
-  @import url(./common.scss);
+  // @import url(./common.scss);
 
   .header-logo {
     position: absolute;

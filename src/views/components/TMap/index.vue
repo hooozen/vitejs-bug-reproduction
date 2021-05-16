@@ -115,9 +115,6 @@
     & .el-input-number {
       width: 100px;
     }
-    & .map-outer {
-      margin-top: 10px;
-    }
     & #mapOuter {
       height: 100%;
       width: 100%;

@@ -105,17 +105,18 @@
         height="100%"
         :stripe="true"
       >
-        <el-table-column type="selection"> </el-table-column>
-        <el-table-column type="index" width="40px"> </el-table-column>
+        <el-table-column type="selection" align="center"> </el-table-column>
+        <el-table-column type="index" width="40px" align="center"> </el-table-column>
         <el-table-column
           v-for="col in columns"
+          align="center"
           :sortable="col.sortable"
           :key="col.prop"
           :label="col.label"
           :prop="col.prop"
         >
         </el-table-column>
-        <el-table-column label="操作" fixed="right">
+        <el-table-column align="center" label="操作" fixed="right">
           <template #default="scope">
             <router-link
               class="text-btn"

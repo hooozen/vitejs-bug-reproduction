@@ -33,17 +33,14 @@
       <el-table
         @selection-change="tableSelectionChange"
         :data="list"
-        border
+        :stripe="true"
         height="100%"
       >
-        <el-table-column
-          type="selection"
-          width="40px"
-          align="center"
-        ></el-table-column>
+        <el-table-column type="selection" align="center"></el-table-column>
         <el-table-column
           type="index"
           width="40px"
+          cne
           align="center"
         ></el-table-column>
         <el-table-column
@@ -52,8 +49,9 @@
           :key="col.prop"
           :label="col.label"
           :prop="col.prop"
+          align="center"
         ></el-table-column>
-        <el-table-column label="营业执照" width="80px">
+        <el-table-column label="营业执照" width="80px" align="center">
           <template #default="scope">
             <span
               class="text-btn"
@@ -63,7 +61,9 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" fixed="right">
+        <el-table-column prop="statusName" label="状态" align="center">
+        </el-table-column>
+        <el-table-column label="操作" fixed="right" align="center">
           <template #default="scope">
             <router-link
               class="text-btn"
@@ -76,7 +76,6 @@
             </span>
           </template>
         </el-table-column>
-        <el-table-column prop="statusName"> </el-table-column>
       </el-table>
     </div>
     <div class="view-foot">

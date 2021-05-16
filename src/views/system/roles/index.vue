@@ -16,22 +16,21 @@
     <div class="view-body">
       <el-table
         @selection-change="handleSelection"
-        v-loading="loadingList"
         :data="list"
-        border
+        :stripe="true"
         height="100%"
       >
-        <el-table-column type="selection" width="40px" align="center">
+        <el-table-column type="selection" align="center">
         </el-table-column>
         <el-table-column type="index" width="40px" align="center">
         </el-table-column>
-        <el-table-column label="职位名称" prop="name"> </el-table-column>
+        <el-table-column label="职位名称" prop="name" align="center"> </el-table-column>
         <el-table-column label="权限">
           <template #default="scope">
             {{ privilegesStringify(scope.row.functions) }}
           </template>
         </el-table-column>
-        <el-table-column label="描述" prop="description"> </el-table-column>
+        <el-table-column label="描述" prop="description" align="center"> </el-table-column>
         <el-table-column
           label="操作"
           fixed="right"
@@ -70,11 +69,9 @@
       // table list and pagination
       const list = ref<{ [key: string]: any }[]>([])
       const selectedList = ref<{ [key: string]: any }[]>([])
-      const loadingList = ref(true)
       const getList = async () => {
         const resData = (await positions()).data
         list.value = resData
-        loadingList.value = false
       }
 
       const handleSelection = (value: any) => {
@@ -137,7 +134,7 @@
         getList()
       })
       return {
-        list, loadingList, privilegesStringify, handleSelection, getList,
+        list, privilegesStringify, handleSelection, getList,
         dialogVisible, addPosition, editPosition,
         dialogData, deletePositions, deletePosition
       }

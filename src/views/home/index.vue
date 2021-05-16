@@ -1,7 +1,11 @@
 <template>
   <div class="home-view">
     <div class="map-bg-outer">
-      <t-map class="map-bg" :center="[38.3227, 105.5525]" :config="Mapconfig"></t-map>
+      <t-map
+        class="map-bg"
+        :center="[38.3227, 105.5525]"
+        :config="Mapconfig"
+      ></t-map>
     </div>
   </div>
 </template>
@@ -34,12 +38,16 @@
       position: absolute;
       top: 0;
       left: 0;
-      right:0;
-      bottom: 0
+      right: 0;
+      bottom: 0;
     }
     & .map-bg {
       height: 100%;
       width: 100%;
+      & .map-outer {
+        height: 100%;
+        width: 100%;
+      }
     }
   }
 </style>

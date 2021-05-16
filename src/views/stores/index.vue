@@ -36,12 +36,11 @@
     <div class="view-body">
       <el-table
         :data="list"
-        border
+        :stripe="true"
         height="100%"
         @selection-change="onSelectionChange"
       >
-        <el-table-column type="selection" width="40px" align="center">
-        </el-table-column>
+        <el-table-column type="selection" align="center"> </el-table-column>
         <el-table-column type="index" width="40px" align="center">
         </el-table-column>
         <el-table-column
@@ -50,6 +49,7 @@
           :key="col.prop"
           :label="col.label"
           :prop="col.prop"
+          align="center"
         >
         </el-table-column>
 
@@ -75,7 +75,7 @@
             </div>
           </template>
         </el-table-column>
-        <el-table-column label="标签">
+        <el-table-column label="标签" align="center">
           <template #default="scope">
             <span v-if="!scope.row.tags?.length">无</span>
             <el-tag v-for="tag in scope.row.tags" class="text-tag" :key="tag">
@@ -225,7 +225,7 @@
       onMounted(() => void init())
       return {
         options, columns,
-        list, 
+        list,
         status, addressProvince, code, contacts, createTime, name, tag, tel, conditionalQuery, resetCondition,
         pageSize, currentPage, listLength, pageSizeChange, currentPageChange,
         deleteItem, batchDelete, onSelectionChange,

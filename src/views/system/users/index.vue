@@ -22,8 +22,8 @@
       </div>
     </div>
     <div class="view-body">
-      <el-table :data="list" border height="100%">
-        <el-table-column type="selection" width="40px" align="center">
+      <el-table :data="list" :stripe="true" height="100%">
+        <el-table-column type="selection" align="center">
         </el-table-column>
         <el-table-column type="index" width="40px" align="center">
         </el-table-column>
@@ -32,9 +32,10 @@
           :key="col.prop"
           :label="col.label"
           :prop="col.prop"
+          align="center"
         >
         </el-table-column>
-        <el-table-column label="操作" fixed="right">
+        <el-table-column label="操作" fixed="right" align="center">
           <template #default="scope">
             <router-link
               class="text-btn"
