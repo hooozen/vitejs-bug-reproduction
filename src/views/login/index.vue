@@ -75,7 +75,7 @@ import { useRouter } from "vue-router";
             try {
               const res = (await login({ ...(loginForm.value) })).data
               store.commit('setToken', res.token)
-              router.push('/home')
+              // router.push('/home')
             } catch {
               loadCodeImg()
             }
@@ -97,7 +97,7 @@ import { useRouter } from "vue-router";
     },
   });
 </script>
-<style lang="postcss">
+<style lang="scss">
   .login-outer {
     position: fixed;
     top: 0;
@@ -107,7 +107,7 @@ import { useRouter } from "vue-router";
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #000033;
+    background-color: #131620;
     & .copyright {
       color: #fff;
       font-size: 30px;
@@ -126,8 +126,8 @@ import { useRouter } from "vue-router";
     }
     & .login__main {
       border-radius: 10px;
-      background-color: #fff;
-      color: #1abc9c;
+      background-color: #212534;
+      color: #f0f0f0;
       padding: 10px 25px 25px;
     }
     & .login__title {
@@ -140,7 +140,6 @@ import { useRouter } from "vue-router";
       width: 100%;
       height: 50px;
       font-size: 20px;
-      background-color: #1abc9c;
       color: #fff;
     }
     & .identifying-img {
