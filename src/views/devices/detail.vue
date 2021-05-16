@@ -198,7 +198,7 @@
       const getDeviceInfo = async () => {
         const data = (await getById(+id.value!)).data
 
-        deviceStatus.value = data.deviceStatus
+        deviceStatus.value = data.deviceStatus || {}
 
         const _deviceInfo = data.deviceInfo
         deviceInfo.value = _deviceInfo

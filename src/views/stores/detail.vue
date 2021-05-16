@@ -157,14 +157,17 @@
       </div>
       <div class="main-item">
         <div class="main-item-title">设备列表</div>
-        <el-table :data="devices">
-          <el-table-column
-            v-for="col in deviceColumns"
-            :key="col.prop"
-            :label="col.label"
-            :prop="col.prop"
-          ></el-table-column>
-        </el-table>
+        <div class="main-item-body" style="padding: 0">
+          <el-table :data="devices" :stripe="true">
+            <el-table-column
+              v-for="col in deviceColumns"
+              :key="col.prop"
+              :label="col.label"
+              :prop="col.prop"
+              align="center"
+            ></el-table-column>
+          </el-table>
+        </div>
       </div>
     </div>
   </div>

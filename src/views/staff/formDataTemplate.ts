@@ -28,7 +28,7 @@ const template: FormData = {
   operatorId: '',
   post: '',
   profilePhoto: '',
-  sex: ''
+  sex: 1,
 }
 
 const generateFormData = (_formData: FormData): FormData => {

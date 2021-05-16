@@ -25,7 +25,10 @@
               <el-input v-model="formData.fullName"></el-input>
             </el-form-item>
             <el-form-item prop="sex" label="性别:">
-              <el-input v-model="formData.sex"></el-input>
+              <el-radio-group v-model="formData.sex">
+                <el-radio :label="1">男</el-radio>
+                <el-radio :label="0">女</el-radio>
+              </el-radio-group>
             </el-form-item>
             <el-form-item prop="nation" label="民族:">
               <el-input v-model="formData.nation"></el-input>
@@ -179,15 +182,8 @@
         formData.value = generateFormData(originalForm)
       }
 
-      const devices = ref([])
-      const getDevices = async () => {
-        if (!id.value) return
-        devices.value = (await getByStoreId(id.value as string)).data
-      }
-
       const init = async () => {
         setFormData()
-        getDevices()
       }
 
       onMounted(async () => void init())
@@ -223,7 +219,6 @@
         beforeUpload,
         uploadSuccess,
         uploadError,
-        devices,
       }
     },
   })

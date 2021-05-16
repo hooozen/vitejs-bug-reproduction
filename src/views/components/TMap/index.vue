@@ -36,6 +36,7 @@
       },
       pointer: {
         type: Array,
+        required: false
       },
       markers: {
         type: Array,

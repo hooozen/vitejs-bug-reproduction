@@ -27,7 +27,7 @@ export interface AddParams {
   operatorId: number | string,
   post: string,
   profilePhoto: string,
-  sex: string
+  sex: string | number,
 }
 
 export interface UpdateParams extends AddParams {

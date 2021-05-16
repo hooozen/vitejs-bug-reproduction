@@ -169,6 +169,10 @@
     width: 440px;
     height: 252px;
   }
+
+  & .el-radio__input.is-checked + .el-radio__label {
+    color: #fff;
+  }
 }
 
 .tabs-view {

@@ -15,11 +15,11 @@
           :rules="formRules"
           :model="formData"
           class="main-item-body"
-          label-width="100px"
+          label-width="120px"
         >
           <div class="item-body-column" style="flex-basis: 400px">
-            <el-form-item prop="fullName" label="账号名称:">
-              <el-input v-model="formData.fullName"></el-input>
+            <el-form-item prop="loginName" label="账号名称:">
+              <el-input v-model="formData.loginName"></el-input>
             </el-form-item>
             <el-form-item prop="password" label="用户密码:">
               <el-input v-model="formData.password"></el-input>
