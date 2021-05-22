@@ -1,5 +1,5 @@
 <template>
-  <div class="devices table-view">
+  <div class="device-upgrade table-view">
     <el-dialog v-model="dialogVisible" title="新增设备" width="400px">
       <el-form
         label-width="100px"
@@ -31,72 +31,38 @@
         <el-button @click="dialogVisible = false">取消</el-button>
       </template>
     </el-dialog>
-    <div class="view-head">
-      <div class="view-panel-line">
-        <el-input
-          width="100px"
-          v-model="sequence"
-          placeholder="请输入设备序列号"
-        >
-        </el-input>
-        <el-input v-model="name" placeholder="请输入设备名称"> </el-input>
-        <tl-store v-model="storeId"></tl-store>
-        <el-date-picker v-model="createTime" type="date" placeholder="添加日期">
-        </el-date-picker>
-      </div>
-      <div class="view-panel-line">
-        <tl-address> </tl-address>
-        <tl-select
-          :options="options.isOnline"
-          v-model="isOnline"
-          placeholder="在线状态"
-        ></tl-select>
-        <tl-select
-          :options="options.status"
-          v-model="status"
-          placeholder="设备状态"
-        ></tl-select>
-        <tl-select
-          :options="options.isActive"
-          v-model="isActive"
-          placeholder="激活状态"
-        ></tl-select>
-        <el-button type="primary" @click="getList">查询</el-button>
-        <el-button @click="resetQueryForm">重置</el-button>
-      </div>
+
+    <div class="view-head"></div>
+    <div class="view-panel-line">
+      <el-input width="100px" v-model="sequence" placeholder="请输入设备序列号">
+      </el-input>
+      <el-input v-model="name" placeholder="请输入设备名称"> </el-input>
+      <tl-store v-model="storeId"></tl-store>
+      <el-date-picker v-model="createTime" type="date" placeholder="添加日期">
+      </el-date-picker>
     </div>
-    <div class="view-overview">
-      <div class="overview-item">
-        <div class="overview-text">
-          <div class="overview-text__title">设备总数</div>
-          <div class="overview-text__value">{{ overviewData.total }}</div>
-        </div>
-        <img class="overview-icon" src="@assets/icon-file.png" />
-      </div>
-      <div class="overview-item">
-        <div class="overview-text">
-          <div class="overview-text__title">设备在线率</div>
-          <div class="overview-text__value">{{ overviewData.onlineRate }}%</div>
-        </div>
-        <div class="overview-icon"></div>
-        <img class="overview-icon" src="@assets/icon-connection.png" />
-      </div>
-      <div class="overview-item">
-        <div class="overview-text">
-          <div class="overview-text__title">设备故障率</div>
-          <div class="overview-text__value">{{ overviewData.faultRate }}%</div>
-        </div>
-        <img class="overview-icon" src="@assets/icon-error.png" />
-      </div>
-      <div class="overview-item">
-        <div class="overview-text">
-          <div class="overview-text__title">设备预警率</div>
-          <div class="overview-text__value">{{ overviewData.alarmRate }}%</div>
-        </div>
-        <img class="overview-icon" src="@assets/icon-alarm.png" />
-      </div>
+    <div class="view-panel-line">
+      <tl-address> </tl-address>
+      <tl-select
+        :options="options.isOnline"
+        v-model="isOnline"
+        placeholder="在线状态"
+      ></tl-select>
+      <tl-select
+        :options="options.status"
+        v-model="status"
+        placeholder="设备状态"
+      ></tl-select>
+      <tl-select
+        :options="options.isActive"
+        v-model="isActive"
+        placeholder="激活状态"
+      ></tl-select>
+      <el-button type="primary" @click="getList">查询</el-button>
+      <el-button @click="resetQueryForm">重置</el-button>
     </div>
     <div class="panel__btns">
+      <el-button type="primary" @click="batchUpgrade">升级</el-button>
       <el-button type="primary" @click="dialogVisible = true">新增</el-button>
       <el-button type="danger" @click="batchDelete">删除</el-button>
       <el-button disabled>导入</el-button>
@@ -122,13 +88,12 @@
           :prop="col.prop"
         >
         </el-table-column>
+        <el-table-column align="center" label="软件版本"> </el-table-column>
+        <el-table-column align="center" label="最后更新时间" prop="updateTime">
+        </el-table-column>
         <el-table-column align="center" label="操作" fixed="right">
           <template #default="scope">
-            <router-link
-              class="text-btn"
-              :to="`device-detail?id=${scope.row.id}`"
-              >详情</router-link
-            >
+            <span class="text-btn" @click="upgrade">升级</span>
             <span class="text-btn" @click="deleteItem(scope.row.id)">删除</span>
           </template>
         </el-table-column>
@@ -169,13 +134,19 @@
     components: { TlSelect, TlSearch, TlAddress, TlStore },
 
     setup() {
+      const init = () => {
+        getList()
+      }
+
+      onMounted(() => void init())
+
       // table list and pagination
       const list = ref<{ [key: string]: any }[]>([])
       const totalNum = ref(10)
       const currentPage = ref(1)
       const pageSize = ref(10)
       const currentPageChange = (current: number) => { getList({ current }) }
-      const sizeChange = (size: number) => { getList({ size }) }
+      const sizeChange = (size: number) => { getList(size) }
 
 
       const getList = async (_params?: any) => {
@@ -243,46 +214,54 @@
         getList()
       }
 
-      // overview data
-      const overviewData = ref({})
-
-      const init = async () => {
-        getList()
-        overviewData.value = (await statistics()).data
-        console.log(overviewData.value)
+      // multiple selection
+      const selectedItems = ref<any[]>([])
+      const onSelectionChange = (value: any[]) => {
+        selectedItems.value = value;
       }
+      const getSelectedIds = (): false | string => {
+        const length = selectedItems.value.length
+        if (!length) return false
+        return selectedItems.value.map(item => item.id).join(',')
+      }
+
+      // delete operation
 
       const deleteItem = async (id: string) => {
         await remove(id)
         getList()
       }
 
-      const selectedItems = ref<any[]>([])
-
-      const onSelectionChange = (value: any[]) => {
-        selectedItems.value = value;
-      }
       const batchDelete = async () => {
-        const length = selectedItems.value.length
-        if (!length) return ElMessage.warning('未选中任何记录')
-        const ids: string = selectedItems.value.map(item => item.id).join(',')
+        const ids: string | false = getSelectedIds()
+        if (!ids) return ElMessage.warning('未选中任何记录')
         await remove(ids, {
           confirmConfig: { text: `确认批量删除 ${length} 项记录?` },
         })
         getList()
       }
 
-      onMounted(() => void init())
+      // upgrade
+      const upgrade = async () => {
+        // TODO
+      }
+
+      const batchUpgrade = async () => {
+        const ids: string | false = getSelectedIds()
+        if (!ids) return ElMessage.warning('未选中任何记录')
+        // TODO
+        // getList()
+      }
+
       return {
-        options, columns,
-        list,
+        options, columns: columns.slice(0, 7), list,
         storeId, createTime, sequence, name, status, isActive, isOnline,
         getList, pageSize, currentPage, totalNum, sizeChange, currentPageChange,
         formEl, addFormRules, dialogVisible, submitAddForm,
-        overviewData,
         addForm, getByDeviceSequence, getDeviceTypeName, deviceTypeName,
         deleteItem, batchDelete, onSelectionChange,
-        resetQueryForm
+        resetQueryForm,
+        upgrade, batchUpgrade,
       }
     },
 

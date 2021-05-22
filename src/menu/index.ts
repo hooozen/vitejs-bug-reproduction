@@ -47,7 +47,7 @@ const menu: MenuItem[] = [
     path: 'staff',
     icon: 's-custom',
     children: [],
-  },/* {
+  }, {
     id: 11,
     label: '商品管理',
     icon: 'goods',
@@ -55,7 +55,7 @@ const menu: MenuItem[] = [
     children: [{
       id: 12,
       label: '商品列表',
-      path: 'commodity',
+      path: 'goods',
       children: [],
     }, {
       id: 13,
@@ -63,7 +63,7 @@ const menu: MenuItem[] = [
       path: 'categroies',
       children: [],
     }],
-  }, {
+  }, /*{
     id: 14,
     label: '订单管理',
     icon: 's-order',

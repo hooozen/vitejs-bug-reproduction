@@ -1,24 +1,27 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import store from '@/store/index'
 
-import Login from '@views/login/index.vue'
-import Layout from '@layout/index.vue'
-import Home from '@views/home/index.vue'
-import Devices from '@views/devices/index.vue'
 import DeviceDetail from '@views/devices/detail.vue'
-import Stores from '@views/stores/index.vue'
-import StoreDetail from '@views/stores/detail.vue'
-import Staff from '@views/staff/index.vue'
-import StaffDetail from '@views/staff/detail.vue'
-import Dict from '@views/system/dict/index.vue'
-import Operators from '@views/operators/index.vue'
+import DeviceUpgrade from '@views/devices/upgrade.vue'
 import DeviceType from '@views/system/device-type/index.vue'
 import DeviceTypeDetail from '@views/system/device-type/detail.vue'
-import Roles from '@views/system/roles/index.vue'
+import Devices from '@views/devices/index.vue'
+import Dict from '@views/system/dict/index.vue'
+import Goods from '@views/goods/index.vue'
+import GoodsDetail from '@views/goods/detail.vue'
+import Home from '@views/home/index.vue'
+import Layout from '@layout/index.vue'
+import Login from '@views/login/index.vue'
 import OperationDetail from '@views/operators/detail.vue'
+import Operators from '@views/operators/index.vue'
+import Roles from '@views/system/roles/index.vue'
+import Staff from '@views/staff/index.vue'
+import StaffDetail from '@views/staff/detail.vue'
+import StoreDetail from '@views/stores/detail.vue'
+import Stores from '@views/stores/index.vue'
+import UserDetail from '@views/system/users/detail.vue'
 import UserInfo from '@views/system/user-info.vue'
 import Users from '@views/system/users/index.vue'
-import UserDetail from '@views/system/users/detail.vue'
 
 const routes = [
   {
@@ -36,6 +39,22 @@ const routes = [
       path: 'device-detail',
       component: DeviceDetail,
       props: { type: 'edit' }
+    }, {
+      path: 'device-upgrade',
+      component: DeviceUpgrade,
+    }, {
+      path: 'goods',
+      component: Goods,
+    }, {
+      name: 'goods-add',
+      path: 'goods-add',
+      props: { type: 'add' },
+      component: GoodsDetail
+    }, {
+      name: 'goods-detail',
+      path: 'goods-detail',
+      props: { type: 'edit' },
+      component: GoodsDetail
     }, {
       path: 'stores',
       component: Stores,
@@ -101,12 +120,12 @@ const routes = [
       name: 'add-user',
       path: 'add-user',
       component: UserDetail,
-      props: {tyep: 'add'}
+      props: { tyep: 'add' }
     }, {
       name: 'user-detail',
       path: 'user-detail',
       component: UserDetail,
-      props: {tyep: 'edit'}
+      props: { tyep: 'edit' }
     }]
   }, {
     path: '/login',

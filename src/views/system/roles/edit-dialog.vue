@@ -10,7 +10,7 @@
       :model="data.formData"
       ref="formEl"
       :rules="formRules"
-      label-width="80px"
+      label-width="100px"
     >
       <el-form-item label="职位名称" prop="name">
         <el-input v-model="data.formData.name"></el-input>

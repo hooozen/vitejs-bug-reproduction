@@ -2,6 +2,10 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  & .view-head {
+    background-color: $--background-color-block;
+    padding: 20px 20px 0;
+  }
 
   & .view-body {
     flex: 1;
@@ -17,13 +21,20 @@
 
   & .view-panel-line {
     display: flex;
-    padding: 10px 10px 0;
+    & .el-form-item {
+      margin: 0;
+    }
+    & > * {
+      margin: 0 20px 20px 0 !important;
+    }
+    & .view-panel-line {
+      margin-top: 10px;
+    }
     & .el-select .el-input {
       width: 160px;
     }
     & .el-input {
-      width: 280px;
-      margin: 0 10px;
+      max-width: 280px;
     }
   }
 
@@ -47,6 +58,7 @@
 
   & .view-overview {
     display: flex;
+    margin-top: 20px;
   }
 
   & .overview-item {
@@ -58,7 +70,7 @@
     flex: 0 0 320px;
     height: 100px;
     padding: 20px 50px;
-    margin: 10px;
+    margin: 0 10px;
     display: flex;
     justify-content: space-between;
   }
@@ -147,9 +159,6 @@
   }
 
   & .item-body-column {
-    & .el-input {
-      /* width: 180px; */
-    }
     flex: 0 1 200px;
     margin: 0 12px;
   }
@@ -189,8 +198,5 @@
       padding: 0 4px;
       margin: 0 8px;
     }
-  }
-
-  &.el-tabs__content {
   }
 }
