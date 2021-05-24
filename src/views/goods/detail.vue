@@ -20,10 +20,13 @@
           <div class="main-item-body" style="display: block">
             <el-form-item prop="goodsPhoto" label="商品图片:">
               <el-upload
-                action=""
+                action="actionURL"
                 list-type="picture-card"
-                :on-preview="handlePictureCardPreview"
-                :on-remove="handleRemove"
+                :on-success="uploadSuccess"
+                :on-error="uploadError"
+                :before-upload="beforeUpload"
+                :on-remove="removePhoto"
+                :file-list="goodsPhotos"
               >
                 <i class="el-icon-plus"></i>
               </el-upload>
@@ -34,13 +37,8 @@
             <el-form-item prop="name" label="设备名称:">
               <el-input v-model="formData.name"></el-input>
             </el-form-item>
-            <el-form-item prop="storeId" label="商品分类:">
-              <tl-store
-                v-model="formData.storeId"
-                :initial-option="storeOption"
-              ></tl-store>
-            </el-form-item>
-            <el-form-item prop="online" label="包装"> </el-form-item>
+            <el-form-item prop="storeId" label="商品分类:"> </el-form-item>
+            <el-form-item prop="online" label="包装:"> </el-form-item>
           </div>
         </div>
 
@@ -63,11 +61,13 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, onMounted, ref } from "vue";
+  import { computed, defineComponent, onMounted, ref, inject } from "vue";
   import { useRoute } from "vue-router";
 
   import NavBar from "../components/nav-bar/index.vue";
   import options from './options'
+
+  import { ElMessage } from 'element-plus'
 
   import { add, GoodsAddParams, GoodsUpdateParams, update } from '@/api/server/goods'
 
@@ -106,6 +106,25 @@
 
       const goodsInfo = ref({})
 
+      const actionURL = inject('baseURL') + '/beer/admin/common/uploadFile'
+
+      const goodsPhotos = ref<any[]>([])
+      const beforeUpload = (file: File) => {
+        if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+          ElMessage.error('只支持 .jpg .png 格式图片')
+          return false
+        }
+      }
+      const uploadSuccess = (res: any, file: any) => {
+        ElMessage.success('文件上传成功')
+      }
+      const uploadError = (e: any) => {
+        ElMessage.error(`文件上传失败: ${e}`)
+      }
+      const removePhoto = () => {
+
+      }
+
       /*
         const getGoodsInfo = async () => {
           const goodsInfo = (await getById(+id.value!)).data
@@ -116,13 +135,14 @@
         // if (id.value) getGoodsInfo()
       }
 
-
       onMounted(() => void init())
 
       return {
+        actionURL,
         title, editable,
         location, formData, formRules, submitForm, formEl,
-        goodsInfo,
+        beforeUpload, uploadSuccess, uploadError, removePhoto,
+        goodsInfo, goodsPhotos,
         options,
       };
     },

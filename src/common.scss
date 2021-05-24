@@ -182,6 +182,11 @@
   & .el-radio__input.is-checked + .el-radio__label {
     color: #fff;
   }
+
+  & .el-upload--picture-card {
+    background-color: $--color-primary;
+    border: none;
+  }
 }
 
 .tabs-view {

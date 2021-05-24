@@ -3,11 +3,15 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent } from 'vue'
+  import { defineComponent, provide } from 'vue'
 
   export default defineComponent({
     name: 'App',
-    components: {}
+    components: {},
+    setup() {
+      // provide('baseURL', import.meta.env.VITE_TEST_API_BASE_URL)
+      provide('baseURL', '')
+    }
   })
 </script>
 

@@ -4,7 +4,7 @@ import router from "@router/index"
 // import store from "@/store/index"
 
 const api = axios.create({
-  // baseURL: import.meta.env.VITE_API_BASE_URL as string,
+  // baseURL: import.meta.env.VITE_TEST_API_BASE_URL as string,
   // baseURL: import.meta.env.VITE_MOCK_BASE_URL as string,
   baseURL: "/beer",
   timeout: 15000,
