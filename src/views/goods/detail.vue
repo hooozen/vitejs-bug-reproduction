@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-view device-detail">
+  <div class="detail-view goods-detail">
     <nav-bar class="detail-nav" :title="title">
       <el-button v-if="editable" type="primary" @click="submitForm">
         保存
@@ -18,7 +18,16 @@
         <div class="main-item">
           <div class="main-item-title">基本信息</div>
           <div class="main-item-body" style="display: block">
-            <el-form-item prop="goodsPhoto" label="商品图片:"> </el-form-item>
+            <el-form-item prop="goodsPhoto" label="商品图片:">
+              <el-upload
+                action=""
+                list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+              >
+                <i class="el-icon-plus"></i>
+              </el-upload>
+            </el-form-item>
             <el-form-item prop="title" label="商品标题:">
               <el-input v-model="formData.title"></el-input>
             </el-form-item>
@@ -119,4 +128,10 @@
     },
   });
 </script>
-<style lang="postcss"></style>
+<style lang="scss">
+  .goods-detail {
+    .el-input {
+      max-width: 400px;
+    }
+  }
+</style>

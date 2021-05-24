@@ -1,5 +1,5 @@
 export default {
-  fullName: [
+  loginName: [
     { required: true, message: '请输入账号名称', trigger: 'blur' },
   ],
   password: [

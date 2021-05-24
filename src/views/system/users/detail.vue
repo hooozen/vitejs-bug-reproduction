@@ -7,62 +7,74 @@
       <el-button v-else @click="editable = true">编辑</el-button>
     </nav-bar>
     <div class="detail-main">
-      <div class="main-item">
-        <div class="main-item-title">基本信息</div>
-        <el-form
-          :disabled="!editable"
-          ref="formEl"
-          :rules="formRules"
-          :model="formData"
-          class="main-item-body"
-          label-width="120px"
-        >
-          <div class="item-body-column" style="flex-basis: 400px">
-            <el-form-item prop="loginName" label="账号名称:">
-              <el-input v-model="formData.loginName"></el-input>
-            </el-form-item>
-            <el-form-item prop="password" label="用户密码:">
-              <el-input v-model="formData.password"></el-input>
-            </el-form-item>
-            <el-form-item prop="mobile" label="手机号码:">
-              <el-input v-model="formData.mobile"></el-input>
-            </el-form-item>
-            <el-form-item prop="code" label="用户编号:">
-              <el-input v-model="formData.code"></el-input>
-            </el-form-item>
-            <el-form-item prop="operatorId" label="所属运营商:">
-              <tl-operator v-model="formData.operatorId"></tl-operator>
-            </el-form-item>
+      <el-form
+        :disabled="!editable"
+        ref="formEl"
+        :rules="formRules"
+        :model="formData"
+        label-width="120px"
+      >
+        <div class="main-item">
+          <div class="main-item-title">基本信息</div>
+          <div class="main-item-body">
+            <div class="item-body-column" style="flex-basis: 400px">
+              <el-form-item prop="loginName" label="账号名称:">
+                <el-input v-model="formData.loginName"></el-input>
+              </el-form-item>
+              <el-form-item prop="password" label="用户密码:">
+                <el-input v-model="formData.password"></el-input>
+              </el-form-item>
+              <el-form-item prop="mobile" label="手机号码:">
+                <el-input v-model="formData.mobile"></el-input>
+              </el-form-item>
+              <el-form-item prop="code" label="用户编号:">
+                <el-input v-model="formData.code"></el-input>
+              </el-form-item>
+            </div>
+            <div class="item-body-column" style="flex-basis: 400px">
+              <el-form-item prop="operatorId" label="所属运营商:">
+                <tl-operator v-model="formData.operatorId"></tl-operator>
+              </el-form-item>
+              <el-form-item label="账户失效时间" prop="expireDate">
+                <el-date-picker
+                  v-model="formData._expireDate"
+                  type="date"
+                  clearable
+                  placeholder="失效时间"
+                >
+                </el-date-picker>
+              </el-form-item>
+              <el-form-item prop="description" label="备注:">
+                <el-input
+                  type="textarea"
+                  v-model="formData.description"
+                ></el-input>
+              </el-form-item>
+            </div>
           </div>
-          <div class="item-body-column" style="flex-basis: 200px">
-            <el-form-item label="账户失效时间" prop="expireDate">
-              <el-date-picker
-                v-model="formData._expireDate"
-                type="date"
-                clearable
-                placeholder="失效时间"
-              >
-              </el-date-picker>
-            </el-form-item>
-            <el-form-item prop="description" label="备注:">
-              <el-input
-                type="textarea"
-                v-model="formData.description"
-              ></el-input>
-            </el-form-item>
+        </div>
+        <div class="main-item">
+          <div class="main-item-title">职位</div>
+          <div class="main-item-body">
             <el-form-item prop="position" label="职位:">
               <tl-position v-model="formData.position"></tl-position>
             </el-form-item>
           </div>
-        </el-form>
-      </div>
+        </div>
+        <div class="main-item">
+          <div class="main-item-title">权限</div>
+          <div class="main-item-body">
+            <el-form-item prop="privilege" label="权限:">
+              <tl-transfer @onSelectedChange="setPrivileges"> </tl-transfer>
+            </el-form-item>
+          </div>
+        </div>
+      </el-form>
     </div>
   </div>
 </template>
 <script lang="ts">
   import { computed, defineComponent, onMounted, ref, watchEffect } from 'vue'
-
-  import { ElMessage } from 'element-plus'
 
   import NavBar from '../../components/nav-bar/index.vue'
   import TlAddress from '../../components/address/index.vue'
@@ -70,6 +82,7 @@
   import TlOrganization from '../../components/org-select/index.vue'
   import TlOperator from '../../components/operator-select/index.vue'
   import TlPosition from '../../components/position-select/index.vue'
+  import TlTransfer from '../../components/transfer/index.vue'
 
   import { add, UserAddParams, UserUpdateParams, update, getById } from '@/api/server/user'
 
@@ -78,6 +91,7 @@
   import options from './options'
   import formRules from './formRules'
   import { blankFormData as formDataTemplate, generateFormData, generateLocalFormData } from './formDataTemplate'
+  import { privileges } from '@/api/server/position'
 
   export default defineComponent({
     components: {
@@ -87,6 +101,7 @@
       TlOperator,
       TlSelect,
       TlPosition,
+      TlTransfer,
     },
     props: {
       type: {
@@ -133,6 +148,11 @@
 
       onMounted(async () => void init())
 
+      const setPrivileges = (privileges: any[]) => {
+        console.log(privileges)
+        formData.value.userPrivileges = privileges;
+      }
+
       return {
         title,
         editable,
@@ -142,6 +162,7 @@
         formRules,
         submitForm,
         formEl,
+        setPrivileges,
       }
     },
   })

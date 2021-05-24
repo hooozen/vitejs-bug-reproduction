@@ -12,71 +12,71 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from "vue";
-import { getTree } from "@api/server/organization";
+  import { defineComponent, ref, computed, onMounted } from "vue";
+  import { getTree } from "@api/server/organization";
 
-export default defineComponent({
-  name: "TlOrganization",
-  props: {
-    modelValue: {
-      type: [String, Number],
-      required: false,
+  export default defineComponent({
+    name: "TlOrganization",
+    props: {
+      modelValue: {
+        type: [String, Number],
+        required: false,
+      },
+      clearable: {
+        type: Boolean,
+        default: false,
+      },
     },
-    clearable: {
-      type: Boolean,
-      default: false,
-    },
-  },
-  emits: ["update:modelValue", "change"],
+    emits: ["update:modelValue", "change"],
 
-  setup(props, context) {
-    const selectEl = ref(null);
-    const industries = ref<OrganizationNode[]>([]);
+    setup(props, context) {
+      const selectEl = ref(null);
+      const industries = ref<OrganizationNode[]>([]);
 
-    const config = {
-      emitPath: false,
-      checkStrictly: true
-    }
+      const config = {
+        emitPath: false,
+        checkStrictly: true
+      }
 
-    const industryOptions = computed(() => {
-      const recuseHanldChildren = ((parent: any) => {
-        if (!parent.children?.length) return {
-          value: parent.id,
-          label: parent.name,
-          leaf: true
-        }
-        return {
-          value: parent.id,
-          label: parent.name,
-          children: parent.children.map((child: any) => recuseHanldChildren(child))
-        }
+      const industryOptions = computed(() => {
+        const recuseHanldChildren = ((parent: any) => {
+          if (!parent.children?.length) return {
+            value: parent.id,
+            label: parent.name,
+            leaf: true
+          }
+          return {
+            value: parent.id,
+            label: parent.name,
+            children: parent.children.map((child: any) => recuseHanldChildren(child))
+          }
+        })
+        return industries.value.map((i: any) => recuseHanldChildren(i))
       })
-      return industries.value.map((i: any) => recuseHanldChildren(i))
-    })
 
-    const getIndustries = async () => {
-      industries.value = (await getTree({ parentId: 0 })).data;
-    };
+      const getIndustries = async () => {
+        industries.value = (await getTree(0)).data;
+      };
 
-    onMounted(() => void getIndustries());
+      onMounted(() => void getIndustries());
 
-    const changeSelection = (value: Array<string>) => {
-      context.emit("update:modelValue", value);
-      context.emit("change", value);
-    };
+      const changeSelection = (value: Array<string>) => {
+        context.emit("update:modelValue", value);
+        context.emit("change", value);
+      };
 
-    return { changeSelection, selectEl, industries, config, industryOptions };
-  },
-});
+      return { changeSelection, selectEl, industries, config, industryOptions };
+    },
+  });
 </script>
 <style lang="postcss">
-.tl-org{
-  & .el-cascader {
-    width: 100%;
-  }
+  .tl-org {
+    & .el-cascader {
+      width: 100%;
+    }
 
-  & > div:not(:first-child) {
-    margin-top: 8px;
+    & > div:not(:first-child) {
+      margin-top: 8px;
+    }
   }
-}
 </style>

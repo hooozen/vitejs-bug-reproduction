@@ -75,7 +75,7 @@ import { useRouter } from "vue-router";
             try {
               const res = (await login({ ...(loginForm.value) })).data
               store.commit('setToken', res.token)
-              // router.push('/home')
+              router.push('/home')
             } catch {
               loadCodeImg()
             }

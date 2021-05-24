@@ -139,7 +139,7 @@
       })
 
       const getIndustries = async () => {
-        industries.value = (await getTree({ parentId: 0 })).data
+        industries.value = (await getTree(0)).data
         isLoading.value = false
       }
 

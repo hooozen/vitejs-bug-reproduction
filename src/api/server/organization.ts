@@ -1,24 +1,20 @@
 import { AxiosPromise } from "axios"
 import axios, { $AxiosRequestConfig } from "../axios"
 
-interface GetByParentIdParam {
-  parentId: number
+function getTree(parentId: number, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('get', '/admin/org/getTreeByParentId', { parentId }, config)
 }
 
-function getTree(params: { parentId: number }, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('get', '/admin/org/getTreeByParentId', params, config)
+interface GetByKeywordParams {
+  keyword: string
 }
 
-interface GetByKeyWordParams {
-  keyWord: string
-}
-
-function getByKeyWord(params: GetByKeyWordParams, config?: $AxiosRequestConfig): AxiosPromise {
+function getByKeyword(params: GetByKeywordParams, config?: $AxiosRequestConfig): AxiosPromise {
   return axios('get', '/admin/org/geByKeyWord', params, config)
 }
 
 function getAll() {
-  return getByKeyWord({ keyWord: '' })
+  return getByKeyword({ keyword: '' })
 }
 
 interface AddParams {
@@ -47,4 +43,4 @@ function remove(params: RemoveParam, config?: $AxiosRequestConfig): Promise<any>
   return axios("delete", "/admin/org/delete", params, config)
 }
 
-export { getByKeyWord, getAll, add, getTree, update, remove }
+export { getByKeyword, getAll, add, getTree, update, remove }

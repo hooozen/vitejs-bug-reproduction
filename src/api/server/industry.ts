@@ -9,20 +9,20 @@ function getByParentId(params: GetByParentIdParam, config?: $AxiosRequestConfig)
   return axios("get", "/admin/industry/getByParentId", params, config)
 }
 
-interface GetByKeyWordParams {
-  keyWord: string
+interface GetByKeywordParams {
+  keyword: string
 }
 
-function getByKeyWord(params: GetByKeyWordParams, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('get', '/admin/industry/geByKeyWord', params, config)
+function getByKeyword(params: GetByKeywordParams, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('get', '/admin/industry/getByKeyword', params, config)
 }
 
 function getAll() {
-  return getByKeyWord({ keyWord: '' })
+  return getByKeyword({ keyword: '' })
 }
 
-function getTree(params: { parentId: number }, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('get', '/admin/industry/getTreeByParentId', params, config)
+function getTree(parentId: number, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('get', '/admin/industry/getTreeByParentId', { parentId }, config)
 }
 
 interface AddParams {
@@ -51,4 +51,4 @@ function remove(params: RemoveParam, config?: $AxiosRequestConfig): Promise<any>
   return axios("delete", "/admin/industry/delete", params, config)
 }
 
-export { getByKeyWord, getAll, add, getByParentId, update, remove, getTree }
+export { getByKeyword, getAll, add, getByParentId, update, remove, getTree }

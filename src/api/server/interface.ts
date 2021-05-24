@@ -10,6 +10,6 @@ export interface ListParams {
   orderType?: string,
   pageNum?: number,
   pageSize?: number,
-  keyWord?: string
+  keyword?: string
 }
 

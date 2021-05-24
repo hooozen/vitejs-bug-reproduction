@@ -17,7 +17,7 @@ export interface DictQueryParams {
 }
 
 function getByKeyword(params: DictQueryParams, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('get', '/admin/dict/geByKeyword', params, config)
+  return axios('get', '/admin/dict/getByKeyword', params, config)
 }
 
 function add(params: DictAddParams, config?: $AxiosRequestConfig): AxiosPromise {

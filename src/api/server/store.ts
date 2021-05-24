@@ -63,4 +63,8 @@ function getById(id: string, config?: $AxiosRequestConfig): AxiosPromise {
   return axios('get', '/admin/store/getById', { id }, config)
 }
 
-export { add, update, getByKeyword, remove, getById }
+function getByOrg(orgId: number | string, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('post', `/admin/store/getByOrg?orgId=${orgId}`, {}, config)
+}
+
+export { add, update, getByKeyword, remove, getById, getByOrg }
