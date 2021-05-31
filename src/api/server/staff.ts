@@ -7,6 +7,7 @@ export interface StaffQueryParams extends PagingQueryParams {
 }
 
 export interface AddParams {
+  id?: string | number,
   censusAddress: string,
   censusArea: string,
   censusCity: string,

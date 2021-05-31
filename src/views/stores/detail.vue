@@ -193,7 +193,7 @@
   import options from './options'
   import deviceOptions from '@views/devices/options'
   import formRules from './formRules'
-  import { blankFormData as formDataTemplate, generateFormData, } from './formDataTemplate'
+  import { blankFormData as formDataTemplate, generateFormData, FormData } from './formDataTemplate'
   import deviceColumns from './deviceColumns'
 
   export default defineComponent({
@@ -213,7 +213,7 @@
       },
     },
     setup(props) {
-      const formData = ref<AddParams>({} as any)
+      const formData = ref<FormData>({} as any)
       const formEl = ref(null)
 
       formData.value = formDataTemplate
@@ -247,8 +247,7 @@
         })
       }
 
-      const updateFormDistrictName = (value: string[], name: string[]) => {
-        console.log(name.join('/'))
+      const updateFormDistrictName = (e: Event) => {
       }
 
       const setFormData = async () => {
@@ -264,7 +263,7 @@
       const getDevices = async () => {
         console.log(id.value)
         if (!id.value) return
-        devices.value = (await getByStoreId(id.value as string)).data.map((device:any) => ({
+        devices.value = (await getByStoreId(id.value as string)).data.map((device: any) => ({
           ...device,
           onlineName: deviceOptions.isOnline.find(s => s.value == device.online)?.label,
           statusName: deviceOptions.status.find(s => s.value == device.status)?.label,

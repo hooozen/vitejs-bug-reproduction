@@ -56,8 +56,8 @@
         <div class="main-item">
           <div class="main-item-title">职位</div>
           <div class="main-item-body">
-            <el-form-item prop="position" label="职位:">
-              <tl-position v-model="formData.position"></tl-position>
+            <el-form-item prop="roleId" label="职位:">
+              <tl-position v-model="formData.roleId"></tl-position>
             </el-form-item>
           </div>
         </div>
@@ -90,7 +90,7 @@
 
   import options from './options'
   import formRules from './formRules'
-  import { blankFormData as formDataTemplate, generateFormData, generateLocalFormData } from './formDataTemplate'
+  import { blankFormData as formDataTemplate, generateFormData, generateLocalFormData, LocalFormData } from './formDataTemplate'
   import { privileges } from '@/api/server/position'
 
   export default defineComponent({
@@ -110,7 +110,7 @@
       },
     },
     setup(props) {
-      const formData = ref<UserAddParams>({} as any)
+      const formData = ref<LocalFormData>({} as any)
       const formEl = ref(null)
 
       formData.value = formDataTemplate

@@ -1,7 +1,7 @@
 import { AddParams } from '@api/server/staff'
 import moment from 'moment'
 
-interface FormData extends AddParams {
+export interface FormData extends AddParams {
   _joinedDate?: Date,
   _censusDistrict?: Array<string>
   _houseDistrict?: Array<string>

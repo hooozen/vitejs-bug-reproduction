@@ -64,7 +64,7 @@ function setMapMarkers(this: any, dots: number[][] | [{ [key: string]: any }], s
       "myStyle": new window.TMap.MarkerStyle({
         "width": 18,  // 点标记样式宽度（像素）
         "height": 30, // 点标记样式高度（像素）
-        "src": '../img/map-marker.png',  //图片路径
+        "src": './img/map-marker.png',  //图片路径
         //焦点在图片中的像素位置，一般大头针类似形式的图片以针尖位置做为焦点，圆形点以圆心位置为焦点
         "anchor": { x: 16, y: 32 }
       })

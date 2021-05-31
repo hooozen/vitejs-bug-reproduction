@@ -7,7 +7,8 @@ interface Tag {
   [propName: string]: any,
 }
 
-interface FormData extends AddParams {
+export interface FormData extends AddParams {
+  createTime?: string
   _district: Array<string>
   _position: Array<string> | Array<number>
   _timeRange: Array<string> | Array<Date>

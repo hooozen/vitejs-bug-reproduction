@@ -121,7 +121,7 @@
 
   import options from './options'
   import formRules from './formRules'
-  import { blankFormData as formDataTemplate, generateFormData, } from './formDataTemplate'
+  import { blankFormData as formDataTemplate, generateFormData, FormData } from './formDataTemplate'
 
   import moment from 'moment'
 
@@ -140,7 +140,7 @@
       },
     },
     setup(props) {
-      const formData = ref<AddParams>({} as any)
+      const formData = ref<FormData>({} as any)
       const formEl = ref(null)
 
       formData.value = formDataTemplate
@@ -173,7 +173,7 @@
         })
       }
 
-      const updateFormDistrictName = (value: string[], name: string[]) => {
+      const updateFormDistrictName = (e: Event) => {
       }
 
       const setFormData = async () => {

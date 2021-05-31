@@ -244,7 +244,7 @@
       }
 
       // overview data
-      const overviewData = ref({})
+      const overviewData = ref<any>({} as any)
 
       const init = async () => {
         getList()

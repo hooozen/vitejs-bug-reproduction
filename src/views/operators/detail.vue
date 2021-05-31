@@ -17,7 +17,7 @@
           class="main-item-body"
           label-width="100px"
         >
-          <div class="item-body-column" style="flex-basis: 400px;">
+          <div class="item-body-column" style="flex-basis: 400px">
             <el-form-item prop="name" label="名称:">
               <el-input v-model="formData.name"></el-input>
             </el-form-item>
@@ -49,7 +49,7 @@
               <tl-organization v-model="formData.orgId"></tl-organization>
             </el-form-item>
           </div>
-          <div class="item-body-column" style="flex-basis: 300px;">
+          <div class="item-body-column" style="flex-basis: 300px">
             <el-form-item label="运营商状态:" prop="status">
               <tl-select
                 :options="options.status"
@@ -113,140 +113,140 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref } from 'vue'
+  import { computed, defineComponent, onMounted, ref } from 'vue'
 
-import { ElMessage } from 'element-plus'
+  import { ElMessage } from 'element-plus'
 
-import NavBar from '../components/nav-bar/index.vue'
-import TMap from '../components/TMap/index.vue'
-import TlAddress from '../components/address/index.vue'
-import TlSelect from '../components/selector/index.vue'
-import TlOrganization from '../components/org-select/index.vue'
+  import NavBar from '../components/nav-bar/index.vue'
+  import TMap from '../components/TMap/index.vue'
+  import TlAddress from '../components/address/index.vue'
+  import TlSelect from '../components/selector/index.vue'
+  import TlOrganization from '../components/org-select/index.vue'
 
-import {
-  add,
-  AddParams,
-  UpdateParams,
-  update,
-  getById,
-} from '@/api/server/operator'
-import { useRoute } from 'vue-router'
+  import {
+    add,
+    AddParams,
+    UpdateParams,
+    update,
+    getById,
+  } from '@/api/server/operator'
+  import { useRoute } from 'vue-router'
 
-import options from './options'
-import formRules from './formRules'
-import {
-  template as formDataTemplate,
-  generateFormData,
-} from './formDataTemplate'
+  import options from './options'
+  import formRules from './formRules'
+  import {
+    template as formDataTemplate,
+    generateFormData,
+    FormData,
+  } from './formDataTemplate'
 
-export default defineComponent({
-  components: {
-    NavBar,
-    TMap,
-    TlAddress,
-    TlOrganization,
-    TlSelect,
-  },
-  props: {
-    type: {
-      type: String,
-      required: true,
+  export default defineComponent({
+    components: {
+      NavBar,
+      TMap,
+      TlAddress,
+      TlOrganization,
+      TlSelect,
     },
-  },
-  setup(props) {
-    const formData = ref<AddParams>({} as any)
-    const formEl = ref(null)
+    props: {
+      type: {
+        type: String,
+        required: true,
+      },
+    },
+    setup(props) {
+      const formData = ref<FormData>({} as any)
+      const formEl = ref(null)
 
-    formData.value = formDataTemplate
+      formData.value = formDataTemplate
 
-    const route = useRoute()
-    const id = computed(() => route.query.id)
+      const route = useRoute()
+      const id = computed(() => route.query.id)
 
-    const editable = ref<boolean>(true)
-    // const editable = ref<boolean>(false)
-    // if (props.type === 'add') editable.value = true
+      const editable = ref<boolean>(true)
+      // const editable = ref<boolean>(false)
+      // if (props.type === 'add') editable.value = true
 
-    const mapCenter = ref<number[]>([39.90689, 116.3976])
+      const mapCenter = ref<number[]>([39.90689, 116.3976])
 
-    const title = computed(() =>
-      props.type === 'edit' ? '运营商详情' : '新增运营商',
-    )
+      const title = computed(() =>
+        props.type === 'edit' ? '运营商详情' : '新增运营商',
+      )
 
-    const activeTab = ref('data')
+      const activeTab = ref('data')
 
-    const submitForm = () => {
-      ;(formEl.value as any).validate(async (valid: any) => {
-        if (!valid) return
-        let _formData: { [key: string]: any } = {}
-        for (const [k, v] of Object.entries(formData.value)) {
-          if (k.substring(0, 1) === '_') continue
-          _formData[k] = v
+      const submitForm = () => {
+        ; (formEl.value as any).validate(async (valid: any) => {
+          if (!valid) return
+          let _formData: { [key: string]: any } = {}
+          for (const [k, v] of Object.entries(formData.value)) {
+            if (k.substring(0, 1) === '_') continue
+            _formData[k] = v
+          }
+          if (props.type === 'add') await add(_formData as AddParams, '新增成功')
+          else await update(_formData as UpdateParams, '保存成功')
+        })
+      }
+
+      const updateFormDistrictName = (e: Event) => {
+      }
+
+      onMounted(async () => {
+        if (id.value) {
+          const originalForm = (await getById(id.value as string)).data
+          isShowViewBtn.value = true
+          imagePreviewSrc.value = originalForm.businessLicense
+          formData.value = generateFormData(originalForm)
+          mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
         }
-        if (props.type === 'add') await add(_formData as AddParams, '新增成功')
-        else await update(_formData as UpdateParams, '保存成功')
       })
-    }
 
-    const updateFormDistrictName = (value: string[], name: string[]) => {
-      console.log(name.join('/'))
-    }
-
-    onMounted(async () => {
-      if (id.value) {
-        const originalForm = (await getById(id.value as string)).data
+      const isShowViewBtn = ref<boolean>(false)
+      const isShowViewer = ref<boolean>(false)
+      const imagePreviewSrc = ref<string>('')
+      const isUploading = ref<boolean>(false)
+      const isUploadSuccess = ref<boolean>(false)
+      const beforeUpload = (file: File) => {
+        if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
+          ElMessage.error('只支持 .jpg .png 格式图片')
+          return false
+        }
+        isUploading.value = true
+      }
+      const uploadSuccess = (res: any, file: any) => {
         isShowViewBtn.value = true
-        imagePreviewSrc.value= originalForm.businessLicense
-        formData.value = generateFormData(originalForm)
-        mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
+        imagePreviewSrc.value = URL.createObjectURL(file.raw)
+        ElMessage.success('文件上传成功')
+        formData.value.businessLicense = res.data
+        isUploading.value = false
       }
-    })
-
-    const isShowViewBtn = ref<boolean>(false)
-    const isShowViewer = ref<boolean>(false)
-    const imagePreviewSrc = ref<string>('')
-    const isUploading = ref<boolean>(false)
-    const isUploadSuccess = ref<boolean>(false)
-    const beforeUpload = (file: File) => {
-      if (file.type !== 'image/jpeg' && file.type !== 'image/png') {
-        ElMessage.error('只支持 .jpg .png 格式图片')
-        return false
+      const uploadError = (e: any) => {
+        ElMessage.error(`文件上传失败: ${e}`)
+        isUploading.value = false
       }
-      isUploading.value = true
-    }
-    const uploadSuccess = (res: any, file: any) => {
-      isShowViewBtn.value = true
-      imagePreviewSrc.value = URL.createObjectURL(file.raw)
-      ElMessage.success('文件上传成功')
-      formData.value.businessLicense = res.data
-      isUploading.value = false
-    }
-    const uploadError = (e: any) => {
-      ElMessage.error(`文件上传失败: ${e}`)
-      isUploading.value = false
-    }
 
-    return {
-      mapCenter,
-      title,
-      editable,
-      options,
-      updateFormDistrictName,
-      location,
-      activeTab,
-      formData,
-      formRules,
-      submitForm,
-      formEl,
-      imagePreviewSrc,
-      isShowViewer,
-      isShowViewBtn,
-      beforeUpload,
-      uploadSuccess,
-      uploadError,
-      isUploadSuccess,
-      isUploading,
-    }
-  },
-})
+      return {
+        mapCenter,
+        title,
+        editable,
+        options,
+        updateFormDistrictName,
+        location,
+        activeTab,
+        formData,
+        formRules,
+        submitForm,
+        formEl,
+        imagePreviewSrc,
+        isShowViewer,
+        isShowViewBtn,
+        beforeUpload,
+        uploadSuccess,
+        uploadError,
+        isUploadSuccess,
+        isUploading,
+      }
+    },
+  })
 </script>
 <style lang="postcss"></style>

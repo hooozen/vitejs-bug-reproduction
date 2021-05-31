@@ -32,6 +32,7 @@
         name: '',
         mobile: '',
         description: '',
+        loginName: '',
       })
       const init = async () => {
         const resData = (await currentUser()).data

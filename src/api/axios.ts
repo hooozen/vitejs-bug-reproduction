@@ -3,10 +3,9 @@ import { ElMessage, ElMessageBox, ElLoading } from "element-plus"
 import router from "@router/index"
 // import store from "@/store/index"
 
+
 const api = axios.create({
-  // baseURL: import.meta.env.VITE_TEST_API_BASE_URL as string,
-  // baseURL: import.meta.env.VITE_MOCK_BASE_URL as string,
-  baseURL: "/beer",
+  baseURL: import.meta.env.VITE_API_BASE_URL as string,
   timeout: 15000,
 })
 
@@ -45,7 +44,7 @@ api.interceptors.request.use((config: AxiosRequestConfig): AxiosRequestConfig =>
 api.interceptors.response.use((response: AxiosResponse<any>): AxiosPromise => {
   closeLoading()
   if (response.data.success !== undefined && !response.data.success) {
-    if (response.data.code === 'token.expired') {
+    if (response.data.code === 'token.expired' || response.data.code === 'token.required') {
       ElMessage.error('身份验证过期，重新登录')
       router.push('login')
     } else {

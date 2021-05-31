@@ -1,7 +1,7 @@
 import { UserAddParams } from '@api/server/user'
 import moment from 'moment'
 
-interface LocalFormData extends UserAddParams {
+export interface LocalFormData extends UserAddParams {
   _expireDate?: Date,
 }
 

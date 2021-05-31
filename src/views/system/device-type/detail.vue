@@ -77,7 +77,7 @@
       const activeTab = ref<string>('property')
 
       const route = useRoute()
-      const deviceTypeId = computed(() => route.query.id)
+      const deviceTypeId = computed<string>(() => route.query.id as string)
       const deviceTypeData = ref<UpdateParams>({
         name: '',
         sequencePrefix: '',

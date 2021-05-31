@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "skipLibCheck": true,
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "node",
@@ -12,25 +13,15 @@
     "esModuleInterop": true,
     "baseUrl": "./src",
     "paths": {
-      "@/*": [ "*"],
-      "@api/*": [ "api/*"],
-      "@layout/*": [ "layout/*"],
+      "@/*": ["*"],
+      "@api/*": ["api/*"],
+      "@layout/*": ["layout/*"],
       "@store/*": ["store/*"],
       "@router/*": ["router/*"],
       "@views/*": ["views/*"]
     },
-    "lib": [
-      "esnext",
-      "dom"
-    ],
-    "types": [
-      "vite/client"
-    ]
+    "lib": ["esnext", "dom"],
+    "types": ["vite/client"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.d.ts",
-    "src/**/*.tsx",
-    "src/**/*.vue"
-  ]
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "src/**/*.tsx", "src/**/*.vue"]
 }

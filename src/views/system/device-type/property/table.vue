@@ -100,9 +100,12 @@
         getProperties()
       }
 
+      const editPosition = (value: any) => { }
+      const deletePosition = (value: any) => { }
+
       onMounted(() => void init())
 
-      return { properties, refresh, dialogVisible, dialogType, propertyFormData, submitSuccess }
+      return { properties, refresh, dialogVisible, dialogType, propertyFormData, submitSuccess, editPosition, deletePosition }
     },
   })
 </script>

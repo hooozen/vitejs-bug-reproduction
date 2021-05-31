@@ -27,7 +27,7 @@
     name: 'TlTag',
     props: {
       modelValue: {
-        type: Array,
+        type: String,
         required: false,
       },
       placeholder: {

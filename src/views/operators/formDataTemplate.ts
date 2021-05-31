@@ -1,6 +1,7 @@
 import { AddParams } from '@api/server/operator'
 
-interface FormData extends AddParams {
+export interface FormData extends AddParams {
+  createTime?: string,
   _district: Array<string>,
   _position: Array<string> | Array<number>
 }
@@ -22,6 +23,7 @@ const template: FormData = {
   name: '',
   orgId: '',
   tel: '',
+  status: '',
 
   set _position(value: number[] | string[]) {
     this.latitude = value[0].toString() || '39.90689'

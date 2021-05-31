@@ -7,7 +7,7 @@ import path from 'path'
 export default defineConfig({
   server: {
     proxy: {
-      '/beer': 'http://120.55.96.37', 
+      '/beer': 'http://120.55.96.37',
     }
   },
   resolve: {

@@ -10,6 +10,9 @@ export interface QueryParams {
 }
 
 export interface AddParams {
+  logo?: string,
+  status: string | number,
+  systemName?: string,
   account: string
   accountBank: string
   address: string

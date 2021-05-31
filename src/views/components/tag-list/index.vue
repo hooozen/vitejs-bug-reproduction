@@ -1,8 +1,8 @@
 <template>
   <div class="tl-tags">
     <el-tag
-      :key="tag.id"
       v-for="tag in modelValue"
+      :key="tag.id"
       closable
       :disable-transitions="false"
       @close="removeTag(tag.id)"
@@ -33,14 +33,14 @@
   </div>
 </template>
 <script lang="ts">
-  import { computed, defineComponent, ref } from 'vue'
+  import { computed, defineComponent, ref, PropType } from 'vue'
   import { getByKeyword } from '@/api/server/tag'
 
   export default defineComponent({
     name: 'TlTags',
     props: {
       modelValue: {
-        type: Array,
+        type: Array as PropType<any[]>,
         default: []
       },
       placeholder: {

@@ -199,11 +199,12 @@
       }
 
       const deviceInfo = ref({
-        deviceType: {},
-        store: {}
+        deviceType: {} as any,
+        store: {} as any,
+        createTime: '',
       })
-      const deviceStatus = ref<any>({})
-      const deviceContainers = ref<any>({})
+      const deviceStatus = ref<any>({} as any)
+      const deviceContainers = ref<any>({} as any)
 
       const storeOption = ref<OptionData[]>([])
       const getDeviceInfo = async () => {

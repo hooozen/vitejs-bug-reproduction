@@ -28,7 +28,7 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
+  import { defineComponent, PropType, ref } from 'vue'
 
   export default defineComponent({
     name: 'TlSearch',
@@ -43,7 +43,7 @@
         required: false
       },
       keywordTypes: {
-        type: Array,
+        type: Array as PropType<any[]>,
         required: false
       },
       showSearchBtn: {

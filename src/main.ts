@@ -10,6 +10,9 @@ import ElementPlus from 'element-plus'
 // import 'element-plus/lib/theme-chalk/index.css'
 import './custome.scss'
 
+console.log('app mode:', import.meta.env.MODE)
+console.log('app env variable:', import.meta.env)
+
 
 createApp(App)
   .use(store)
