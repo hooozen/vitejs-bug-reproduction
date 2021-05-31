@@ -191,6 +191,7 @@
   import { useRoute } from 'vue-router'
 
   import options from './options'
+  import deviceOptions from '@views/devices/options'
   import formRules from './formRules'
   import { blankFormData as formDataTemplate, generateFormData, } from './formDataTemplate'
   import deviceColumns from './deviceColumns'
@@ -263,7 +264,12 @@
       const getDevices = async () => {
         console.log(id.value)
         if (!id.value) return
-        devices.value = (await getByStoreId(id.value as string)).data
+        devices.value = (await getByStoreId(id.value as string)).data.map((device:any) => ({
+          ...device,
+          onlineName: deviceOptions.isOnline.find(s => s.value == device.online)?.label,
+          statusName: deviceOptions.status.find(s => s.value == device.status)?.label,
+          activeName: deviceOptions.isActive.find(s => s.value == device.active)?.label,
+        }))
       }
 
       const init = async () => {

@@ -42,7 +42,7 @@ const generateLocalFormData = (deviceInfo: any, id?: string | number): LocalForm
 
 const generateFormData = (lcoalFormData: LocalFormData): AddParams => {
   const formData: any = {}
-  for (const [k, v] of Object.entries(formData)) {
+  for (const [k, v] of Object.entries(lcoalFormData)) {
     if (k.substring(0, 1) === '_') continue;
     formData[k] = v
   }

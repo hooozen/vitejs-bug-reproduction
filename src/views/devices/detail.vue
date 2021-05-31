@@ -17,7 +17,7 @@
           class="main-item-body"
           label-width="120px"
         >
-          <div class="item-body-column" style="flex-basis: 400px">
+          <div class="item-body-column" style="flex-basis: 300px">
             <el-form-item prop="sequence" label="设备序列号:">
               {{ formData.sequence }}
             </el-form-item>
@@ -34,30 +34,35 @@
               ></tl-store>
             </el-form-item>
             <el-form-item prop="online" label="在线状态:">
-              {{ formData.online }}
+              {{
+                options.isOnline.find((o) => o.value == deviceStatus.online)
+                  ?.label
+              }}
             </el-form-item>
             <el-form-item prop="status" label="设备状态:">
-              {{ formData.status }}
+              {{
+                options.status.find((o) => o.value == deviceStatus.status)
+                  ?.label
+              }}
             </el-form-item>
           </div>
           <div class="item-body-column" style="flex-basis: 300px">
             <el-form-item prop="alarm" label="预警状态:">
-              {{ formData.alarm }}
+              {{ deviceStatus.alarm ? "是" : "否" }}
             </el-form-item>
             <el-form-item prop="active" label="激活状态:">
-              {{ formData.active }}
+              {{ deviceStatus.active ? "是" : "否" }}
             </el-form-item>
             <el-form-item label="添加时间:">
               {{ deviceInfo.createTime }}
             </el-form-item>
             <el-form-item label="激活时间:">
-              {{ formData.createTime }}
+              {{ deviceStatus.activeTime }}
             </el-form-item>
             <el-form-item label="最后上线时间:">
-              {{ formData.createTime }}
+              {{ deviceStatus.updateTime }}
             </el-form-item>
           </div>
-          <!--
           <div class="item-body-column detail-map">
             <el-form-item label="经纬度" prop="_position">
               <t-map
@@ -68,7 +73,6 @@
               </t-map>
             </el-form-item>
           </div>
-          -->
         </el-form>
       </div>
       <div class="main-item">
@@ -93,10 +97,14 @@
             </div>
           </div>
           <div class="item-body-column" style="flex-bisis: 280px">
-            <div class="device-status-item">啤酒1:</div>
-            <div class="device-status-item">啤酒2:</div>
-            <div class="device-status-item">啤酒3:</div>
-            <div class="device-status-item">啤酒4:</div>
+            <div
+              v-for="container in deviceContainers"
+              :key="container.id"
+              class="device-status-item"
+            >
+              {{ container.name }}: {{ container.remainder }}Kg
+              {{ container.remainder / container.capacity }} %
+            </div>
           </div>
           <div class="item-body-column device-photo-outer">
             <img class="device-photo" src="/img/device-1.png" />
@@ -181,7 +189,9 @@
       const submitForm = () => {
         (formEl.value as any).validate(async (valid: any) => {
           if (!valid) return
+          console.log(formData.value)
           const _formData = generateFormData(formData.value)
+          console.log(_formData)
           if (props.type === 'add')
             await add(_formData as AddParams, '新增成功')
           else await update(_formData as UpdateParams, '保存成功')
@@ -193,6 +203,7 @@
         store: {}
       })
       const deviceStatus = ref<any>({})
+      const deviceContainers = ref<any>({})
 
       const storeOption = ref<OptionData[]>([])
       const getDeviceInfo = async () => {
@@ -201,6 +212,7 @@
         deviceStatus.value = data.deviceStatus || {}
 
         const _deviceInfo = data.deviceInfo
+        deviceContainers.value = data.deviceContainers
         deviceInfo.value = _deviceInfo
         formData.value = generateLocalFormData(_deviceInfo, id.value as string)
 
@@ -218,10 +230,9 @@
       onMounted(() => void init())
 
       return {
-        title, editable,
+        title, editable, options, storeOption,
         location, activeTab, formData, formRules, submitForm, formEl,
-        deviceInfo, storeOption,
-        deviceStatus, options,
+        deviceInfo, deviceStatus, deviceContainers,
       };
     },
   });
