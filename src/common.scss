@@ -205,3 +205,22 @@
     }
   }
 }
+
+.text-btn {
+  text-decoration: none;
+  color: #409eff;
+  color: #fff;
+  cursor: pointer;
+  &:not(:first-child) {
+    margin-left: 8px;
+  }
+  &:hover {
+    color: #66b1ff;
+  }
+}
+.text-btn--warning {
+  color: red;
+  &:not(:first-child) {
+    margin-left: 8px;
+  }
+}

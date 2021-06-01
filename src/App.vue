@@ -3,14 +3,27 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, provide } from 'vue'
+  import { defineComponent, onMounted, provide } from 'vue'
+  import { getUserInfo } from '@api/local'
+  import { useRouter } from 'vue-router'
+  import { useStore } from 'vuex'
 
   export default defineComponent({
     name: 'App',
     components: {},
     setup() {
-      // provide('baseURL', import.meta.env.VITE_TEST_API_BASE_URL)
-      provide('baseURL', '')
+      provide('baseURL', import.meta.env.VITE_API_BASE_URL)
+
+      const router = useRouter()
+      const store = useStore()
+
+      const init = () => {
+        const userInfo = getUserInfo()
+        if (!userInfo) router.push('login')
+        store.commit('setUserInfo', userInfo)
+      }
+
+      onMounted(() => void init())
     }
   })
 </script>

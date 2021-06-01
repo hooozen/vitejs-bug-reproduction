@@ -28,7 +28,11 @@
               v-model="loginForm.imageCode"
             >
               <template #suffix>
-                <img @click="loadCodeImg" ref="codeImg" class="identifying-img" />
+                <img
+                  @click="loadCodeImg"
+                  ref="codeImg"
+                  class="identifying-img"
+                />
               </template>
             </el-input>
           </el-form-item>
@@ -42,8 +46,8 @@
 <script lang="ts">
   import { ref, defineComponent, onMounted } from "vue"
   import { login, verificationCode } from '@api/index'
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
+  import { useStore } from "vuex";
+  import { useRouter } from "vue-router";
 
   export default defineComponent({
     setup() {
@@ -74,7 +78,7 @@ import { useRouter } from "vue-router";
           if (valid) {
             try {
               const res = (await login({ ...(loginForm.value) })).data
-              store.commit('setToken', res.token)
+              store.commit('setUserInfo', res)
               router.push('/home')
             } catch {
               loadCodeImg()
@@ -86,7 +90,7 @@ import { useRouter } from "vue-router";
         });
       }
       const loadCodeImg = async () => {
-        const data = await verificationCode({ width: '100', height: '50'})
+        const data = await verificationCode({ width: '100', height: '50' })
         // @ts-ignore
         codeImg.value.src = window.URL.createObjectURL(data)
       }

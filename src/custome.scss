@@ -66,7 +66,6 @@ body {
   input {
     background-color: $--background-color-base;
   }
-
 }
 .el-image-viewer__actions,
 .el-image-viewer__close {
@@ -83,6 +82,10 @@ body {
   background-color: #373e55 !important;
 }
 .el-popper.is-light .el-popper__arrow::before {
+  background: #373e55 !important;
+}
+
+.el-popper.is-light {
   background: #373e55 !important;
 }
 

@@ -6,20 +6,15 @@
       </div>
       <div class="main">
         <div class="header">
-          <div class="user">
-            <el-popover
-              placement="bottom"
-              :width="40"
-              trigger="click"
-              content="退出"
-            >
-              <template #reference>
-                <span>admin</span>
-              </template>
-            </el-popover>
-
-            <div class="user-face"></div>
-          </div>
+          <el-popover placement="bottom" :width="40" trigger="click">
+            <template #reference>
+              <div class="user-bar">
+                <span>{{ userInfo.loginName }}</span>
+                <div class="user-face"></div>
+              </div>
+            </template>
+            <span class="text-btn" @click="logOut">注销登录</span>
+          </el-popover>
           <i class="el-icon-message-solid" style="margin-right: 20px"></i>
         </div>
         <div class="view-outer">
@@ -31,20 +26,28 @@
 </template>
 
 <script lang="ts">
-  import { ref, defineComponent } from 'vue'
+  import { ref, defineComponent, computed } from 'vue'
+  import { useStore } from 'vuex'
   import AsideMenu from './components/asideMenu.vue'
+  import { clearUserInfo } from '@api/local'
+  import { useRouter } from 'vue-router'
 
   export default defineComponent({
     name: 'Layout',
     components: {
       AsideMenu,
     },
-    data() {
-      return {
-        menuCollapse: false,
+    setup: () => {
+      const store = useStore()
+      const router = useRouter()
+      const menuCollapse = ref<boolean>(false)
+      const userInfo = computed<{ [key: string]: any }>(() => store.getters.userInfo)
+      const logOut = () => {
+        store.commit('setUserInfo')
+        router.push('login')
       }
+      return { menuCollapse, userInfo, logOut }
     },
-    setup: () => { },
   })
 </script>
 <style lang="scss">
@@ -102,37 +105,20 @@
     display: flex;
     flex-direction: row-reverse;
     align-items: center;
+    .user-bar {
+      display: flex;
+      cursor: pointer;
+    }
+    .user-face {
+      background: url(@/assets/face.jpeg) 0 0 /40px 40px;
+      height: 40px;
+      width: 40px;
+      border-radius: 20px;
+      margin: 5px 10px;
+    }
   }
   .view-outer {
     flex: 1;
     height: calc(100% - 50px);
-    & .text-btn {
-      text-decoration: none;
-      color: #409eff;
-      color: #fff;
-      cursor: pointer;
-      &:not(:first-child) {
-        margin-left: 8px;
-      }
-      &:hover {
-        color: #66b1ff;
-      }
-    }
-    & .text-btn--warning {
-      color: red;
-      &:not(:first-child) {
-        margin-left: 8px;
-      }
-    }
-  }
-  .user {
-    display: flex;
-  }
-  .user-face {
-    background: url(@/assets/face.jpeg) 0 0 /40px 40px;
-    height: 40px;
-    width: 40px;
-    border-radius: 20px;
-    margin: 5px 10px;
   }
 </style>
