@@ -32,34 +32,39 @@
       </template>
     </el-dialog>
 
-    <div class="view-head"></div>
-    <div class="view-panel-line">
-      <el-input width="100px" v-model="sequence" placeholder="请输入设备序列号">
-      </el-input>
-      <el-input v-model="name" placeholder="请输入设备名称"> </el-input>
-      <tl-store v-model="storeId"></tl-store>
-      <el-date-picker v-model="createTime" type="date" placeholder="添加日期">
-      </el-date-picker>
-    </div>
-    <div class="view-panel-line">
-      <tl-address> </tl-address>
-      <tl-select
-        :options="options.isOnline"
-        v-model="isOnline"
-        placeholder="在线状态"
-      ></tl-select>
-      <tl-select
-        :options="options.status"
-        v-model="status"
-        placeholder="设备状态"
-      ></tl-select>
-      <tl-select
-        :options="options.isActive"
-        v-model="isActive"
-        placeholder="激活状态"
-      ></tl-select>
-      <el-button type="primary" @click="getList">查询</el-button>
-      <el-button @click="resetQueryForm">重置</el-button>
+    <div class="view-head">
+      <div class="view-panel-line">
+        <el-input
+          width="100px"
+          v-model="sequence"
+          placeholder="请输入设备序列号"
+        >
+        </el-input>
+        <el-input v-model="name" placeholder="请输入设备名称"> </el-input>
+        <tl-store v-model="storeId"></tl-store>
+        <el-date-picker v-model="createTime" type="date" placeholder="添加日期">
+        </el-date-picker>
+      </div>
+      <div class="view-panel-line">
+        <tl-address> </tl-address>
+        <tl-select
+          :options="options.isOnline"
+          v-model="isOnline"
+          placeholder="在线状态"
+        ></tl-select>
+        <tl-select
+          :options="options.status"
+          v-model="status"
+          placeholder="设备状态"
+        ></tl-select>
+        <tl-select
+          :options="options.isActive"
+          v-model="isActive"
+          placeholder="激活状态"
+        ></tl-select>
+        <el-button type="primary" @click="getList">查询</el-button>
+        <el-button @click="resetQueryForm">重置</el-button>
+      </div>
     </div>
     <div class="panel__btns">
       <el-button type="primary" @click="batchUpgrade">升级</el-button>

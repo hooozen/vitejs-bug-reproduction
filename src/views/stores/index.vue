@@ -1,28 +1,29 @@
 <template>
   <div class="store table-view">
-    <div class="view-head"></div>
-    <div class="view-panel-line">
-      <el-input v-model="code" placeholder="请输入门店编码"></el-input>
-      <el-input v-model="name" placeholder="请输入门店名称"></el-input>
-      <el-input v-model="contacts" placeholder="请输入联系人"></el-input>
-      <el-input v-model="tel" placeholder="请输入联系电话"></el-input>
-      <el-date-picker
-        placeholder="注册时间筛选"
-        v-model="createTime"
-        type="date"
-      >
-      </el-date-picker>
-    </div>
-    <div class="view-panel-line">
-      <tl-address :deepth="1" v-model:district="addressProvince"></tl-address>
-      <tl-select
-        :options="options.status"
-        v-model="status"
-        placeholder="选择门店状态"
-      ></tl-select>
-      <tl-tag v-model="tag" placeholder="标签"></tl-tag>
-      <el-button @click="conditionalQuery" type="primary">查询</el-button>
-      <el-button @click="resetCondition">重置</el-button>
+    <div class="view-head">
+      <div class="view-panel-line">
+        <el-input v-model="code" placeholder="请输入门店编码"></el-input>
+        <el-input v-model="name" placeholder="请输入门店名称"></el-input>
+        <el-input v-model="contacts" placeholder="请输入联系人"></el-input>
+        <el-input v-model="tel" placeholder="请输入联系电话"></el-input>
+        <el-date-picker
+          placeholder="注册时间筛选"
+          v-model="createTime"
+          type="date"
+        >
+        </el-date-picker>
+      </div>
+      <div class="view-panel-line">
+        <tl-address :deepth="1" v-model:district="addressProvince"></tl-address>
+        <tl-select
+          :options="options.status"
+          v-model="status"
+          placeholder="选择门店状态"
+        ></tl-select>
+        <tl-tag v-model="tag" placeholder="标签"></tl-tag>
+        <el-button @click="conditionalQuery" type="primary">查询</el-button>
+        <el-button @click="resetCondition">重置</el-button>
+      </div>
     </div>
     <div class="panel__btns">
       <el-button type="primary" @click="router.push('add-store')"
@@ -165,7 +166,7 @@
           ..._params
         }
         console.log('conditions of querying: ', params)
-        const resData = (await getByKeyword(params, '访问成功')).data
+        const resData = (await getByKeyword(params)).data
         list.value = resData.records.map((item: any) => ({
           ...item,
           status: options.status.find(s => s.value == item.status)?.label,

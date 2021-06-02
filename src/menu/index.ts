@@ -47,7 +47,7 @@ const menu: MenuItem[] = [
     path: 'staff',
     icon: 's-custom',
     children: [],
-  }, {
+  }, /*{
     id: 11,
     label: '商品管理',
     icon: 'goods',
@@ -148,12 +148,12 @@ const menu: MenuItem[] = [
       label: '用户信息',
       path: 'user-info',
       children: [],
-    }, {
+    }, /* {
       id: 30,
       label: '操作日志',
       path: 'logs',
       children: [],
-    }],
+    }*/],
   },/* {
     id: 31,
     label: '台账管理',

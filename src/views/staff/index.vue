@@ -22,8 +22,7 @@
     </div>
     <div class="view-body">
       <el-table :data="list" :stripe="true" height="100%">
-        <el-table-column type="selection" align="center">
-        </el-table-column>
+        <el-table-column type="selection" align="center"> </el-table-column>
         <el-table-column type="index" width="40px" align="center">
         </el-table-column>
         <el-table-column
@@ -103,7 +102,7 @@
           censusProvince: censusProvince.value[0],
           ..._params
         }
-        const resData = (await getByKeyword(params, '访问成功')).data
+        const resData = (await getByKeyword(params)).data
         list.value = resData.records.map((item: any) => ({
           ...item,
           censusAddressName: getAdressName(item.censusProvince, item.censusCity),
