@@ -35,7 +35,7 @@
             </div>
             <div class="item-body-column" style="flex-basis: 400px">
               <el-form-item prop="operatorId" label="所属运营商:">
-                <tl-operator v-model="formData.operatorId"></tl-operator>
+                <tl-operator v-model="formData.operatorId" :initialOption="operatorOption"></tl-operator>
               </el-form-item>
               <el-form-item label="账户失效时间" prop="expireDate">
                 <el-date-picker
@@ -141,10 +141,15 @@
           else await update(_formData as UserUpdateParams, '保存成功')
         })
       }
+      const operatorOption = ref<OptionData[]>([])
 
       const setFormData = async () => {
         if (!id.value) return
         const originalForm = (await getById(id.value as string)).data
+        operatorOption.value = [{
+          value: originalForm.operatorId as any,
+          label: originalForm.operatorName as any
+        }]
         formData.value = generateLocalFormData(originalForm)
       }
 
@@ -169,6 +174,7 @@
         submitForm,
         formEl,
         setPrivileges,
+        operatorOption,
       }
     },
   })
