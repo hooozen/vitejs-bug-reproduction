@@ -3,7 +3,9 @@
     <div class="detail-main">
       <div class="main-item">
         <div class="main-item-head">
-          <div class="main-item-title">用户信息</div>
+          <div class="main-item-head">
+            <div class="main-item-title">用户信息</div>
+          </div>
           <div class="main-item-btns">
             <el-button v-if="editable" @click="submitForm">
               <i class="el-icon-document"> </i>保存

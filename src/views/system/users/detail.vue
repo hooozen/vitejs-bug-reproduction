@@ -15,7 +15,9 @@
         label-width="120px"
       >
         <div class="main-item">
-          <div class="main-item-title">基本信息</div>
+          <div class="main-item-head">
+            <div class="main-item-title">基本信息</div>
+          </div>
           <div class="main-item-body">
             <div class="item-body-column" style="flex-basis: 400px">
               <el-form-item prop="loginName" label="账号名称:">
@@ -54,7 +56,9 @@
           </div>
         </div>
         <div class="main-item">
-          <div class="main-item-title">职位</div>
+          <div class="main-item-head">
+            <div class="main-item-title">职位</div>
+          </div>
           <div class="main-item-body">
             <el-form-item prop="roleId" label="职位:">
               <tl-position v-model="formData.roleId"></tl-position>
@@ -62,7 +66,9 @@
           </div>
         </div>
         <div class="main-item">
-          <div class="main-item-title">权限</div>
+          <div class="main-item-head">
+            <div class="main-item-title">权限</div>
+          </div>
           <div class="main-item-body">
             <el-form-item prop="privilege" label="权限:">
               <tl-transfer @onSelectedChange="setPrivileges"> </tl-transfer>
@@ -123,7 +129,7 @@
       // if (props.type === 'add') editable.value = true
 
       const title = computed(() =>
-        props.type === 'edit' ? '用户详情' : '新增用户1',
+        props.type === 'edit' ? '用户详情' : '新增用户',
       )
 
       const submitForm = () => {

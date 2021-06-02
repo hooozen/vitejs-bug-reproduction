@@ -8,7 +8,9 @@
     </nav-bar>
     <div class="detail-main">
       <div class="main-item">
-        <div class="main-item-title">基本信息</div>
+        <div class="main-item-head">
+          <div class="main-item-title">基本信息</div>
+        </div>
         <el-form
           :disabled="!editable"
           ref="formEl"
@@ -76,7 +78,9 @@
         </el-form>
       </div>
       <div class="main-item">
-        <div class="main-item-title">设备状态</div>
+        <div class="main-item-head">
+          <div class="main-item-title">设备状态</div>
+        </div>
         <div class="main-item-body" style="align-items: center">
           <div class="item-body-column" style="flex-basis: 280px">
             <div class="device-status-item">

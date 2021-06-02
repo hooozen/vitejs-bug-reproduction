@@ -120,12 +120,12 @@ const routes = [
       name: 'add-user',
       path: 'add-user',
       component: UserDetail,
-      props: { tyep: 'add' }
+      props: { type: 'add' }
     }, {
       name: 'user-detail',
       path: 'user-detail',
       component: UserDetail,
-      props: { tyep: 'edit' }
+      props: { type: 'edit' }
     }]
   }, {
     path: '/login',

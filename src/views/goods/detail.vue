@@ -16,7 +16,9 @@
         label-width="120px"
       >
         <div class="main-item">
-          <div class="main-item-title">基本信息</div>
+          <div class="main-item-head">
+            <div class="main-item-title">基本信息</div>
+          </div>
           <div class="main-item-body" style="display: block">
             <el-form-item prop="goodsPhoto" label="商品图片:">
               <el-upload
@@ -43,7 +45,9 @@
         </div>
 
         <div class="main-item">
-          <div class="main-item-title">价格/型号</div>
+          <div class="main-item-head">
+            <div class="main-item-title">价格/型号</div>
+          </div>
           <div class="main-item-body" style="display: block">
             <el-form-item label="商品价格:" prop="price">
               <el-input-number></el-input-number>

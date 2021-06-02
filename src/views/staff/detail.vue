@@ -8,7 +8,9 @@
     </nav-bar>
     <div class="detail-main">
       <div class="main-item">
-        <div class="main-item-title">基本信息</div>
+        <div class="main-item-head">
+          <div class="main-item-title">基本信息</div>
+        </div>
         <el-form
           :disabled="!editable"
           ref="formEl"

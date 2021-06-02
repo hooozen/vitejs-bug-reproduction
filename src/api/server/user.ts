@@ -43,7 +43,7 @@ export interface UserUpdateParams extends UserAddParams {
 }
 
 function update(params: UserAddParams, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('post', '/admin/user/add', params, config)
+  return axios('post', '/admin/user/update', params, config)
 }
 
 function getById(id: string, config?: $AxiosRequestConfig): AxiosPromise {
