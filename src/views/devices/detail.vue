@@ -111,7 +111,10 @@
             </div>
           </div>
           <div class="item-body-column device-photo-outer">
-            <img class="device-photo" src="/img/device-1.png" />
+            <img
+              class="device-photo"
+              :src="deviceInfo.deviceType.devicePhoto"
+            />
           </div>
         </div>
       </div>

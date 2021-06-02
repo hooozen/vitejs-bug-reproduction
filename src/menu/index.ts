@@ -23,12 +23,12 @@ const menu: MenuItem[] = [
       label: '设备管理',
       path: 'devices',
       children: [],
-    }, {
+    },/* {
       id: 4,
       label: '设备升级',
       path: 'device-upgrade',
       children: [],
-    }],
+    }*/],
   }, {
     id: 5,
     label: '门店管理',

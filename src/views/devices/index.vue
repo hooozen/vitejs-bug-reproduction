@@ -2,7 +2,7 @@
   <div class="devices table-view">
     <el-dialog v-model="dialogVisible" title="新增设备" width="400px">
       <el-form
-        label-width="100px"
+        label-width="120px"
         :model="addForm"
         :rules="addFormRules"
         ref="formEl"

@@ -53,7 +53,12 @@
         default: '区域选择'
       }
     },
-    emits: ['update:district', 'update:address', 'change', 'input'],
+    emits: {
+      'update:district': null,
+      'update:address': null,
+      'change': null,
+      'input': null
+    },
 
     setup(props, context) {
       const selectEl = ref(null)
@@ -84,7 +89,7 @@
         const checkedData = (selectEl.value as any).getCheckedNodes()[0]
         const districtName = (checkedData && checkedData.pathLabels) || []
         context.emit('update:district', value)
-        context.emit('change', value, districtName)
+        context.emit('change', { value, name: districtName })
       }
 
       const inputAddress = (value: string) => {

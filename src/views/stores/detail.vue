@@ -251,9 +251,9 @@
         })
       }
 
-      const updateFormDistrictName = (value: any, name: any) => {
-        console.log(name.join(','))
-        formData.value.fullAddress = name.join(',')
+      const updateFormDistrictName = (e: Event) => {
+        console.log((e as any).name.join(','))
+        formData.value.fullAddress = (e as any).name.join(',')
       }
 
       const setFormData = async () => {
