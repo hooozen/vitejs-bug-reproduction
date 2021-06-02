@@ -21,8 +21,8 @@
             <el-form-item prop="name" label="名称:">
               <el-input v-model="formData.name"></el-input>
             </el-form-item>
-            <el-form-item prop="orgId" label="组织代码:">
-              <el-input v-model="formData.orgId"></el-input>
+            <el-form-item prop="socialCreditCode" label="组织代码:">
+              <el-input v-model="formData.socialCreditCode"></el-input>
             </el-form-item>
             <el-form-item prop="contacts" label="联系人:">
               <el-input v-model="formData.contacts"></el-input>
@@ -44,9 +44,6 @@
                 @change="updateFormDistrictName"
                 :full="true"
               ></tl-address>
-            </el-form-item>
-            <el-form-item prop="orgId" label="管辖组织:">
-              <tl-organization v-model="formData.orgId"></tl-organization>
             </el-form-item>
           </div>
           <div class="item-body-column" style="flex-basis: 300px">

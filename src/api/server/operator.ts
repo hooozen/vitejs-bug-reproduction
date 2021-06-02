@@ -27,7 +27,7 @@ export interface AddParams {
   latitude: string
   longitude: string
   name: string
-  orgId: string
+  socialCreditCode: string
   tel: string
 }
 

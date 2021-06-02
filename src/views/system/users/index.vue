@@ -17,14 +17,15 @@
           >新增</el-button
         >
         <el-button type="danger">删除</el-button>
+        <!--
         <el-button>导入</el-button>
         <el-button>导出</el-button>
+        -->
       </div>
     </div>
     <div class="view-body">
       <el-table :data="list" :stripe="true" height="100%">
-        <el-table-column type="selection" align="center">
-        </el-table-column>
+        <el-table-column type="selection" align="center"> </el-table-column>
         <el-table-column type="index" width="40px" align="center">
         </el-table-column>
         <el-table-column

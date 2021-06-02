@@ -70,8 +70,10 @@
       <el-button type="primary" @click="batchUpgrade">升级</el-button>
       <el-button type="primary" @click="dialogVisible = true">新增</el-button>
       <el-button type="danger" @click="batchDelete">删除</el-button>
+      <!--
       <el-button disabled>导入</el-button>
       <el-button>导出</el-button>
+      -->
     </div>
 
     <div class="view-body">

@@ -193,7 +193,7 @@
   import options from './options'
   import deviceOptions from '@views/devices/options'
   import formRules from './formRules'
-  import { blankFormData as formDataTemplate, generateFormData, FormData } from './formDataTemplate'
+  import { blankFormData as formDataTemplate, generateFormData, generateLocalFormData, FormData } from './formDataTemplate'
   import deviceColumns from './deviceColumns'
 
   export default defineComponent({
@@ -247,7 +247,9 @@
         })
       }
 
-      const updateFormDistrictName = (e: Event) => {
+      const updateFormDistrictName = (value: any, name: any) => {
+        console.log(name.join(','))
+        formData.value.fullAddress = name.join(',')
       }
 
       const setFormData = async () => {
@@ -255,7 +257,7 @@
         const originalForm = (await getById(id.value as string)).data
         isShowLicenseViewBtn.value = true
         isShowPhotoViewBtn.value = true
-        formData.value = generateFormData(originalForm)
+        formData.value = generateLocalFormData(originalForm)
         mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
       }
 

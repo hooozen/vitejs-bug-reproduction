@@ -30,8 +30,10 @@
         >新增</el-button
       >
       <el-button @click="batchDelete" type="danger">删除</el-button>
+      <!--
       <el-button>导入</el-button>
       <el-button>导出</el-button>
+      -->
     </div>
 
     <div class="view-body">

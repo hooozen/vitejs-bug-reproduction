@@ -30,6 +30,7 @@ export interface AddParams {
   longitude: string
   name: string
   openingTimeEnd: string
+  fullAddress?: string
   openingTimeStart: string
   operatorId?: number | string
   orgId: number | string

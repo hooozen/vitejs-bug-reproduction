@@ -45,7 +45,7 @@ const template: LocalFormData = {
   tags: [],
 }
 
-const generateFormData = (_formData: LocalFormData): FormData => {
+const generateLocalFormData = (_formData: LocalFormData): FormData => {
   return {
     ..._formData,
 
@@ -94,6 +94,15 @@ const generateFormData = (_formData: LocalFormData): FormData => {
   }
 }
 
-const blankFormData = generateFormData(template)
+const generateFormData = (formData: LocalFormData) => {
+  let _formData: { [key: string]: any } = {}
+  for (const [k, v] of Object.entries(formData)) {
+    if (k.substring(0, 1) === '_') continue
+    _formData[k] = v
+  }
+  console.log(_formData)
+}
 
-export { blankFormData, generateFormData }
+const blankFormData = generateLocalFormData(template)
+
+export { blankFormData, generateLocalFormData, generateFormData }
