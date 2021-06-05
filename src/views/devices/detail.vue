@@ -120,27 +120,91 @@
       </div>
       <div class="main-item">
         <div class="main-item-body">
-          <el-tabs v-model="activeTab">
+          <el-tabs v-model="activeTab" style="width: 100%">
             <el-tab-pane label="设备数据" name="data">
-              <el-table></el-table>
+              <el-table :data="[tableDeviceInfo]">
+                <el-table-column
+                  align="center"
+                  :key="col.prop"
+                  :label="col.label"
+                  :prop="col.prop"
+                  v-for="col in tableDeviceInfoColumn"
+                ></el-table-column>
+                <el-table-column
+                  align="center"
+                  label="最后更新时间"
+                  fixed="right"
+                  prop="updateTime"
+                  width="120px"
+                >
+                </el-table-column>
+              </el-table>
             </el-tab-pane>
             <el-tab-pane label="已绑定门店" name="store">
-              <el-table border></el-table>
+              <el-table :data="stores">
+                <el-table-column
+                  align="center"
+                  :key="col.prop"
+                  :label="col.label"
+                  :prop="col.prop"
+                  v-for="col in tableColumns.store"
+                ></el-table-column>
+              </el-table>
             </el-tab-pane>
             <el-tab-pane label="预警记录" name="warning">
-              <el-table border></el-table>
+              <el-table>
+                <el-table-column
+                  align="center"
+                  :key="col.prop"
+                  :label="col.label"
+                  :prop="col.prop"
+                  v-for="col in tableColumns.alarm"
+                ></el-table-column>
+              </el-table>
             </el-tab-pane>
             <el-tab-pane label="故障记录" name="breakdow">
-              <el-table border></el-table>
+              <el-table>
+                <el-table-column
+                  align="center"
+                  :key="col.prop"
+                  :label="col.label"
+                  :prop="col.prop"
+                  v-for="col in tableColumns.error"
+                ></el-table-column>
+              </el-table>
             </el-tab-pane>
             <el-tab-pane label="设备参数" name="params">
-              <el-table border></el-table>
+              <el-table :data="deviceProperties">
+                <el-table-column
+                  align="center"
+                  :key="col.prop"
+                  :label="col.label"
+                  :prop="col.prop"
+                  v-for="col in tableColumns.property"
+                ></el-table-column>
+              </el-table>
             </el-tab-pane>
             <el-tab-pane label="运行记录" name="working">
-              <el-table border></el-table>
+              <el-table>
+                <el-table-column
+                  align="center"
+                  :key="col.prop"
+                  :label="col.label"
+                  :prop="col.prop"
+                  v-for="col in tableColumns.workingLog"
+                ></el-table-column>
+              </el-table>
             </el-tab-pane>
             <el-tab-pane label="操作记录" name="device">
-              <el-table border></el-table>
+              <el-table>
+                <el-table-column
+                  align="center"
+                  :key="col.prop"
+                  :label="col.label"
+                  :prop="col.prop"
+                  v-for="col in tableColumns.operationLog"
+                ></el-table-column>
+              </el-table>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -162,6 +226,7 @@
 
   import formRules from './formRules'
   import { emptyLocalForm, generateLocalFormData, generateFormData } from './formDataTemplate'
+  import tableColumns from './detail-table-column'
 
   export default defineComponent({
     components: {
@@ -211,7 +276,9 @@
         createTime: '',
       })
       const deviceStatus = ref<any>({} as any)
-      const deviceContainers = ref<any>({} as any)
+      const deviceContainers = ref<any[]>([])
+      const stores = ref<any[]>([])
+      const deviceProperties = ref<any[]>([])
 
       const storeOption = ref<OptionData[]>([])
       const getDeviceInfo = async () => {
@@ -221,6 +288,8 @@
 
         const _deviceInfo = data.deviceInfo
         deviceContainers.value = data.deviceContainers
+        stores.value = data.store
+        deviceProperties.value = data.deviceProperties
         deviceInfo.value = _deviceInfo
         formData.value = generateLocalFormData(_deviceInfo, id.value as string)
 
@@ -230,10 +299,24 @@
         }]
       }
 
+      // footer table data
+      const tableDeviceInfoColumn = computed<any[]>(() => deviceContainers.value
+        .map((c: any, i: number) => ({ label: `产品${i + 1}`, prop: `name${i + 1}` })))
+
+      const tableDeviceInfo = computed<{ [key: string]: any }>(() => {
+        let data: any = {}
+        deviceContainers.value.forEach((item: any, i: number) => {
+          data[tableDeviceInfoColumn.value[i]?.prop] = item.name
+        })
+        data.updateTime = deviceContainers.value[0]?.updateTime
+        console.log(tableDeviceInfoColumn.value, data)
+        return data
+      })
+
+
       const init = () => {
         if (id.value) getDeviceInfo()
       }
-
 
       onMounted(() => void init())
 
@@ -241,6 +324,8 @@
         title, editable, options, storeOption,
         location, activeTab, formData, formRules, submitForm, formEl,
         deviceInfo, deviceStatus, deviceContainers,
+        tableDeviceInfoColumn, tableColumns,
+        tableDeviceInfo, stores, deviceProperties,
       };
     },
   });

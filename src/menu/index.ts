@@ -7,13 +7,13 @@ interface MenuItem {
 }
 
 const menu: MenuItem[] = [
-  /*{
+  {
     id: 1,
     label: '首页',
     path: 'home',
     icon: 's-data',
     children: [],
-  },*/ {
+  }, {
     id: 2,
     label: '设备管理',
     icon: 'goblet-full',
