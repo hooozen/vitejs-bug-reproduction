@@ -20,7 +20,7 @@
 <script lang="ts">
   import { defineComponent, ref, computed } from 'vue'
   import { getDistrict } from '@api/server/common'
-  import { getDeep as getDistrictDeep } from './districtFunc'
+  import { getDeep as getDistrictDeep, isSpecialDistrict } from './districtFunc'
 
   export default defineComponent({
     name: 'TlAddress',
@@ -88,6 +88,10 @@
       const changeSelection = (value: Array<string>) => {
         const checkedData = (selectEl.value as any).getCheckedNodes()[0]
         const districtName = (checkedData && checkedData.pathLabels) || []
+        if (isSpecialDistrict(value[0])) {
+          value.unshift(value[0])
+          districtName.unshift(districtName[0])
+        }
         context.emit('update:district', value)
         context.emit('change', { value, name: districtName })
       }
