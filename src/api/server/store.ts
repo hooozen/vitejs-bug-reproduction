@@ -7,6 +7,7 @@ export interface StoreQueryParams extends PagingQueryParams {
   code?: string
   contacts?: string
   createTime?: string
+  operatorId?: string | number
   name?: string
   status?: number | string
   tag?: string

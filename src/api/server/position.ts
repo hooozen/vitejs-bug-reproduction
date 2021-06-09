@@ -32,6 +32,10 @@ function remove(params: RemoveParam | number[], config?: $AxiosRequestConfig): P
   return axios("delete", "/admin/role/delete", params, config)
 }
 
+function getByOperatorId(operatorId: string | number, config?: $AxiosRequestConfig): AxiosPromise {
+  return axios('get', '/admin/role/getByOperatorId', { operatorId }, config)
+}
+
 function positions(config?: $AxiosRequestConfig): AxiosPromise {
   return axios('get', '/admin/role/get', {}, config)
 }
@@ -40,4 +44,4 @@ function privileges(successInfo?: string): AxiosPromise {
   return axios('get', '/admin/role/function', {}, successInfo)
 }
 
-export { edit, add, positions, privileges, remove }
+export { edit, add, positions, privileges, remove, getByOperatorId }

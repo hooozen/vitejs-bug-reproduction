@@ -35,7 +35,10 @@
             </div>
             <div class="item-body-column" style="flex-basis: 400px">
               <el-form-item prop="operatorId" label="所属运营商:">
-                <tl-operator v-model="formData.operatorId" :initialOption="operatorOption"></tl-operator>
+                <tl-operator
+                  v-model="formData.operatorId"
+                  :initialOption="operatorOption"
+                ></tl-operator>
               </el-form-item>
               <el-form-item label="账户失效时间" prop="expireDate">
                 <el-date-picker
@@ -59,20 +62,33 @@
           <div class="main-item-head">
             <div class="main-item-title">职位</div>
           </div>
-          <div class="main-item-body">
+          <div class="main-item-body" style="position: relative">
             <el-form-item prop="roleId" label="职位:">
-              <tl-position v-model="formData.roleId"></tl-position>
+              <tl-position
+                :operatorId="formData.operatorId"
+                v-model="formData.roleId"
+              ></tl-position>
             </el-form-item>
+            <div v-if="!formData.operatorId" class="block-mask">
+              请先选择运营商
+            </div>
           </div>
         </div>
         <div class="main-item">
           <div class="main-item-head">
             <div class="main-item-title">权限</div>
           </div>
-          <div class="main-item-body">
+          <div class="main-item-body" style="position: relative">
             <el-form-item prop="privilege" label="权限:">
-              <tl-transfer @onSelectedChange="setPrivileges"> </tl-transfer>
+              <tl-transfer
+                :operatorId="formData.operatorId"
+                @onSelectedChange="setPrivileges"
+              >
+              </tl-transfer>
             </el-form-item>
+            <div v-if="!formData.operatorId" class="block-mask">
+              请先选择运营商
+            </div>
           </div>
         </div>
       </el-form>

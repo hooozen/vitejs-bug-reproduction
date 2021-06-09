@@ -30,7 +30,7 @@
       },
       placeholder: {
         type: String,
-        default: '输入门店名称',
+        default: '输入名称搜索',
       },
       initialOption: {
         type: Array,

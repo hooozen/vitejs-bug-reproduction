@@ -90,7 +90,7 @@
     2. 由于 Element 没有提供方便的改变 Table 列选择状态的方法，待选列表中被选中后则从该列表移除，
        展示在右侧已选列表中。这样既避免处理重选、“下级”等操作（父节点被选中后该操作已无意义），也符合交互习惯（更强的提示效果）
   */
-  import { computed, defineComponent, onMounted, ref, nextTick } from 'vue'
+  import { computed, defineComponent, onMounted, ref, nextTick, toRefs, watch } from 'vue'
 
   import { getTree, getByKeyword as getOrgByKeyword } from '@api/server/organization'
   import { getByOrg, getByKeyword as getStoreByKeyword } from '@api/server/store'
@@ -112,21 +112,37 @@
         default: 0,
         required: false,
       },
+      operatorId: {
+        type: [Number, String],
+        required: true,
+      },
     },
     emits: ['onSelectedChange'],
     setup(props, context) {
-
       onMounted(() => init())
 
-      const init = async () => {
-        localTree.value = (await getTree(0)).data
-      }
-
+      const { operatorId } = toRefs(props)
       const localTree = ref<any[]>([])
       const navs = ref<{ value: number, label: string }[]>([])
 
+
+      const init = () => {
+        setLocalTree()
+      }
+
+      const setLocalTree = async () => {
+        if (!operatorId.value) return
+        localTree.value = (await getTree({
+          parentId: 0,
+          operatorId: operatorId.value
+        })).data
+      }
+
+      watch(operatorId, setLocalTree)
+
       const checkPrivilegeIsSelected = (privilege: any): boolean => {
-        return selectedPrivileges.value.some(p => p.id == privilege.id && p._type == privilege._type)
+        return selectedPrivileges.value
+          .some(p => p.id == privilege.id && p._type == privilege._type)
       }
 
       const leftTableData = computed(() => {
@@ -148,7 +164,6 @@
         if (index == navs.value.length - 1) return
         navs.value = navs.value.slice(0, index + 1)
       }
-
 
       let gotChildrenOfParent: number[] = []
 
@@ -172,8 +187,8 @@
       const search = async () => {
         const _keyword = keyword.value
         const [orgRes, storeRes] = await Promise.all([
-          getOrgByKeyword({ keyword: _keyword }),
-          getStoreByKeyword({ name: _keyword, size: 10, current: 1 })
+          getOrgByKeyword({ keyword: _keyword, operatorId: operatorId.value }),
+          getStoreByKeyword({ name: _keyword, operatorId: operatorId.value, size: 10, current: 1 })
         ])
         searchResult.value = orgRes.data
           .concat(storeRes.data.records?.map((item: any) => ({ ...item, _type: 2 })))

@@ -1,12 +1,19 @@
 import { AxiosPromise } from "axios"
 import axios, { $AxiosRequestConfig } from "../axios"
 
-function getTree(parentId: number, config?: $AxiosRequestConfig): AxiosPromise {
-  return axios('get', '/admin/org/getTreeByParentId', { parentId }, config)
+interface GetTreeParams {
+  parentId: number | string,
+  operatorId?: number | string,
+}
+
+function getTree(params?: GetTreeParams, config?: $AxiosRequestConfig): AxiosPromise {
+  params = params || { parentId: 0 }
+  return axios('get', '/admin/org/getTreeByParentId', params, config)
 }
 
 interface GetByKeywordParams {
-  keyword: string
+  keyword: string,
+  operatorId?: number | string,
 }
 
 function getByKeyword(params: GetByKeywordParams, config?: $AxiosRequestConfig): AxiosPromise {

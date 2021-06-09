@@ -122,7 +122,7 @@
       onMounted(() => init())
 
       const init = async () => {
-        localTree.value = (await getTree(0)).data
+        localTree.value = (await getTree()).data
       }
 
       const localTree = ref<any[]>([])

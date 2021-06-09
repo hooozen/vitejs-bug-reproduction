@@ -15,8 +15,8 @@
   </el-select>
 </template>
 <script lang="ts">
-  import { defineComponent, onMounted, watchEffect, ref } from 'vue'
-  import { positions } from '@api/server/position'
+  import { defineComponent, onMounted, watch, ref, toRefs } from 'vue'
+  import { getByOperatorId } from '@api/server/position'
 
   export default defineComponent({
     name: 'TlOpsition',
@@ -24,6 +24,10 @@
       initialOption: {
         type: Array,
         required: false
+      },
+      operatorId: {
+        type: [Number, String],
+        required: true
       },
       modelValue: {
         type: [String, Boolean, Number],
@@ -42,6 +46,7 @@
 
     setup(props, context) {
       const options = ref<OptionData[]>([])
+      const { operatorId } = toRefs(props)
 
       /*
       watchEffect(() => {
@@ -56,15 +61,16 @@
       }
 
       const getOptoins = async () => {
-        console.log('get options')
-        const resData = (await positions({ silent: true })).data
+        if (!operatorId.value) return
+        const resData = (await getByOperatorId(operatorId.value, { silent: true })).data
         options.value = resData.map((item: any) => ({ value: item.id, label: item.name }))
       }
 
       const init = () => {
-        console.log('init')
         getOptoins()
       }
+
+      watch(operatorId, getOptoins)
 
       onMounted(() => void init())
 
@@ -73,7 +79,7 @@
   })
 </script>
 
-<style lang="postcss">
+<style lang="scss">
   .tl-select {
     & .el-input {
       width: 120px;
