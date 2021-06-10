@@ -84,8 +84,8 @@
         }
       })
 
-
       const changeSelection = (value: Array<string>) => {
+				console.log('change')
         const checkedData = (selectEl.value as any).getCheckedNodes()[0]
         const districtName = (checkedData && checkedData.pathLabels) || []
         if (isSpecialDistrict(value[0])) {

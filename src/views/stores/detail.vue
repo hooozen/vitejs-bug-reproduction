@@ -217,10 +217,10 @@
       },
     },
     setup(props) {
-      const formData = ref<FormData>({} as any)
+      const formData = ref<FormData>(formDataTemplate)
       const formEl = ref(null)
 
-      formData.value = formDataTemplate
+      console.log(formData.value)
 
       const route = useRoute()
       const id = computed(() => route.query.id)
@@ -262,6 +262,7 @@
         isShowLicenseViewBtn.value = true
         isShowPhotoViewBtn.value = true
         formData.value = generateLocalFormData(originalForm)
+        console.log('xxxxx', formData.value)
         mapCenter.value = [+originalForm.latitude, +originalForm.longitude]
       }
 
