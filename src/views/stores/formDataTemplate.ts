@@ -1,5 +1,6 @@
 import { AddParams } from '@api/server/store'
 import moment from 'moment'
+import { isSpecialDistrict } from '@views/components/address/districtFunc'
 
 interface Tag {
   id: number | string,
@@ -46,8 +47,10 @@ const template: LocalFormData = {
 }
 
 const generateLocalFormData = (_formData: LocalFormData): FormData => {
+  console.log('generateLocalFormData')
   return {
     ..._formData,
+
 
     __tags: _formData.tags,
 
@@ -89,7 +92,9 @@ const generateLocalFormData = (_formData: LocalFormData): FormData => {
       this.addressStreet = value[3] || ''
     },
     get _district() {
-      return [this.addressProvince, this.addressCity, this.addressArea, this.addressStreet].filter(item => item)
+      const value = [this.addressProvince, this.addressCity, this.addressArea, this.addressStreet].filter(item => item)
+      if (value[0] && isSpecialDistrict(value[0])) value.shift()
+      return value
     },
   }
 }
