@@ -3,20 +3,12 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build --mode=localtest --base=/beer-admin/",
-    "build-test": "vue-tsc --noEmit && vite build --mode=test --base=/beer-admin/",
-    "build-prod": "vue-tsc --noEmit && vite build --mode=production",
+    "build": "vue-tsc --noEmit && vite build --base=/bug/",
     "serve": "vite preview"
   },
   "dependencies": {
-    "axios": "^0.21.1",
-    "echarts": "^5.1.1",
-    "mockjs": "^1.1.0",
     "moment": "^2.29.1",
-    "vue": "^3.0.5",
-    "vue-echarts": "^6.0.0-rc.5",
-    "vue-router": "4",
-    "vuex": "^4.0.0"
+    "vue": "^3.0.5"
   },
   "devDependencies": {
     "@types/node": "^14.14.37",
